@@ -18,6 +18,8 @@ const SEED_TASKS = [
   { id: 'p0-05', phase_id: '0', phase_name: 'Setup', label: 'Build Admin panel', tool: 'React' },
   { id: 'p0-06', phase_id: '0', phase_name: 'Setup', label: 'Initialise git and push to GitHub', tool: 'Git' },
   { id: 'p0-07', phase_id: '0', phase_name: 'Setup', label: 'Deploy to Vercel', tool: 'Vercel' },
+  { id: 't0-claude-design', phase_id: '0', phase_name: 'Setup', label: 'Design core UI screens in Claude Design (Home, Question, Solution, Canvas, Progress)', tool: 'Claude Design' },
+  { id: 't0-design-handoff', phase_id: '0', phase_name: 'Setup', label: 'Handoff Claude Design to Claude Code', tool: 'Claude Design → Claude Code' },
   // Phase 1 — Core Loop
   { id: 'p1-01', phase_id: '1', phase_name: 'Core Loop', label: 'Design questions table schema', tool: 'Turso' },
   { id: 'p1-02', phase_id: '1', phase_name: 'Core Loop', label: 'Seed English Verbal questions', tool: 'Claude Code' },
