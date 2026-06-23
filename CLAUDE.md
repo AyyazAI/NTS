@@ -524,3 +524,117 @@ At the start of every Claude Code session:
 | INC-002 | Jun 22 2026 | Admin panel tasks out of sync — Claude Design tasks missing after plan update | Resolved |
 
 Full incident details: src/governance/NTS-GOV-001-AI-Governance-Incident-Log.docx
+
+---
+
+## Premium Membership Model (Phase 3-4)
+
+**Positioning:** "Support the platform and get extra features"
+**Price:** Rs. 1000/month — framed as "one McDonald's meal"
+**First 1-2 weeks free** for all students to experience premium
+
+### Free vs Premium Split
+
+| Feature | Free | Premium |
+|---|---|---|
+| All questions | ✅ | ✅ |
+| Step-by-step explanations | ✅ | ✅ |
+| Canvas working | ✅ | ✅ |
+| Mock tests | ✅ | ✅ |
+| Basic progress (current session) | ✅ | ✅ |
+| Social sharing achievement cards | ✅ | ✅ |
+| Full history — all attempts | ❌ | ✅ |
+| Canvas working archive | ❌ | ✅ |
+| Live chatbot follow-up (Claude-powered) | ❌ | ✅ |
+| Detailed monthly PDF report | ❌ | ✅ |
+| Offline practice pack download + upload | ❌ | ✅ |
+| Early feature access (beta) | ❌ | ✅ |
+| Community work contribution (opt-in) | ❌ | ✅ |
+| Achievement badges + rewards | ❌ | ✅ |
+| Ad-free (if ads ever introduced) | ❌ | ✅ |
+
+### Premium Feature Details
+
+**Full history** — every attempt, canvas working, solution viewed — searchable and reviewable
+
+**Live chatbot** — Claude-powered follow-up on specific solutions. "I still don't understand step 3 — explain differently." API cost justifies premium placement.
+
+**Rewards system** — achievement badges for good NTS scores. Student uploads NTS result slip. Honour system with community visibility. No cash rewards — profile badges, featured on leaderboard, extended premium trial.
+
+**Community work contribution** — premium students opt in to share anonymised handwritten working. Used to enrich explanations for all students. Explicit consent required, documented in governance.
+
+**Social sharing** — beautiful shareable card: score, streak, improvement. "I scored 78/100 on NAT-I Mock Test on TaleemiMarkaz." Free feature — serves as organic marketing.
+
+**Monthly PDF report** — what they studied, how they improved, what to focus on. Shareable with parents/teachers. Parents in Pakistan are deeply involved in exam prep — this speaks to that.
+
+**Offline practice pack + upload** — see Offline Feature section below.
+
+### Fundraising Compatibility
+
+Freemium model strengthens fundraising story:
+"We serve students free. Premium covers server and AI costs. Your donation funds access for students who cannot afford even our nominal premium."
+
+IGNITE, UNDP, Agha Khan Foundation all fund platforms demonstrating self-sustainability alongside social mission. Revenue model makes the platform more fundable, not less.
+
+### Payment Methods (Pakistan)
+- JazzCash
+- EasyPaisa
+- Credit/debit card
+
+### Timeline
+- Phase 1-2: Free only — prove the product works
+- Phase 3: Introduce premium after 1000+ active users
+- Phase 4: Full premium feature set
+
+---
+
+## Offline Practice Pack Feature (Phase 3-4)
+
+### The Problem It Solves
+Many Pakistani students in smaller cities have unreliable internet. A printed practice pack usable anywhere — bus, home, without WiFi — addresses a real access gap.
+
+### How It Works
+
+**Download:**
+- Student downloads PDF practice pack (10-20 questions)
+- PDF includes: question text, answer bubbles (A/B/C/D), working space
+- Designed to replicate real NTS exam worksheet experience
+- Premium feature
+
+**Solve offline:**
+- Student prints or solves on screen offline
+- Works anywhere, no internet needed
+
+**Upload and analyse:**
+```
+Student photographs completed paper
+        ↓
+Uploads photo to TaleemiMarkaz
+        ↓
+Claude Vision reads:
+  - Filled answer bubbles (highly reliable — binary task)
+  - Handwritten working in margins (best effort)
+        ↓
+Confirmation step shown to student:
+  "Here's what we read:
+   Q1: B ✓  Q2: A ✗  Q3: C ✓
+   Is this correct?"
+  [Yes, save results] [No, let me correct]
+        ↓
+Answers marked against verified answer key
+Wrong answers → full solution shown
+Working analysed for error diagnosis (if readable)
+        ↓
+Results saved to online profile
+```
+
+**Handwriting limitation handling:**
+- Answer bubble reading: always reliable
+- Working analysis: best-effort with graceful fallback
+- If working unreadable: "We couldn't read your working clearly. Here's the full solution anyway."
+- Student confirmation step prevents misread answers from corrupting profile data
+
+### Timeline
+- PDF download: Phase 3
+- Upload and analyse: Phase 4
+
