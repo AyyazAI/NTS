@@ -1,10 +1,15 @@
 import { useState } from 'react'
 import Header from '../components/Header'
 import BottomNav from '../components/BottomNav'
+import {
+  NAT_CATEGORIES,
+  getNatCategory,
+  setNatCategory as saveCategory,
+  getCategoryLabel,
+} from '../utils/natCategory'
 
-// Streak calendar — last 30 days, hardcoded static data
 const STREAK_DAYS = (() => {
-  const active = [0, 1, 2, 3, 5, 6, 7, 8, 9, 12, 13, 14, 15, 16, 19, 20, 21, 22, 23, 26, 27, 28]
+  const active = [0,1,2,3,5,6,7,8,9,12,13,14,15,16,19,20,21,22,23,26,27,28]
   return Array.from({ length: 30 }, (_, i) => active.includes(i))
 })()
 
@@ -12,10 +17,7 @@ function StreakCalendar() {
   return (
     <div className="grid gap-1" style={{ gridTemplateColumns: 'repeat(10, 1fr)' }}>
       {STREAK_DAYS.map((active, i) => (
-        <div
-          key={i}
-          className={`aspect-square rounded ${active ? 'bg-teal-500' : 'bg-gray-100'}`}
-        />
+        <div key={i} className={`aspect-square rounded ${active ? 'bg-teal-500' : 'bg-gray-100'}`} />
       ))}
     </div>
   )
@@ -30,7 +32,33 @@ function StatRow({ label, value }) {
   )
 }
 
-function ViewMode({ onEdit }) {
+// 6-card category selector used in both onboarding and edit mode
+function CategorySelector({ value, onChange }) {
+  return (
+    <div className="grid grid-cols-2 gap-2">
+      {NAT_CATEGORIES.map(cat => {
+        const selected = value === cat.id
+        return (
+          <button
+            key={cat.id}
+            onClick={() => onChange(cat.id)}
+            className={`relative text-left p-3 rounded-xl border-2 transition-all ${
+              selected ? 'border-teal-600 bg-teal-50' : 'border-gray-200 bg-white hover:border-gray-300'
+            }`}
+          >
+            {selected && (
+              <span className="absolute top-2 right-2 w-4 h-4 rounded-full bg-teal-600 flex items-center justify-center text-white text-[9px] font-black">✓</span>
+            )}
+            <p className={`text-[10px] font-black mb-0.5 ${selected ? 'text-teal-600' : 'text-gray-400'}`}>{cat.id}</p>
+            <p className={`text-xs font-bold leading-tight ${selected ? 'text-teal-800' : 'text-gray-700'}`}>{cat.label}</p>
+          </button>
+        )
+      })}
+    </div>
+  )
+}
+
+function ViewMode({ natCategory, onEdit }) {
   return (
     <div className="space-y-4">
       {/* Avatar + name */}
@@ -56,10 +84,10 @@ function ViewMode({ onEdit }) {
         <p className="text-xs font-black text-gray-500 uppercase tracking-wider mb-3">Goal Tracker</p>
         <div className="flex justify-between items-baseline mb-2">
           <span className="text-sm text-gray-600">Target score</span>
-          <span className="font-black text-gray-900">75/100</span>
+          <span className="font-black text-gray-900">75/90</span>
         </div>
         <div className="h-3 bg-gray-200 rounded-full overflow-hidden mb-1">
-          <div className="h-full bg-teal-500 rounded-full" style={{ width: '67%' }} />
+          <div className="h-full bg-teal-500 rounded-full" style={{ width: '74%' }} />
         </div>
         <div className="flex justify-between text-xs text-gray-400">
           <span>Current avg: 67</span>
@@ -77,12 +105,12 @@ function ViewMode({ onEdit }) {
         <p className="text-xs text-gray-400 mt-2">Last 30 days</p>
       </div>
 
-      {/* Test details */}
+      {/* Test details — includes NAT-I category */}
       <div className="bg-gray-50 border border-gray-100 rounded-2xl p-4">
         <p className="text-xs font-black text-gray-500 uppercase tracking-wider mb-2">Test Details</p>
-        <StatRow label="Test date"          value="12 Jul 2026" />
-        <StatRow label="Test type"          value="NAT-I" />
-        <StatRow label="Target university"  value="LUMS" />
+        <StatRow label="Test date"        value="12 Jul 2026" />
+        <StatRow label="Category"         value={getCategoryLabel(natCategory)} />
+        <StatRow label="Target university" value="LUMS" />
       </div>
 
       {/* Practice stats */}
@@ -90,7 +118,7 @@ function ViewMode({ onEdit }) {
         <p className="text-xs font-black text-gray-500 uppercase tracking-wider mb-2">Practice Stats</p>
         <StatRow label="Questions attempted" value="142" />
         <StatRow label="Solutions viewed"    value="38"  />
-        <StatRow label="Topics covered"      value="3/3" />
+        <StatRow label="Topics covered"      value="4/4" />
         <StatRow label="Accuracy"            value="67%" />
       </div>
 
@@ -98,8 +126,8 @@ function ViewMode({ onEdit }) {
       <div className="bg-gray-50 border border-gray-100 rounded-2xl p-4">
         <p className="text-xs font-black text-gray-500 uppercase tracking-wider mb-2">Mock Test Stats</p>
         <StatRow label="Tests completed"  value="3"      />
-        <StatRow label="Best score"       value="67/100" />
-        <StatRow label="Average score"    value="60/100" />
+        <StatRow label="Best score"       value="67/90"  />
+        <StatRow label="Average score"    value="60/90"  />
         <StatRow label="Neg marks lost"   value="−12.5"  />
       </div>
 
@@ -113,33 +141,34 @@ function ViewMode({ onEdit }) {
   )
 }
 
-function EditMode({ onCancel }) {
-  const [name,       setName]       = useState('Hamza Ahmed')
-  const [mobile,     setMobile]     = useState('0312-3456789')
-  const [email,      setEmail]      = useState('')
-  const [testDate,   setTestDate]   = useState('2026-07-12')
-  const [university, setUniversity] = useState('LUMS')
-  const [targetScore,setTargetScore]= useState(75)
-  const [reminders,  setReminders]  = useState(true)
-  const [dirty, setDirty] = useState(false)
+function EditMode({ initialCategory, onCancel }) {
+  const [name,        setName]        = useState('Hamza Ahmed')
+  const [mobile,      setMobile]      = useState('0312-3456789')
+  const [email,       setEmail]       = useState('')
+  const [testDate,    setTestDate]    = useState('2026-07-12')
+  const [university,  setUniversity]  = useState('LUMS')
+  const [targetScore, setTargetScore] = useState(75)
+  const [reminders,   setReminders]   = useState(true)
+  const [category,    setCategory]    = useState(initialCategory)
+  const [dirty,       setDirty]       = useState(false)
 
-  const mobileValid = /^03\d{9}$/.test(mobile.replace(/-/g, ''))
-  const scoreValid  = targetScore >= 40 && targetScore <= 100
+  const mobileValid   = /^03\d{9}$/.test(mobile.replace(/-/g, ''))
+  const scoreValid    = targetScore >= 40 && targetScore <= 90
+  const categoryChanged = category !== initialCategory
 
   function mark() { setDirty(true) }
+  function handleCategoryChange(id) { setCategory(id); mark() }
 
   return (
     <div className="space-y-4">
       {/* Edit badge */}
-      <div className="flex items-center justify-between pt-2">
-        <div className="flex items-center gap-3">
-          <div className="w-14 h-14 rounded-full bg-teal-600 flex items-center justify-center text-white text-xl font-black">
-            H
-          </div>
-          <span className="text-xs font-black text-amber-600 bg-amber-50 border border-amber-200 rounded-full px-2.5 py-1">
-            Editing
-          </span>
+      <div className="flex items-center gap-3 pt-2">
+        <div className="w-14 h-14 rounded-full bg-teal-600 flex items-center justify-center text-white text-xl font-black">
+          H
         </div>
+        <span className="text-xs font-black text-amber-600 bg-amber-50 border border-amber-200 rounded-full px-2.5 py-1">
+          Editing
+        </span>
       </div>
 
       {/* Unsaved warning */}
@@ -153,7 +182,6 @@ function EditMode({ onCancel }) {
         </div>
       )}
 
-      {/* Fields */}
       <div className="space-y-3">
         <div>
           <label className="text-xs font-black text-gray-500 uppercase tracking-wider block mb-1.5">Full Name</label>
@@ -209,18 +237,29 @@ function EditMode({ onCancel }) {
           />
         </div>
 
+        {/* NAT-I Category selector */}
+        <div>
+          <label className="text-xs font-black text-gray-500 uppercase tracking-wider block mb-2">NAT-I Category</label>
+          <CategorySelector value={category} onChange={handleCategoryChange} />
+          {categoryChanged && (
+            <p className="text-xs text-amber-600 bg-amber-50 rounded-lg px-3 py-2 mt-2 font-bold">
+              ⚠️ This will update your subject section across practice and mock tests
+            </p>
+          )}
+        </div>
+
         <div>
           <label className="text-xs font-black text-gray-500 uppercase tracking-wider block mb-1.5">
-            Target Score: {targetScore}/100
+            Target Score: {targetScore}/90
           </label>
           <input
             value={targetScore}
             onChange={e => { setTargetScore(Number(e.target.value)); mark() }}
-            type="range" min={40} max={100} step={1}
+            type="range" min={40} max={90} step={1}
             className="w-full accent-teal-600"
           />
           {!scoreValid && (
-            <p className="text-xs text-red-500 mt-1 font-bold">Score must be between 40 and 100</p>
+            <p className="text-xs text-red-500 mt-1 font-bold">Score must be between 40 and 90</p>
           )}
         </div>
 
@@ -249,6 +288,7 @@ function EditMode({ onCancel }) {
         </button>
         <button
           disabled={!mobileValid || !scoreValid}
+          onClick={() => { if (categoryChanged) saveCategory(category) }}
           className={`flex-1 py-3.5 rounded-xl font-bold text-sm transition-colors ${
             mobileValid && scoreValid
               ? 'bg-teal-600 text-white hover:bg-teal-700'
@@ -263,7 +303,14 @@ function EditMode({ onCancel }) {
 }
 
 export default function Profile() {
-  const [editing, setEditing] = useState(false)
+  const [editing,     setEditing]     = useState(false)
+  const [natCategory, setNatCategory] = useState(() => getNatCategory() || 'NAT-IE')
+
+  function handleSave() {
+    // Re-read from localStorage after EditMode may have called saveCategory()
+    setNatCategory(getNatCategory() || 'NAT-IE')
+    setEditing(false)
+  }
 
   return (
     <div className="min-h-screen bg-white flex flex-col max-w-sm mx-auto">
@@ -271,8 +318,8 @@ export default function Profile() {
 
       <main className="flex-1 px-4 pb-28 overflow-y-auto">
         {editing
-          ? <EditMode onCancel={() => setEditing(false)} />
-          : <ViewMode onEdit={() => setEditing(true)} />
+          ? <EditMode initialCategory={natCategory} onCancel={handleSave} />
+          : <ViewMode natCategory={natCategory} onEdit={() => setEditing(true)} />
         }
       </main>
 

@@ -3,6 +3,7 @@ import { Link, useSearchParams } from 'react-router-dom'
 import Header from '../components/Header'
 import BottomNav from '../components/BottomNav'
 import ModeIndicator from '../components/ModeIndicator'
+import { getNatCategory, getCategoryName, SUBJECT_SUBTOPICS } from '../utils/natCategory'
 
 const SUBTOPICS = {
   english: [
@@ -31,7 +32,13 @@ const SUBTOPICS = {
   ],
 }
 
-const TOPIC_LABELS = { english: 'English', math: 'Math', reasoning: 'Reasoning' }
+const TOPIC_LABELS = {
+  english:   'English',
+  math:      'Math',
+  reasoning: 'Reasoning',
+  subject:   null, // filled dynamically
+}
+
 const DIFFICULTIES = ['Easy', 'Medium', 'Hard', 'Mixed']
 
 function barColor(pct) {
@@ -43,10 +50,20 @@ function barColor(pct) {
 export default function SubTopicSelection() {
   const [searchParams] = useSearchParams()
   const topicId = searchParams.get('topic') || 'math'
-  const subtopics = SUBTOPICS[topicId] ?? SUBTOPICS.math
-  const topicLabel = TOPIC_LABELS[topicId] ?? 'Math'
-
   const [difficulty, setDifficulty] = useState('Mixed')
+
+  const natCategory = getNatCategory() || 'NAT-IE'
+  const categoryName = getCategoryName(natCategory)
+
+  // Resolve subtopics and label based on topicId
+  let subtopics, topicLabel
+  if (topicId === 'subject') {
+    subtopics  = SUBJECT_SUBTOPICS[natCategory] ?? SUBJECT_SUBTOPICS['NAT-IE']
+    topicLabel = categoryName
+  } else {
+    subtopics  = SUBTOPICS[topicId] ?? SUBTOPICS.math
+    topicLabel = TOPIC_LABELS[topicId] ?? 'Math'
+  }
 
   const weakest = subtopics.reduce((min, s) => (s.pct < min.pct ? s : min), subtopics[0])
 

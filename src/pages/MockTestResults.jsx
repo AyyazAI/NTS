@@ -1,12 +1,8 @@
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import Header from '../components/Header'
 import BottomNav from '../components/BottomNav'
-
-const SECTIONS = [
-  { name: 'Verbal',       score: 15, total: 20, pct: 75 },
-  { name: 'Quantitative', score: 13, total: 20, pct: 65 },
-  { name: 'Analytical',   score: 17, total: 20, pct: 85 },
-]
+import { getNatCategory, getCategoryLabel } from '../utils/natCategory'
 
 function SectionBar({ name, score, total, pct }) {
   const colour = pct >= 70 ? 'bg-teal-500' : pct >= 50 ? 'bg-amber-400' : 'bg-red-400'
@@ -24,6 +20,15 @@ function SectionBar({ name, score, total, pct }) {
 }
 
 export default function MockTestResults() {
+  const [natCategory] = useState(() => getNatCategory() || 'NAT-IE')
+
+  const SECTIONS = [
+    { name: 'Verbal',                     score: 15, total: 20, pct: 75 },
+    { name: 'Analytical Reasoning',       score: 17, total: 20, pct: 85 },
+    { name: 'Quantitative',               score: 13, total: 20, pct: 65 },
+    { name: getCategoryLabel(natCategory), score: 22, total: 30, pct: 73 },
+  ]
+
   return (
     <div className="min-h-screen bg-white flex flex-col max-w-sm mx-auto">
       <Header />
@@ -33,7 +38,7 @@ export default function MockTestResults() {
         <div className="text-center py-6">
           <p className="text-teal-600 font-black text-lg mb-1">Test Complete ✓</p>
           <p className="text-6xl font-black text-gray-900 leading-none">67</p>
-          <p className="text-xl font-bold text-gray-400">/100</p>
+          <p className="text-xl font-bold text-gray-400">/90</p>
           <p className="mt-2 text-sm font-bold text-teal-600">↑ 5 points from your last test</p>
         </div>
 

@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { NAT_CATEGORIES, setNatCategory as saveCategory } from '../utils/natCategory'
 
 export default function Onboarding() {
   const navigate = useNavigate()
@@ -15,6 +16,7 @@ export default function Onboarding() {
   const [testDate, setTestDate] = useState('')
   const [hasTargetScore, setHasTargetScore] = useState(false)
   const [score, setScore] = useState(70)
+  const [natCategory, setNatCategory] = useState(null)
 
   function handleContinue() {
     const clean = mobile.replace(/[\s-]/g, '')
@@ -24,6 +26,12 @@ export default function Onboarding() {
     }
     setMobileError('')
     setStep(2)
+  }
+
+  function handleFinish() {
+    if (!natCategory) return
+    saveCategory(natCategory)
+    navigate('/')
   }
 
   const today = new Date().toISOString().split('T')[0]
@@ -73,9 +81,7 @@ export default function Onboarding() {
                 value={mobile}
                 onChange={e => { setMobile(e.target.value); setMobileError('') }}
                 className={`w-full border rounded-xl px-4 py-3.5 text-base focus:outline-none focus:ring-2 focus:border-transparent ${
-                  mobileError
-                    ? 'border-red-400 focus:ring-red-400'
-                    : 'border-gray-200 focus:ring-teal-500'
+                  mobileError ? 'border-red-400 focus:ring-red-400' : 'border-gray-200 focus:ring-teal-500'
                 }`}
               />
               {mobileError && (
@@ -100,9 +106,46 @@ export default function Onboarding() {
       ) : (
         <div className="w-full flex-1 flex flex-col">
           <h1 className="text-2xl font-black text-gray-900 mb-1">Set your goals</h1>
-          <p className="text-sm text-gray-500 mb-8">You can always update these later in your Profile</p>
+          <p className="text-sm text-gray-500 mb-6">You can always update these later in your Profile</p>
 
-          <div className="space-y-7 flex-1">
+          <div className="space-y-6 flex-1">
+            {/* NAT-I Category — mandatory */}
+            <div>
+              <p className="text-sm font-bold text-gray-700 mb-2">
+                Which NAT-I are you preparing for?{' '}
+                <span className="text-red-500">*</span>
+              </p>
+              <div className="grid grid-cols-2 gap-2">
+                {NAT_CATEGORIES.map(cat => {
+                  const selected = natCategory === cat.id
+                  return (
+                    <button
+                      key={cat.id}
+                      onClick={() => setNatCategory(cat.id)}
+                      className={`relative text-left p-3 rounded-xl border-2 transition-all ${
+                        selected
+                          ? 'border-teal-600 bg-teal-50'
+                          : 'border-gray-200 bg-white hover:border-gray-300'
+                      }`}
+                    >
+                      {selected && (
+                        <span className="absolute top-2 right-2 w-4 h-4 rounded-full bg-teal-600 flex items-center justify-center text-white text-[9px] font-black">✓</span>
+                      )}
+                      <p className={`text-[10px] font-black mb-0.5 ${selected ? 'text-teal-600' : 'text-gray-400'}`}>
+                        {cat.id}
+                      </p>
+                      <p className={`text-xs font-bold leading-tight ${selected ? 'text-teal-800' : 'text-gray-700'}`}>
+                        {cat.label}
+                      </p>
+                    </button>
+                  )
+                })}
+              </div>
+              {!natCategory && (
+                <p className="text-xs text-gray-400 mt-1.5 font-semibold">Required — select your test category to continue</p>
+              )}
+            </div>
+
             {/* Test date */}
             <div>
               <p className="text-sm font-bold text-gray-700 mb-3">
@@ -116,9 +159,7 @@ export default function Onboarding() {
                       key={opt}
                       onClick={() => setHasTestDate(opt === 'Yes')}
                       className={`flex-1 py-3 rounded-xl text-sm font-bold border-2 transition-all ${
-                        active
-                          ? 'bg-teal-600 text-white border-teal-600'
-                          : 'bg-white text-gray-600 border-gray-200'
+                        active ? 'bg-teal-600 text-white border-teal-600' : 'bg-white text-gray-600 border-gray-200'
                       }`}
                     >
                       {opt}
@@ -150,9 +191,7 @@ export default function Onboarding() {
                       key={opt}
                       onClick={() => setHasTargetScore(opt === 'Yes')}
                       className={`flex-1 py-3 rounded-xl text-sm font-bold border-2 transition-all ${
-                        active
-                          ? 'bg-teal-600 text-white border-teal-600'
-                          : 'bg-white text-gray-600 border-gray-200'
+                        active ? 'bg-teal-600 text-white border-teal-600' : 'bg-white text-gray-600 border-gray-200'
                       }`}
                     >
                       {opt}
@@ -163,29 +202,34 @@ export default function Onboarding() {
               {hasTargetScore && (
                 <div className="mt-3">
                   <p className="text-sm font-bold text-teal-600 mb-2">
-                    I want to score {score}/100
+                    I want to score {score}/90
                   </p>
                   <input
                     type="range"
                     min="40"
-                    max="100"
+                    max="90"
                     value={score}
                     onChange={e => setScore(Number(e.target.value))}
                     className="w-full accent-teal-600"
                   />
                   <div className="flex justify-between text-xs text-gray-400 mt-1">
                     <span>40</span>
-                    <span>100</span>
+                    <span>90</span>
                   </div>
                 </div>
               )}
             </div>
           </div>
 
-          <div className="space-y-3 mt-8">
+          <div className="space-y-3 mt-6">
             <button
-              onClick={() => navigate('/')}
-              className="w-full bg-teal-600 text-white font-bold py-4 rounded-xl text-base hover:bg-teal-700 transition-colors"
+              onClick={handleFinish}
+              disabled={!natCategory}
+              className={`w-full font-bold py-4 rounded-xl text-base transition-colors ${
+                natCategory
+                  ? 'bg-teal-600 text-white hover:bg-teal-700 active:bg-teal-800'
+                  : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+              }`}
             >
               Let's go! →
             </button>

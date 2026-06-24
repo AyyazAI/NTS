@@ -4,10 +4,18 @@ import Header from '../components/Header'
 import BottomNav from '../components/BottomNav'
 import ModeIndicator from '../components/ModeIndicator'
 import Canvas from '../components/Canvas'
+import { getNatCategory, getCategoryLabel } from '../utils/natCategory'
+
+function getSectionLabel(qNum, subjectLabel) {
+  if (qNum <= 20) return 'Section 1: Verbal'
+  if (qNum <= 40) return 'Section 2: Analytical Reasoning'
+  if (qNum <= 60) return 'Section 3: Quantitative'
+  return `Section 4: ${subjectLabel}`
+}
 
 const QUESTION = {
   number: 4,
-  total: 10,
+  total: 90,
   topic: 'Reasoning',
   subtopic: 'Combinations',
   text: 'A committee of 5 people is to be formed from a group of 7 people. How many different committees can be formed?',
@@ -19,8 +27,7 @@ const QUESTION = {
   ],
 }
 
-// Timer display — static placeholder (teal = normal time)
-function Timer({ time = '24:38', state = 'normal' }) {
+function Timer({ time = '120:00', state = 'normal' }) {
   const colour =
     state === 'urgent' ? 'text-red-600' :
     state === 'warning' ? 'text-amber-600' :
@@ -35,9 +42,13 @@ function Timer({ time = '24:38', state = 'normal' }) {
 }
 
 export default function QuestionMockTest() {
-  const [selected, setSelected] = useState(null)
-  const [flagged, setFlagged] = useState(false)
-  const [showConfirm, setShowConfirm] = useState(false)
+  const [selected,     setSelected]     = useState(null)
+  const [flagged,      setFlagged]      = useState(false)
+  const [showConfirm,  setShowConfirm]  = useState(false)
+  const [natCategory]  = useState(() => getNatCategory() || 'NAT-IE')
+
+  const subjectLabel  = getCategoryLabel(natCategory)
+  const sectionLabel  = getSectionLabel(QUESTION.number, subjectLabel)
 
   return (
     <div className="min-h-screen bg-white flex flex-col max-w-sm mx-auto">
@@ -54,14 +65,14 @@ export default function QuestionMockTest() {
           </div>
           <div className="text-right">
             <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wide mb-0.5">Time left</p>
-            <Timer time="24:38" state="normal" />
+            <Timer time="120:00" state="normal" />
           </div>
         </div>
 
-        {/* Topic tag + progress */}
+        {/* Section label + progress */}
         <div className="flex items-center justify-between mb-3">
-          <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">
-            {QUESTION.topic} · {QUESTION.subtopic}
+          <span className="text-xs font-bold text-teal-700 bg-teal-50 border border-teal-200 rounded-full px-2.5 py-1">
+            {sectionLabel}
           </span>
           <span className="text-xs font-bold text-gray-400">
             Q{QUESTION.number} of {QUESTION.total}

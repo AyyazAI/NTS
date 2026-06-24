@@ -2,11 +2,12 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import Header from '../components/Header'
 import BottomNav from '../components/BottomNav'
+import { getNatCategory, getCategoryLabel } from '../utils/natCategory'
 
-const TOPICS = [
-  { id: 'english', name: 'English', icon: '📖', attempted: 17, total: 25, pct: 68 },
-  { id: 'math', name: 'Math', icon: '🔢', attempted: 8, total: 25, pct: 32 },
-  { id: 'reasoning', name: 'Reasoning', icon: '🧩', attempted: 21, total: 25, pct: 84 },
+const COMMON_TOPICS = [
+  { id: 'english',   name: 'English',   icon: '📖', attempted: 17, total: 20, pct: 68 },
+  { id: 'math',      name: 'Math',      icon: '🔢', attempted: 8,  total: 20, pct: 32 },
+  { id: 'reasoning', name: 'Reasoning', icon: '🧩', attempted: 21, total: 20, pct: 84 },
 ]
 
 function barColor(pct) {
@@ -17,6 +18,17 @@ function barColor(pct) {
 
 export default function Home() {
   const [mode, setMode] = useState('practice')
+  const [natCategory] = useState(() => getNatCategory() || 'NAT-IE')
+
+  const subjectTopic = {
+    id: 'subject',
+    name: getCategoryLabel(natCategory),
+    icon: '🔬',
+    attempted: 8,
+    total: 30,
+    pct: 58,
+  }
+  const allTopics = [...COMMON_TOPICS, subjectTopic]
 
   return (
     <div className="min-h-screen bg-white flex flex-col max-w-sm mx-auto">
@@ -59,7 +71,7 @@ export default function Home() {
         {/* Practice: topic cards */}
         {mode === 'practice' && (
           <div className="space-y-3">
-            {TOPICS.map(topic => (
+            {allTopics.map(topic => (
               <Link key={topic.id} to={`/practice?topic=${topic.id}`}>
                 <div className="bg-gray-50 border border-gray-100 rounded-2xl p-4 flex items-center gap-4 hover:border-teal-200 hover:bg-teal-50 transition-all cursor-pointer">
                   <span className="text-3xl">{topic.icon}</span>
@@ -93,7 +105,7 @@ export default function Home() {
             </p>
             <Link to="/mock-test">
               <button className="w-full bg-teal-600 text-white font-bold py-4 rounded-xl text-base hover:bg-teal-700 transition-colors">
-                Start Mock Test →
+                Start Mock Test → 90 MCQs · 120 min
               </button>
             </Link>
           </div>

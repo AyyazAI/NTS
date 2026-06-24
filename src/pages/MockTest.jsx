@@ -4,14 +4,18 @@ import Header from '../components/Header'
 import BottomNav from '../components/BottomNav'
 import ModeIndicator from '../components/ModeIndicator'
 import Canvas from '../components/Canvas'
+import { getNatCategory, getCategoryLabel, getCategoryShort } from '../utils/natCategory'
 
-const SECTIONS = ['English', 'Math', 'Reasoning']
+// Section keys — Subject key is fixed; display label is dynamic
+const SECTION_KEYS = ['Verbal', 'Analytical', 'Quantitative', 'Subject']
 
-// Per-section question state: answered/flagged/current/unseen
+const SECTION_TOTALS = { Verbal: 20, Analytical: 20, Quantitative: 20, Subject: 30 }
+
 const INITIAL_STATE = {
-  English:   { current: 3, answered: [0, 1, 2], flagged: [5], total: 20 },
-  Math:      { current: 0, answered: [],         flagged: [],  total: 20 },
-  Reasoning: { current: 0, answered: [],         flagged: [],  total: 20 },
+  Verbal:       { current: 3, answered: [0, 1, 2], flagged: [5], total: 20 },
+  Analytical:   { current: 0, answered: [],         flagged: [],  total: 20 },
+  Quantitative: { current: 0, answered: [],         flagged: [],  total: 20 },
+  Subject:      { current: 0, answered: [],         flagged: [],  total: 30 },
 }
 
 const QUESTION = {
@@ -24,23 +28,23 @@ const QUESTION = {
   ],
 }
 
-function Timer({ time = '54:22', state = 'normal' }) {
+function Timer({ time = '67:15', state = 'normal' }) {
   const colour = state === 'urgent' ? 'text-red-600' : state === 'warning' ? 'text-amber-600' : 'text-teal-600'
   const size   = state === 'urgent' ? 'text-2xl'     : state === 'warning' ? 'text-xl'        : 'text-lg'
   return <span className={`font-black tabular-nums ${colour} ${size}`}>{time}</span>
 }
 
-// Navigator grid — 10 squares
 function NavigatorGrid({ sectionData, onNavigate }) {
   const { current, answered, flagged, total } = sectionData
+  const cols = total > 20 ? 10 : 10
   return (
     <div>
-      <div className="grid grid-cols-10 gap-1 mb-2">
+      <div className={`grid gap-1 mb-2`} style={{ gridTemplateColumns: `repeat(${cols}, 1fr)` }}>
         {Array.from({ length: total }, (_, i) => {
           const isAnswered = answered.includes(i)
           const isFlagged  = flagged.includes(i)
           const isCurrent  = i === current
-          let cls = 'w-full aspect-square rounded flex items-center justify-center text-[10px] font-black border-2 transition-all cursor-pointer '
+          let cls = 'w-full aspect-square rounded flex items-center justify-center text-[9px] font-black border-2 transition-all cursor-pointer '
           if (isCurrent)       cls += 'border-teal-600 bg-white text-teal-600'
           else if (isFlagged)  cls += 'border-amber-400 bg-amber-100 text-amber-700'
           else if (isAnswered) cls += 'border-teal-600 bg-teal-600 text-white'
@@ -52,13 +56,12 @@ function NavigatorGrid({ sectionData, onNavigate }) {
           )
         })}
       </div>
-      {/* Legend */}
       <div className="flex flex-wrap gap-x-3 gap-y-1">
         {[
-          { colour: 'bg-teal-600',   label: 'Answered' },
-          { colour: 'bg-white border-2 border-teal-600', label: 'Current' },
-          { colour: 'bg-amber-100 border-2 border-amber-400', label: 'Flagged' },
-          { colour: 'bg-white border-2 border-gray-200', label: 'Unseen' },
+          { colour: 'bg-teal-600',                            label: 'Answered' },
+          { colour: 'bg-white border-2 border-teal-600',      label: 'Current'  },
+          { colour: 'bg-amber-100 border-2 border-amber-400', label: 'Flagged'  },
+          { colour: 'bg-white border-2 border-gray-200',      label: 'Unseen'   },
         ].map(l => (
           <div key={l.label} className="flex items-center gap-1">
             <div className={`w-3.5 h-3.5 rounded ${l.colour}`} />
@@ -71,13 +74,22 @@ function NavigatorGrid({ sectionData, onNavigate }) {
 }
 
 export default function MockTest() {
-  const [activeSection, setActiveSection] = useState('English')
-  const [sectionState, setSectionState] = useState(INITIAL_STATE)
-  const [selected, setSelected] = useState(null)
-  const [flagged, setFlagged] = useState(false)
-  const [showConfirm, setShowConfirm] = useState(false)
+  const [natCategory]    = useState(() => getNatCategory() || 'NAT-IE')
+  const [activeSection,  setActiveSection]  = useState('Verbal')
+  const [sectionState,   setSectionState]   = useState(INITIAL_STATE)
+  const [selected,       setSelected]       = useState(null)
+  const [flagged,        setFlagged]        = useState(false)
+  const [showConfirm,    setShowConfirm]    = useState(false)
 
   const current = sectionState[activeSection]
+
+  // Display label for Subject tab and section header
+  const subjectLabel = getCategoryLabel(natCategory)
+  const subjectShort = getCategoryShort(natCategory)
+
+  function sectionDisplayLabel(key) {
+    return key === 'Subject' ? subjectShort : key
+  }
 
   function handleNavigate(i) {
     setSectionState(s => ({
@@ -101,25 +113,36 @@ export default function MockTest() {
           </div>
           <div className="text-right">
             <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wide mb-0.5">Time left</p>
-            <Timer time="54:22" state="normal" />
+            <Timer time="67:15" state="normal" />
+            <p className="text-[10px] text-gray-400">of 120 min</p>
           </div>
         </div>
 
-        {/* Section tabs */}
-        <div className="flex gap-2 mb-3">
-          {SECTIONS.map(s => (
+        {/* Section tabs — 4 sections, scrollable if needed */}
+        <div className="flex gap-1.5 mb-3 overflow-x-auto pb-1">
+          {SECTION_KEYS.map(s => (
             <button
               key={s}
               onClick={() => setActiveSection(s)}
-              className={`flex-1 py-2 rounded-xl text-xs font-black border-2 transition-all ${
+              className={`flex-shrink-0 px-3 py-2 rounded-xl text-xs font-black border-2 transition-all ${
                 activeSection === s
                   ? 'bg-teal-600 border-teal-600 text-white'
-                  : 'border-gray-200 text-gray-500 hover:border-gray-300'
+                  : 'border-gray-200 text-gray-500 hover:border-gray-300 bg-white'
               }`}
             >
-              {s}
+              {sectionDisplayLabel(s)}
             </button>
           ))}
+        </div>
+
+        {/* Section info */}
+        <div className="flex items-center justify-between mb-2">
+          <span className="text-xs font-bold text-gray-500">
+            {activeSection === 'Subject' ? subjectLabel : activeSection} · {SECTION_TOTALS[activeSection]} MCQs
+          </span>
+          <span className="text-xs font-bold text-gray-400">
+            Q{current.current + 1} of {current.total}
+          </span>
         </div>
 
         {/* Navigator grid */}
@@ -129,18 +152,13 @@ export default function MockTest() {
 
         {/* Question card */}
         <div className="bg-gray-50 border border-gray-100 rounded-2xl p-4 mb-4 relative">
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-xs font-bold text-gray-400">
-              {activeSection} · Q{current.current + 1} of {current.total}
-            </span>
-            <button
-              onClick={() => setFlagged(f => !f)}
-              className={`text-lg transition-transform hover:scale-110 ${flagged ? 'opacity-100' : 'opacity-30 hover:opacity-60'}`}
-            >
-              🚩
-            </button>
-          </div>
-          <p className="text-base font-semibold text-gray-900 leading-relaxed">
+          <button
+            onClick={() => setFlagged(f => !f)}
+            className={`absolute top-3 right-3 text-lg transition-transform hover:scale-110 ${flagged ? 'opacity-100' : 'opacity-30 hover:opacity-60'}`}
+          >
+            🚩
+          </button>
+          <p className="text-base font-semibold text-gray-900 leading-relaxed pr-8">
             {QUESTION.text}
           </p>
         </div>
