@@ -22,7 +22,7 @@ export default function Home() {
     <div className="min-h-screen bg-white flex flex-col max-w-sm mx-auto">
       <Header />
 
-      <main className="flex-1 px-4 pt-4 pb-32">
+      <main className="flex-1 px-4 pt-4 pb-28">
         <h1 className="text-2xl font-black text-gray-900 mb-4">
           Assalam-o-Alaikum, Hamza 👋
         </h1>

@@ -55,7 +55,7 @@ export default function SubTopicSelection() {
       <Header />
       <ModeIndicator mode="practice" />
 
-      <main className="flex-1 px-4 pb-40">
+      <main className="flex-1 px-4 pb-56">
         {/* Back + breadcrumb */}
         <div className="flex items-center gap-2 mb-1">
           <Link to="/" className="text-2xl text-gray-400 hover:text-gray-600 leading-none">←</Link>
@@ -118,7 +118,7 @@ export default function SubTopicSelection() {
       </main>
 
       {/* Start button — sits above bottom nav */}
-      <div className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-sm bg-white border-t border-gray-100 px-4 pb-24 pt-3 z-20">
+      <div className="fixed bottom-20 left-1/2 -translate-x-1/2 w-full max-w-sm bg-white border-t border-gray-100 px-4 py-3 z-20">
         <Link to="/practice/question">
           <button className="w-full bg-teal-600 text-white font-bold py-4 rounded-xl text-base hover:bg-teal-700 transition-colors">
             Start Practice →
