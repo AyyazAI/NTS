@@ -3,7 +3,7 @@ import { useState } from 'react'
 const METHODS = [
   { id: 'count', label: '✓ Method 1: Count' },
   { id: 'formula', label: 'Method 2: Formula' },
-  { id: 'visual', label: 'Method 3: Visual' },
+  { id: 'visual', label: 'Method 3: Grid' },
 ]
 
 export default function MethodTabs({ defaultMethod = 'count', children }) {

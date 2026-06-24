@@ -41,68 +41,56 @@ function Step({ number, title, explanation, working, tip }) {
   )
 }
 
-// Method 3 — SVG visual diagram
+// Method 3 — Complete grid of all 21 rejected pairs
 function VisualMethod() {
-  const people = [
-    { label: 'A', x: 160, y: 35,  out: true  },
-    { label: 'B', x: 227, y: 68,  out: true  },
-    { label: 'C', x: 245, y: 140, out: false },
-    { label: 'D', x: 203, y: 200, out: false },
-    { label: 'E', x: 117, y: 200, out: false },
-    { label: 'F', x: 75,  y: 140, out: false },
-    { label: 'G', x: 93,  y: 68,  out: false },
+  const rows = [
+    { label: 'A paired with', pairs: ['A+B', 'A+C', 'A+D', 'A+E', 'A+F', 'A+G'], count: 6 },
+    { label: 'B paired with', pairs: ['B+C', 'B+D', 'B+E', 'B+F', 'B+G'],         count: 5 },
+    { label: 'C paired with', pairs: ['C+D', 'C+E', 'C+F', 'C+G'],                count: 4 },
+    { label: 'D paired with', pairs: ['D+E', 'D+F', 'D+G'],                        count: 3 },
+    { label: 'E paired with', pairs: ['E+F', 'E+G'],                               count: 2 },
+    { label: 'F paired with', pairs: ['F+G'],                                       count: 1 },
   ]
-  const a = people[0], b = people[1]
 
   return (
     <div>
-      <p className="text-sm text-gray-700 leading-relaxed mb-3">
-        7 people arranged in a circle. The pair <strong>left out</strong> determines the committee.
-        Here A + B are left out → the committee is C, D, E, F, G.
+      <p className="text-sm font-black text-gray-800 mb-3">
+        All 21 possible committees — shown as who's left out
       </p>
-      <svg viewBox="0 0 320 240" className="w-full max-w-xs mx-auto block">
-        {/* Dashed line between rejected pair */}
-        <line
-          x1={a.x} y1={a.y} x2={b.x} y2={b.y}
-          stroke="#B45309" strokeWidth="2" strokeDasharray="5 3"
-        />
-        {/* Rejected pair label */}
-        <text x="214" y="38" textAnchor="middle" fontFamily="Nunito" fontSize="10"
-          fontWeight="700" fill="#B45309">Left out</text>
 
-        {/* People circles */}
-        {people.map(p => (
-          <g key={p.label}>
-            <circle
-              cx={p.x} cy={p.y} r={20}
-              fill={p.out ? '#FEF3C7' : '#CCFBF1'}
-              stroke={p.out ? '#B45309' : '#0D6B5E'}
-              strokeWidth="2"
-            />
-            <text
-              x={p.x} y={p.y}
-              textAnchor="middle" dominantBaseline="central"
-              fontFamily="Nunito" fontWeight="900" fontSize="14"
-              fill="#1A2F4A"
-            >
-              {p.label}
-            </text>
-          </g>
+      <div className="space-y-2">
+        {rows.map(row => (
+          <div key={row.label} className="flex items-center gap-2">
+            <span className="text-[10px] font-bold text-gray-400 w-16 flex-shrink-0 leading-tight">
+              {row.label}
+            </span>
+            <div className="flex flex-wrap gap-1 flex-1">
+              {row.pairs.map(pair => (
+                <span
+                  key={pair}
+                  className="bg-amber-100 text-amber-900 border border-amber-300 rounded-lg px-2 py-1 text-xs font-black"
+                >
+                  {pair}
+                </span>
+              ))}
+            </div>
+            <span className="text-[10px] font-bold text-gray-400 w-10 text-right flex-shrink-0">
+              {row.count} pairs
+            </span>
+          </div>
         ))}
+      </div>
 
-        {/* Legend */}
-        <circle cx={35} cy={228} r={7} fill="#CCFBF1" stroke="#0D6B5E" strokeWidth="1.5"/>
-        <text x={47} y={228} dominantBaseline="central" fontFamily="Nunito" fontSize="10" fill="#1A2F4A">
-          Committee member (5)
-        </text>
-        <circle cx={195} cy={228} r={7} fill="#FEF3C7" stroke="#B45309" strokeWidth="1.5"/>
-        <text x={207} y={228} dominantBaseline="central" fontFamily="Nunito" fontSize="10" fill="#1A2F4A">
-          Left out (2)
-        </text>
-      </svg>
-      <p className="text-sm text-gray-700 mt-3 leading-relaxed">
-        Every unique pair we can leave out = one unique committee. We counted <strong>21 pairs</strong> in Method 1.
-        Each pair left out → one committee of 5. So there are <strong>21 committees</strong>. ✅
+      <div className="border-t border-gray-200 mt-4 pt-3">
+        <p className="text-sm font-black text-teal-700">
+          Total: 6+5+4+3+2+1 = 21 committees ✅
+        </p>
+      </div>
+
+      <p className="text-sm text-gray-600 mt-3 leading-relaxed">
+        Each cell above = one rejected pair = one unique committee.
+        Every cell is different. No pair is repeated.
+        Count the cells — that is your answer.
       </p>
     </div>
   )
