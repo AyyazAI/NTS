@@ -34,15 +34,25 @@ When building UI components, reference the HTML file for exact:
 ## Product Scope
 
 **Target test:** NAT-I (National Aptitude Test — bachelor admissions)
-**Sections covered:**
+
+**Sections covered (Phase 1 — all 4 sections):**
 - English (Verbal) — synonyms, antonyms, grammar, sentence completion, comprehension, analogies
 - Math (Quantitative) — arithmetic, percentages, ratios, algebra, averages, geometry
 - Analytical Reasoning — selection, sequencing, blood relations, directions, syllogisms, combinations
+- Subject-Specific — 30 MCQs, varies by NAT-I category (Phase 1 seeds NAT-IE only)
+
+**NAT-I Categories (6 total):**
+- Engineering (NAT-IE) — Physics, Chemistry, Mathematics, English ← Phase 1 active
+- Medical (NAT-IM) ← Phase 2
+- Computer Science (NAT-ICS) ← Phase 2
+- Commerce (NAT-ICOM) ← Phase 2
+- General Sciences (NAT-IGS) ← Phase 2
+- Arts (NAT-IA) ← Phase 2
 
 **Out of scope (for now):**
 - GAT, HAT, recruitment tests
-- Subject-specific sections (Physics, Biology, CS etc.)
 - GK, Islamiat, Current Affairs
+- NAT-IM, NAT-ICS, NAT-ICOM, NAT-IGS, NAT-IA subject sections (Phase 2)
 
 ---
 
@@ -61,6 +71,16 @@ When building UI components, reference the HTML file for exact:
 | Version control | GitHub (AyyazAI/NTS) |
 
 **All Claude API and Turso calls route through Vercel serverless functions — NEVER directly from the browser.**
+
+---
+
+## Working Mechanism
+
+- **Claude (claude.ai chat)** handles: planning, discussion, document generation, prompts for Claude Code, design decisions, governance, CLAUDE.md updates
+- **Claude Code (terminal at E:\Claude - NTS)** handles: all file creation, editing, code execution, and Git commits
+- Claude Code reads CLAUDE.md at the start of every session
+- CLAUDE.md is written/updated by Claude (chat) and committed by Claude Code
+- Claude Code never asks Ayyaz to paste code files — it reads them directly
 
 ---
 
@@ -122,12 +142,13 @@ Every AI-generated explanation must follow these rules:
 
 ### Mock Test Mode (Exam Simulation)
 - No Show Solution during test — exam conditions
-- 30 minute countdown timer
+- 120 minute countdown timer (90 MCQs, all 4 sections)
 - Negative marking -0.25 per wrong answer
 - Flag (🚩) and navigate questions freely
 - No sub-topic selection — full mixed paper
 - Progress tracked under Mock Tests tab
 - Timer colour: teal → amber at 5 min → red at 1 min (no popup)
+- Section label shown above each question (Section 1–4)
 - When timer runs out → test auto-submits immediately
 - Full solution review only AFTER test submitted
 - If browser closed mid-test → test resumes on return
@@ -175,7 +196,15 @@ Every AI-generated explanation must follow these rules:
 Step 1 — Mandatory:
 - Full name + Mobile number (Pakistani format, inline validation)
 - "Skip setup — take me to practice →" link
-Step 2 — Optional goals:
+
+Step 2 — Mixed (category mandatory, goals optional):
+- **NAT-I category selector — MANDATORY**
+  - Label: "Which NAT-I are you preparing for?"
+  - 6 options as selectable cards: Engineering (NAT-IE), Medical (NAT-IM),
+    Computer Science (NAT-ICS), Commerce (NAT-ICOM),
+    General Sciences (NAT-IGS), Arts (NAT-IA)
+  - Selected state: teal border + teal tick
+  - "Let's go! →" disabled until category selected
 - Test date toggle (Yes/Not yet) → date picker if Yes
 - Target score toggle (Yes/Not yet) → slider 40-100 if Yes
 - No university field in onboarding (Profile only)
@@ -186,14 +215,19 @@ Step 2 — Optional goals:
 - "Assalam-o-Alaikum, [Name] 👋"
 - Daily Goal card: "Practice 20 questions today" + progress bar
 - Mode cards: [📚 Practice Mode] [⏱️ Mock Test]
-- Practice selected → topic cards (English, Math, Reasoning) with "X of Y questions attempted"
-- Mock Test selected → topic cards hidden, "Start Mock Test →" CTA
+- Practice selected → 4 topic cards:
+  - English — X of 20 questions attempted
+  - Math — X of 20 questions attempted
+  - Analytical Reasoning — X of 20 questions attempted
+  - [Subject label e.g. "Engineering (NAT-IE)"] — X of 30 questions attempted
+- Mock Test selected → topic cards hidden, "Start Mock Test → 90 MCQs · 120 min" CTA
 - Bar colour: green >70%, amber 50-70%, red <50%
 
 ### Screen 3 — Sub-topic Selection (Practice Mode only)
 - "📚 Practice Mode" pill below header
 - "Choose what to practice" + topic name
 - Sub-topic list with progress bars, "⚠️ Focus here" on weakest
+- For subject-specific section (NAT-IE): Physics, Chemistry, Mathematics, English
 - Difficulty: [Easy] [Medium] [Hard] [Mixed]
 - "Start Practice →" button
 
@@ -212,7 +246,13 @@ Step 2 — Optional goals:
 
 ### Screen 5 — Question Screen (Mock Test Mode)
 - "⏱️ NAT-I Mock Test" amber pill
-- Timer top right (colour changes at 5min and 1min)
+- Section label above question card:
+  - Q1–20: "Section 1: Verbal"
+  - Q21–40: "Section 2: Analytical Reasoning"
+  - Q41–60: "Section 3: Quantitative"
+  - Q61–90: "Section 4: [Subject label]" ← dynamic per nat_category
+- Timer top right (colour changes at 5min and 1min), starts at 120:00
+- Question counter: Q X of 90
 - Score + NEG MARKING display
 - Flag 🚩 top right of question card
 - NO Show Solution button
@@ -224,7 +264,7 @@ Step 2 — Optional goals:
 - "You selected B — Correct answer is A" side by side
 - YOUR WORKING section: submitted canvas shown, ⚠️ error marker
 - "Three ways to see the solution"
-- Method tabs: [✓ Count] [Method 2: Formula] [Method 3: Visual]
+- Method tabs: [✓ Count] [Formula] [Grid]
   - Method 1 (Count): full listing method, zero formula, zero C(n,r)
   - Method 2 (Formula): maps C(n,r) onto Method 1 steps explicitly
   - Method 3 (Visual): actual SVG diagram, high contrast colours
@@ -243,7 +283,8 @@ Toggle: [Practice] [Mock Tests]
 
 Practice tab:
 - Score trend line chart + This Week/Month/All Time toggle
-- Sub-topic breakdown accordion (English, Math, Reasoning)
+- Sub-topic breakdown accordion — 4 sections:
+  - English, Math, Reasoning, [Subject label e.g. "Engineering (NAT-IE)"]
 - Each topic: expandable, sub-topic bars, weakest in red "⚠️ Focus here"
 - TODAY'S FOCUS sticky: top 3 weakest + [Start →] per item
 - Empty state: "Complete your first session to see progress"
@@ -257,10 +298,10 @@ Mock Tests tab:
 
 ### Screen 9 — Mock Test Screen
 - "⏱️ NAT-I Mock Test" amber pill
-- Section tabs: [English] [Math] [Reasoning]
-- Timer (colour changes)
+- Section tabs: [English] [Math] [Reasoning] [Subject label]
+- Timer (colour changes), starts at 120:00
 - Score + NEG MARKING
-- 10-question navigator grid per section
+- 10-question navigator grid per section (30-question grid for subject section)
   - ● Teal = Answered, ◻ Teal border = Current, ◐ Amber = Flagged, ○ Grey = Unseen
 - Question + 4 options below
 - Canvas (Draw/Type/Upload)
@@ -270,10 +311,14 @@ Mock Tests tab:
 
 ### Screen 10 — Mock Test Results
 - "Test Complete ✓" teal
-- "67/100" large + "↑ 5 points from last test"
-- Section breakdown: English 22/30 73%, Math 19/30 63%, Reasoning 26/30 87%
+- Score out of 90, large + "↑ X points from last test"
+- Section breakdown (4 rows):
+  - English: score/20, %
+  - Math: score/20, %
+  - Reasoning: score/20, %
+  - [Subject label]: score/30, % ← out of 30, dynamic label
 - Attempted/Skipped/Flagged stats
-- Negative marking: "−5.25 marks lost (21 wrong × 0.25)"
+- Negative marking: "−X marks lost (Y wrong × 0.25)"
 - Attempt history: "Test 1: 52 | Test 2: 61 | Test 3: 67 ↑"
 - [Review All Questions →] [Practice Weak Areas →]
 
@@ -281,6 +326,7 @@ Mock Tests tab:
 View state:
 - Avatar (initial teal circle) + name
 - Mobile number
+- NAT-I Category display: e.g. "Engineering (NAT-IE)"
 - "18 days to NAT-I" countdown
 - Goal tracker, Streak calendar, Test details, Practice stats, Mock stats
 - [✏️ Edit Profile] teal outline button
@@ -288,6 +334,9 @@ View state:
 Edit state:
 - "Editing" badge
 - All fields editable, active field teal border
+- **NAT-I Category field** — tap to open 6-option selector
+  - On change: inline warning "This will update your subject section across practice and mock tests"
+  - Category change counts as unsaved change
 - Streak reminders toggle
 - "You have unsaved changes" warning + [Discard] [Save] inline
 - [Cancel] [Save Profile] at bottom
@@ -317,6 +366,8 @@ id, topic, sub_topic, difficulty,
 question_text, option_a, option_b, option_c, option_d, correct_option,
 explanation_en, explanation_methods,
 source, verified (1=human verified only), verified_by, verified_at,
+section (verbal | analytical | quantitative | subject_specific),
+category (NAT-IE | NAT-IM | NAT-ICS | NAT-ICOM | NAT-IGS | NAT-IA — null for common sections),
 ai_generated, review_flag, review_note,
 times_attempted, times_correct,
 created_at, updated_at
@@ -326,6 +377,12 @@ id, question_id, method_number, method_title, method_steps (JSON)
 
 ### question_flags (Phase 1)
 id, question_id, flagged_by, flag_reason, status, resolved_by, resolved_at
+
+### students (Phase 1)
+id, full_name, mobile,
+nat_category (NAT-IE | NAT-IM | NAT-ICS | NAT-ICOM | NAT-IGS | NAT-IA),
+test_date, target_score,
+created_at, updated_at
 
 ### attempts (Phase 2)
 id, student_id, question_id, mode (practice/mock_test),
@@ -369,7 +426,7 @@ Full evidence: src/governance/design/ folder
 ## Plan Change Propagation Checklist
 
 When plan changes, ALWAYS update before next session:
-- [ ] CLAUDE.md (this file)
+- [ ] CLAUDE.md (written by Claude chat, committed by Claude Code)
 - [ ] Turso tasks table (admin panel)
 - [ ] NTS-GOV-001 if governance-relevant
 - [ ] Log as incident if a dependent document was missed
@@ -378,7 +435,7 @@ When plan changes, ALWAYS update before next session:
 
 ## Phase Roadmap
 
-### Phase 0 — Setup (8/9 complete — handoff pending)
+### Phase 0 — Setup (Complete ✅)
 - ✅ Claude Code installed and authenticated
 - ✅ React 18 + Vite + Tailwind scaffolded
 - ✅ Turso connected (nts database, AWS ap-south-1 Mumbai)
@@ -388,23 +445,35 @@ When plan changes, ALWAYS update before next session:
 - ✅ Claude Design FINAL — 11 screens approved
 - ✅ Design exported (PDF, HTML, ZIP, Master Prompt)
 - ✅ Governance document NTS-GOV-001 v1.1 committed
-- ⬜ Handoff Claude Design to Claude Code ← NEXT TASK
+- ✅ Handoff Claude Design to Claude Code
 
-### Phase 1 — Core Loop
-- Update admin panel tasks in Turso
-- Questions table schema (3 tables: questions, question_methods, question_flags)
-- Admin question entry form (/admin/questions/new)
-- Seed 60 verified questions (20 per section from NTS past papers)
-- Build 11 React components from approved design:
-  Onboarding, Home, SubTopicSelection, QuestionPractice, QuestionMockTest,
-  SolutionWrong, SolutionCorrect, Progress, MockTest, MockTestResults, Profile
-  Supporting: BottomNav, Canvas, ModeIndicator, MethodTabs
-- Wire Practice Mode core loop
-- Claude API explanation generation (Vercel serverless, GOV-RULE-009 system prompt)
-- Canvas implementation (Draw/Type/Upload with persistence)
-- Deploy Phase 1 to Vercel
+### Phase 1 — Core Loop (In Progress)
+- ✅ All 11 screens built as static UI (Batch 5)
+- ✅ Subject-specific 4th section added to all 11 screens
+- ✅ NAT-IE (Engineering) seeded as Phase 1 active category
+- ✅ Onboarding updated with mandatory NAT-I category selector
+- ✅ Mock test updated to 90 MCQs, 120 minutes (4 sections)
+- ⬜ Pending fixes: SolutionWrong tabs, QuestionMockTest colour audit (in progress via Claude Code)
+- ⬜ Visual verification across all 11 screens
+- ⬜ Questions table schema (questions, question_methods, question_flags)
+- ⬜ Admin question entry form (/admin/questions/new)
+- ⬜ Seed 90 verified questions:
+    - Verbal: 20 questions
+    - Analytical Reasoning: 20 questions
+    - Quantitative: 20 questions
+    - Subject-Specific (NAT-IE Engineering): 30 questions
+- ⬜ Wire Practice Mode core loop
+- ⬜ Claude API explanation generation (Vercel serverless, GOV-RULE-009 system prompt)
+- ⬜ Canvas implementation (Draw/Type/Upload with persistence)
+- ⬜ Deploy Phase 1 to Vercel
+- ⬜ Two documents: BRD + Design Testing Evidence Log
+- ⬜ Remaining 5 categories content added to CLAUDE.md
 
 ### Phase 2 — Intelligence Layer
+- Activate remaining NAT-I categories one at a time:
+  NAT-IM (Medical), NAT-ICS (Computer Science), NAT-ICOM (Commerce),
+  NAT-IGS (General Sciences), NAT-IA (Arts)
+- Seed subject-specific questions for each category (30 per category)
 - MCP connectors (Turso + GitHub)
 - Multi-agent pipeline (Agents 1-5)
 - Claude Vision: canvas working analysis + error diagnosis
@@ -445,7 +514,14 @@ When plan changes, ALWAYS update before next session:
 **Source 1:** NTS past papers (manual curation) — Phase 1
 **Source 2:** Agent 5 generated (human spot-checked) — Phase 2
 **Source 3:** Community contributions (human-gated) — Phase 3+
-**Minimum for Phase 1:** 60 verified questions (20 per section)
+
+**Phase 1 question targets:**
+- Verbal: 20 questions
+- Analytical Reasoning: 20 questions
+- Quantitative: 20 questions
+- Subject-Specific (NAT-IE Engineering): 30 questions
+- Total Phase 1: 90 verified questions
+
 **Rule:** Only verified=1 questions served to students. No exceptions.
 
 ---
@@ -458,8 +534,8 @@ When plan changes, ALWAYS update before next session:
 - **Canvas:** Draw/Type/Upload — persists, feeds Claude Vision
 - **Solution methods:** Minimum 2, all expanded, Method 2 maps formula onto Method 1 steps
 - **Negative marking:** -0.25 per wrong answer, skip strategy taught
-- **Student profile:** Goals, test date, target score, attempt history, weak zones, streaks
-- **Mock test:** Auto-submit on timeout, resume on close, full review after
+- **Student profile:** Goals, test date, target score, NAT-I category, attempt history, weak zones, streaks
+- **Mock test:** 90 MCQs, 120 min, 4 sections, auto-submit on timeout, resume on close, full review after
 - **Premium:** Rs. 1000/month — history, chatbot, PDF reports, offline packs (Phase 3)
 - **Tutor marketplace:** Phase 5
 
@@ -494,6 +570,7 @@ Every Claude Code session:
 |---|---|---|---|
 | INC-001 | Jun 21 2026 | AI used context memory instead of verified database | Resolved |
 | INC-002 | Jun 22 2026 | Admin panel tasks out of sync after plan update | Resolved |
+| INC-003 | Jun 25 2026 | Subject-specific section incorrectly scoped to Phase 2 — corrected to Phase 1, all 11 screens updated, CLAUDE.md propagated | Resolved |
 
 Full details: src/governance/NTS-GOV-001-AI-Governance-Incident-Log.docx
 
