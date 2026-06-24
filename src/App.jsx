@@ -7,6 +7,10 @@ import QuestionPractice from './pages/QuestionPractice'
 import QuestionMockTest from './pages/QuestionMockTest'
 import SolutionWrong from './pages/SolutionWrong'
 import SolutionCorrect from './pages/SolutionCorrect'
+import Progress from './pages/Progress'
+import MockTest from './pages/MockTest'
+import MockTestResults from './pages/MockTestResults'
+import Profile from './pages/Profile'
 
 export default function App() {
   return (
@@ -16,9 +20,13 @@ export default function App() {
         <Route path="/onboarding" element={<Onboarding />} />
         <Route path="/practice" element={<SubTopicSelection />} />
         <Route path="/practice/question" element={<QuestionPractice />} />
-        <Route path="/mock-test" element={<QuestionMockTest />} />
+        <Route path="/mock-test" element={<MockTest />} />
+        <Route path="/mock-test/question" element={<QuestionMockTest />} />
+        <Route path="/mock-test/results" element={<MockTestResults />} />
         <Route path="/solution/wrong" element={<SolutionWrong />} />
         <Route path="/solution/correct" element={<SolutionCorrect />} />
+        <Route path="/progress" element={<Progress />} />
+        <Route path="/profile" element={<Profile />} />
         <Route path="/admin" element={<Admin />} />
       </Routes>
     </BrowserRouter>
