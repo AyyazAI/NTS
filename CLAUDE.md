@@ -12,6 +12,25 @@
 
 ---
 
+## Design Status
+
+**Claude Design: FINAL — 11 screens approved**
+Design exported and saved in src/governance/design/
+- NTS_Prep_Design.pdf — visual reference all 11 screens
+- NTS_Prep_Design.html — interactive prototype with CSS/fonts/spacing
+- NTS_Prep_Design.zip — complete project archive
+- NTS_Prep_Design_Master_Prompt.md — consolidated design prompt (QA evidence)
+
+**Design share link:** [saved in Claude Design — claude.ai/design]
+
+When building UI components, reference the HTML file for exact:
+- Colours (#0D9488 teal, #D97706 amber, #DC2626 red timer only)
+- Font: Nunito, all weights
+- Spacing, border radius, shadow values
+- Component structure and layout
+
+---
+
 ## Product Scope
 
 **Target test:** NAT-I (National Aptitude Test — bachelor admissions)
@@ -38,7 +57,7 @@
 | AI Primary | Claude Sonnet 4.6 |
 | Deployment | Vercel (Hobby plan) |
 | Dev tool | Claude Code v2.1.183 |
-| Design tool | Claude Design (claude.ai/design) |
+| Design tool | Claude Design (claude.ai/design) — FINAL |
 | Version control | GitHub (AyyazAI/NTS) |
 
 **All Claude API and Turso calls route through Vercel serverless functions — NEVER directly from the browser.**
@@ -49,7 +68,7 @@
 
 This project exists to learn:
 1. **Claude Code** — filesystem-aware coding, no copy-paste workflow
-2. **Claude Design** — UI prototyping, design-to-code handoff ✅ Learned Phase 0
+2. **Claude Design** — UI prototyping, design-to-code handoff ✅ Complete Phase 0
 3. **MCP** — Turso connector, GitHub connector (Phase 2)
 4. **Multi-agent architecture** — 5 agents with clear boundaries (Phase 2)
 5. **RAG** — similar question retrieval, weak zone surfacing (Phase 3)
@@ -74,17 +93,18 @@ This project exists to learn:
 
 Every AI-generated explanation must follow these rules:
 
-1. **Never assume prior knowledge** — explain every step as if the student has never seen this method before
-2. **Never skip steps** — every calculation and logical leap must be shown explicitly
-3. **Never use "obviously" or "clearly"** — if it were obvious, they wouldn't need help
-4. **Show multiple methods** — minimum 2 solution approaches per question where applicable
+1. **Never assume prior knowledge** — explain every step as if student has never seen this method
+2. **Never skip steps** — every calculation and logical leap shown explicitly
+3. **Never use "obviously" or "clearly"**
+4. **Show multiple methods** — minimum 2 solution approaches per question
 5. **Plain language first** — intuitive method before formula
-6. **Formula as shortcut** — introduce formulas only after intuitive method is understood
-7. **Full working at each step** — not just the answer, the complete working
-8. **Visual solutions** — AI generates actual SVG diagrams, tables, grids — NOT text instructions to draw
+6. **Formula as shortcut** — introduce only after intuitive method is understood
+7. **Full working at each step** — not just the answer, complete working
+8. **Visual solutions** — actual SVG diagrams, tables, grids — NOT text instructions to draw
+9. **Formula mapped onto intuitive method** — after Method 1 counting, Method 2 maps C(n,r) directly onto the steps student just learned. Each method stands completely alone — Method 1 never mentions C(n,r).
 
 **Target reader:** An intelligent Pakistani student aged 17-19 encountering this method for the first time.
-**Language:** English only. Urdu toggle removed from scope.
+**Language:** English only. No Urdu toggle.
 
 ---
 
@@ -92,24 +112,25 @@ Every AI-generated explanation must follow these rules:
 
 ### Practice Mode (Learning)
 - Show Solution button always available
-- No time pressure
-- No negative marking
+- No time pressure, no negative marking
 - Canvas working analysed on wrong answers
-- Sub-topic selection available (English > Synonyms, Math > Algebra etc.)
+- Sub-topic selection available
 - Progress tracked under Practice tab
 - Wrong answer → auto-shown solution with working analysis
 - Correct answer → option to explore other methods or skip to next
+- Show Solution → marks question as "Learned" (separate from Attempted)
 
 ### Mock Test Mode (Exam Simulation)
 - No Show Solution during test — exam conditions
 - 30 minute countdown timer
 - Negative marking -0.25 per wrong answer
 - Flag (🚩) and navigate questions freely
-- No sub-topic selection — full mixed paper like real NTS
+- No sub-topic selection — full mixed paper
 - Progress tracked under Mock Tests tab
+- Timer colour: teal → amber at 5 min → red at 1 min (no popup)
 - When timer runs out → test auto-submits immediately
-- Full solution review available only AFTER test submitted
-- If browser closed mid-test → test resumes on return, not auto-submitted
+- Full solution review only AFTER test submitted
+- If browser closed mid-test → test resumes on return
 
 ---
 
@@ -121,186 +142,156 @@ Every AI-generated explanation must follow these rules:
 3. Student automatically taken to Solution screen (no choice)
 4. Working shown with error highlighted: "You went wrong here — [specific error]"
 5. Full solution shown — all methods visible, all steps expanded
-6. "Try a similar question →" CTA at bottom
+6. "Try a similar question →" fixed button at bottom
 
 ### Correct Answer:
-1. Correct detected → "Correct — nice work! 🎉"
-2. Two options: [Explore other methods] [Next Question →]
-3. If Explore → Solution screen with their method auto-selected
-4. If Next Question → straight to next, no solution shown
+1. "Correct — nice work! 🎉"
+2. Two options: [Explore methods] [Next Question →]
+3. Explore → Solution screen, student's method auto-selected
+4. Next Question → straight to next, no solution shown
 
 ### Show Solution (student gives up):
-- Available in Practice Mode only
-- Question marked as "Learned" (not Attempted, not Skipped)
-- Tracked separately in progress — does not affect accuracy %
+- Practice Mode only
+- Marked as "Learned" — does not affect accuracy %
 - Goes to full Solution screen immediately
 
 ---
 
 ## Navigation & UX Rules
 
-- Bottom navigation visible on ALL screens: Home, Practice, Mock Test, Progress, Profile
-- Bottom nav has enough padding to avoid overlap with device system controls
-- Both ← Previous and → Next navigation on question screens
-- Canvas working persists when navigating between questions — never erased
+- Bottom navigation on ALL screens: Home, Practice, Mock, Progress, Profile
+- Bottom nav: 80px minimum padding — never overlaps device controls
+- Question screens: ‹ hidden on Q1, always show ›
+- Flag 🚩 at TOP RIGHT of question card — not in bottom bar
+- Canvas working persists when navigating between questions
 - Unsaved profile changes → warning dialog before navigating away
-- File upload: JPG, PNG, PDF only. Max 5MB. Clear error for invalid type/size
+- File upload: JPG, PNG, PDF only. Max 5MB. Inline error for invalid.
 
 ---
 
-## Screen Inventory (Design v3 — In Progress)
+## Screen Inventory — FINAL (11 screens)
 
-### Screen 1 — Home
-Two states:
-- First-time user → redirect to Onboarding
-- Returning user → show Home with real data
+### Screen 1 — Onboarding (First-time user — 2 steps)
+Step 1 — Mandatory:
+- Full name + Mobile number (Pakistani format, inline validation)
+- "Skip setup — take me to practice →" link
+Step 2 — Optional goals:
+- Test date toggle (Yes/Not yet) → date picker if Yes
+- Target score toggle (Yes/Not yet) → slider 40-100 if Yes
+- No university field in onboarding (Profile only)
+- "Let's go! →" button
 
-Returning user Home:
-- TaleemiMarkaz logo + "NTS Prep" on every screen header
-- Student greeting: "Assalam-o-Alaikum, [Name]"
-- Streak card (only show if streak > 0, never show negative days)
-- Mode selector: [📚 Practice Mode] [⏱️ Mock Test] — active mode highlighted teal
-- Practice Mode selected → show topic cards (English, Math, Reasoning) with progress
-- Mock Test selected → topic cards hide, replaced with "Start Mock Test →" CTA
-- Progress on topic cards = questions attempted / total available (Practice) or score % (Mock Test)
-- Remove "See All" link — all three topics already visible
-- Bottom navigation
+### Screen 2 — Home (Returning user)
+- TaleemiMarkaz logo + "NTS Prep" header — every screen
+- "Assalam-o-Alaikum, [Name] 👋"
+- Daily Goal card: "Practice 20 questions today" + progress bar
+- Mode cards: [📚 Practice Mode] [⏱️ Mock Test]
+- Practice selected → topic cards (English, Math, Reasoning) with "X of Y questions attempted"
+- Mock Test selected → topic cards hidden, "Start Mock Test →" CTA
+- Bar colour: green >70%, amber 50-70%, red <50%
 
-### Screen 2 — Onboarding (NEW — first time user)
-- Welcome to TaleemiMarkaz / NTS Prep
-- Step 1: Name entry
-- Step 2: Mobile number (used for OTP login)
-- Step 3: Test date (NAT-I date picker — no past dates, no dates > 1 year ahead)
-- Step 4: Target score (slider 40-100)
-- Step 5: Target university (optional text field)
-- Progress indicator showing onboarding steps
-- On complete → Home screen
-
-### Screen 3 — Sub-topic Selection (NEW — Practice Mode only)
-- Appears after student selects a topic on Home
-- "Choose what to practice"
-- Topic header: English / Math / Reasoning
-- Sub-topic cards with progress bars:
-  - English: Synonyms, Antonyms, Grammar, Sentence Completion, Comprehension, Analogies
-  - Math: Arithmetic, Percentages, Ratios, Algebra, Averages, Geometry
-  - Reasoning: Selection, Sequencing, Blood Relations, Directions, Syllogisms, Combinations
-- Difficulty selector below: [Easy] [Medium] [Hard] [Mixed]
-- "Start Practice →" teal button
+### Screen 3 — Sub-topic Selection (Practice Mode only)
+- "📚 Practice Mode" pill below header
+- "Choose what to practice" + topic name
+- Sub-topic list with progress bars, "⚠️ Focus here" on weakest
+- Difficulty: [Easy] [Medium] [Hard] [Mixed]
+- "Start Practice →" button
 
 ### Screen 4 — Question Screen (Practice Mode)
-- TaleemiMarkaz header on all screens
-- Topic + sub-topic tag (e.g. "Reasoning · Permutations")
-- Question number: "Question 4 of 20"
-- Question text — large, readable
-- 4 answer options A/B/C/D as full-width tap targets
-- Two-step selection: tap option to highlight, then Submit activates
-- Canvas scratch pad with three tabs: [✏️ Draw] [⌨️ Type] [📷 Upload]
-  - Draw: finger canvas, toolbar (thick pen, thin pen, eraser, undo, clear)
-  - Type: text input area
-  - Upload: image picker (JPG/PNG/PDF, max 5MB, error shown for invalid)
-  - Canvas work PERSISTS when navigating away and returning
-- Bottom bar: [← Prev] [🚩 Flag] [Show Solution] [Submit Answer →]
-- Submit Answer only activates after an option is selected
+- "📚 Practice Mode" pill
+- Topic + sub-topic tag, question number
+- Flag 🚩 top right of question card
+- 4 answer options — two-step selection
+- Canvas: [✏️ Draw] [⌨️ Type] [📷 Upload] tabs
+  - Draw: toolbar (thick pen, thin pen, eraser, undo, clear)
+  - Upload: JPG/PNG/PDF max 5MB, inline error
+  - Canvas persists across navigation
+- Bottom bar Q1: [Show Solution] [Submit Answer] [›]
+- Bottom bar Q2+: [‹] [Show Solution] [Submit Answer] [›]
+- Submit Answer greyed until option selected
 
 ### Screen 5 — Question Screen (Mock Test Mode)
-- Same as Practice but:
-  - No "Show Solution" button
-  - Timer visible top right (countdown)
-  - Score and negative marking display visible
-  - Bottom bar: [← Prev] [🚩 Flag] [Next →]
-  - No sub-topic tag — just question number
+- "⏱️ NAT-I Mock Test" amber pill
+- Timer top right (colour changes at 5min and 1min)
+- Score + NEG MARKING display
+- Flag 🚩 top right of question card
+- NO Show Solution button
+- Bottom bar: [‹] [Submit Answer] [›]
+- Canvas available (Draw/Type/Upload)
 
 ### Screen 6 — Solution Screen Variant A (Wrong Answer)
-- Header: "Not quite — let's see why" (neutral colour, never red)
-- "You selected B (21) — Correct answer is C (15)"
-- If canvas working submitted:
-  - "YOUR WORKING" section shows submitted image/text
-  - ⚠️ marker on exact wrong step: "You went wrong here — [specific error explained in plain language]"
-- FULL SOLUTION shown immediately — all steps visible, not one at a time
-- Method tabs: [Method 1: Counting] [Method 2: Formula] [Method 3: Visual]
-  - Method 1 default (most intuitive, plain language)
-  - Method 2: formula with full explanation of every symbol and operation
-  - Method 3: actual AI-generated diagram (SVG table, grid, Venn diagram) — NOT text saying "draw a diagram"
-- Every step fully expanded — no "reveal next step" — student sees complete working
-- "Try a similar question →" teal button at bottom
+- "Not quite — let's see why 🤔" — neutral/amber, never red
+- "You selected B — Correct answer is A" side by side
+- YOUR WORKING section: submitted canvas shown, ⚠️ error marker
+- "Three ways to see the solution"
+- Method tabs: [✓ Count] [Method 2: Formula] [Method 3: Visual]
+  - Method 1 (Count): full listing method, zero formula, zero C(n,r)
+  - Method 2 (Formula): maps C(n,r) onto Method 1 steps explicitly
+  - Method 3 (Visual): actual SVG diagram, high contrast colours
+- All steps fully expanded — nothing hidden
+- Each step: teal circle number + bold title + explanation + boxed working + 💡 note
+- Bridge card after Method 1: "🎯 Challenge yourself — try the formula next time"
+- "Try a similar question →" FIXED at bottom, never scrolls
 
 ### Screen 7 — Solution Screen Variant B (Correct Answer)
-- Header: "Correct — nice work! 🎉" in teal
+- "Correct — nice work! 🎉" teal
 - "You answered in 47 seconds"
-- Two options: [Explore other methods] [Next Question →]
-- If Explore → full solution screen, student's method auto-highlighted
+- [Explore methods] [Next Question →]
 
-### Screen 8 — Progress Screen (Redesigned)
-Toggle at top: [Practice] [Mock Tests]
+### Screen 8 — Progress Screen
+Toggle: [Practice] [Mock Tests]
 
-PRACTICE TAB:
-- Score Trend (line chart)
-  - Toggle: [This Week] [This Month] [All Time]
-  - Improvement label: "+26% this week ↑"
-- Topic + Sub-topic Section (merged — no duplication):
-  - Three topic headers (English, Math, Reasoning) each expandable accordion
-  - Topic header shows overall % with colour: green >70%, amber 50-70%, red <50%
-  - Expanded: sub-topic progress bars with %, weakest highlighted red with "⚠️ Focus here"
-- Today's Focus (sticky bottom):
-  - Top 3 weakest sub-topics listed
-  - "Practice [sub-topic] today" with [Start →] button per item
+Practice tab:
+- Score trend line chart + This Week/Month/All Time toggle
+- Sub-topic breakdown accordion (English, Math, Reasoning)
+- Each topic: expandable, sub-topic bars, weakest in red "⚠️ Focus here"
+- TODAY'S FOCUS sticky: top 3 weakest + [Start →] per item
+- Empty state: "Complete your first session to see progress"
 
-MOCK TESTS TAB:
-- Tests completed count
-- Best score / Average score
-- Score trend across mock tests (line chart)
-- Negative marks lost total
-- Readiness score gauge (0-100) with guidance text
-
-Empty state: if no data yet → encouraging message "Complete your first practice session to see your progress"
+Mock Tests tab:
+- Score trend across tests
+- Tests completed, best/average score
+- Negative marks lost
+- Readiness score gauge
+- Sub-topic breakdown from mock test performance
 
 ### Screen 9 — Mock Test Screen
-- TaleemiMarkaz header
-- "NAT-I Mock Test" title
-- Section tabs: [English] [Math] [Reasoning] — each section 10 questions
-- Timer countdown prominent top right
-- Score: "+18.25" and NEG. MARKING: "-0.25/wrong" in amber
-- Question navigator grid per section (10 squares):
-  - ● Teal = Answered
-  - ○ White outlined = Current
-  - ◐ Amber = Flagged
-  - ○ Grey = Unseen
-- Question text and answer options
-- Bottom bar: [← Prev] [🚩 Flag] [Next →]
-- Before submit: confirmation "You have X flagged questions. Review or submit anyway?" [Review Flagged] [Submit Anyway]
-- On timeout: auto-submit immediately → results screen
+- "⏱️ NAT-I Mock Test" amber pill
+- Section tabs: [English] [Math] [Reasoning]
+- Timer (colour changes)
+- Score + NEG MARKING
+- 10-question navigator grid per section
+  - ● Teal = Answered, ◻ Teal border = Current, ◐ Amber = Flagged, ○ Grey = Unseen
+- Question + 4 options below
+- Canvas (Draw/Type/Upload)
+- Bottom bar: [‹] [Submit Answer] [›]
+- Before submit: "You have X flagged questions" → [Review Flagged] [Submit Anyway]
+- Timeout: auto-submit → Results screen
 
-### Screen 10 — Mock Test Results (NEW)
-- "Test Complete" header
-- Overall score: XX/100
-- Section breakdown:
-  - English: X/30 (X%)
-  - Math: X/30 (X%)
-  - Reasoning: X/30 (X%)
-- Negative marking: total marks lost
-- Attempted / Skipped / Flagged counts
-- Comparison to previous tests (if any)
-- "Review All Questions →" button → shows every question with correct answer and full solution
-- "Practice Weak Areas →" button → takes to sub-topic selection for weakest area
+### Screen 10 — Mock Test Results
+- "Test Complete ✓" teal
+- "67/100" large + "↑ 5 points from last test"
+- Section breakdown: English 22/30 73%, Math 19/30 63%, Reasoning 26/30 87%
+- Attempted/Skipped/Flagged stats
+- Negative marking: "−5.25 marks lost (21 wrong × 0.25)"
+- Attempt history: "Test 1: 52 | Test 2: 61 | Test 3: 67 ↑"
+- [Review All Questions →] [Practice Weak Areas →]
 
-### Screen 11 — Profile Screen
-- TaleemiMarkaz header
-- Student avatar (initial in teal circle) + name
-- Mobile number (primary identifier — not email)
-- Optional email field
-- Test countdown: "18 days to NAT-I" (never shows negative days)
-- GOAL: Target score, current tracking, readiness gauge
-- STREAK: 🔥 X days, GitHub-style streak calendar grid
-- TEST DETAILS: Test date, test type, target university (all editable)
-- PRACTICE STATS: Questions attempted, solutions viewed (Learned), topics covered
-- MOCK TEST STATS: Tests completed, best score, average, marks lost to neg marking
-- [Save Profile] button — always visible when editing
-- Unsaved changes warning if navigating away without saving
-- Input validation:
-  - Mobile: Pakistani format validation
-  - Email: valid format if entered
-  - Test date: no past dates, no dates > 1 year ahead
-  - Target score: 40-100 only
+### Screen 11 — Profile Screen (Two States)
+View state:
+- Avatar (initial teal circle) + name
+- Mobile number
+- "18 days to NAT-I" countdown
+- Goal tracker, Streak calendar, Test details, Practice stats, Mock stats
+- [✏️ Edit Profile] teal outline button
+
+Edit state:
+- "Editing" badge
+- All fields editable, active field teal border
+- Streak reminders toggle
+- "You have unsaved changes" warning + [Discard] [Save] inline
+- [Cancel] [Save Profile] at bottom
+- Input validation: mobile format, date range, score 40-100
 
 ---
 
@@ -308,37 +299,38 @@ Empty state: if no data yet → encouraging message "Complete your first practic
 
 | Agent | Role | Phase |
 |---|---|---|
-| Agent 1 | Question Validator — checks question clarity and answer key correctness | Phase 2 |
-| Agent 2 | Explanation Generator — Mode A (standard explanation) and Mode B (handwriting analysis + error diagnosis) | Phase 2 |
-| Agent 3 | Difficulty Classifier — tags questions Easy/Medium/Hard per topic | Phase 2 |
-| Agent 4 | Progress Analyser — weak zones, readiness score, daily recommendations | Phase 3 |
-| Agent 5 | Similar Question Generator — creates structurally identical questions at specified difficulty | Phase 2 |
+| Agent 1 | Question Validator | Phase 2 |
+| Agent 2 | Explanation Generator (Mode A: standard, Mode B: handwriting analysis) | Phase 2 |
+| Agent 3 | Difficulty Classifier | Phase 2 |
+| Agent 4 | Progress Analyser | Phase 3 |
+| Agent 5 | Similar Question Generator | Phase 2 |
 
 ---
 
 ## Database Schema
 
 ### tasks (admin panel tracker)
-- id, phase_id, phase_name, label, tool, done, updated_at
+id, phase_id, phase_name, label, tool, done, updated_at
 
 ### questions (Phase 1)
-- id, topic, sub_topic, difficulty
-- question_text, option_a, option_b, option_c, option_d, correct_option
-- explanation_en, explanation_methods
-- source, verified, verified_by, verified_at
-- ai_generated, review_flag, review_note
-- times_attempted, times_correct
-- created_at, updated_at
+id, topic, sub_topic, difficulty,
+question_text, option_a, option_b, option_c, option_d, correct_option,
+explanation_en, explanation_methods,
+source, verified (1=human verified only), verified_by, verified_at,
+ai_generated, review_flag, review_note,
+times_attempted, times_correct,
+created_at, updated_at
 
 ### question_methods (Phase 1)
-- id, question_id, method_number, method_title, method_steps (JSON)
+id, question_id, method_number, method_title, method_steps (JSON)
 
 ### question_flags (Phase 1)
-- id, question_id, flagged_by, flag_reason, status, resolved_by, resolved_at
+id, question_id, flagged_by, flag_reason, status, resolved_by, resolved_at
 
 ### attempts (Phase 2)
-- id, student_id, question_id, mode (practice/mock_test), action (attempted/skipped/learned)
-- selected_option, is_correct, time_spent, created_at
+id, student_id, question_id, mode (practice/mock_test),
+action (attempted/skipped/learned),
+selected_option, is_correct, time_spent, created_at
 
 ---
 
@@ -346,51 +338,37 @@ Empty state: if no data yet → encouraging message "Complete your first practic
 
 | Rule | Statement | Status |
 |---|---|---|
-| GOV-RULE-001 | AI must reference verified data sources, not context memory, when a database or admin record exists | Active |
-| GOV-RULE-002 | AI output contradicting a verified source must be flagged and corrected before actioning | Active |
-| GOV-RULE-003 | Governance incidents are captured immediately in any phase — not deferred | Active |
-| GOV-RULE-004 | AI never determines the correct answer — only explains a pre-verified answer | Active |
-| GOV-RULE-005 | All AI explanations must be logged with model name, version, timestamp, confidence | Planned Phase 4 |
-| GOV-RULE-006 | Low-confidence AI explanations must be queued for human review before shown to students | Planned Phase 4 |
-| GOV-RULE-007 | Factual questions (GK, Islamiat, Current Affairs) require human-verified answer keys | Active |
-| GOV-RULE-008 | Any change to the project plan must be propagated to CLAUDE.md and all dependent documents before the next Claude Code session | Active |
-| GOV-RULE-009 | AI explanations must never assume prior knowledge, never skip steps, show multiple methods, plain language before formula, visual solutions as actual diagrams not text instructions | Active |
+| GOV-RULE-001 | AI must reference verified data sources, not context memory | Active |
+| GOV-RULE-002 | AI output contradicting verified source must be flagged | Active |
+| GOV-RULE-003 | Governance incidents captured immediately — not deferred | Active |
+| GOV-RULE-004 | AI never determines correct answer — only explains pre-verified answer | Active |
+| GOV-RULE-005 | All AI explanations logged with model, version, timestamp, confidence | Phase 4 |
+| GOV-RULE-006 | Low-confidence explanations queued for human review | Phase 4 |
+| GOV-RULE-007 | Factual questions require human-verified answer keys | Active |
+| GOV-RULE-008 | Plan changes propagated to CLAUDE.md and all dependent docs before next session | Active |
+| GOV-RULE-009 | Explanations never assume prior knowledge, never skip steps, multiple methods, plain language before formula, visual as actual diagrams, formula mapped onto intuitive method | Active |
 
 **Governance document:** src/governance/NTS-GOV-001-AI-Governance-Incident-Log.docx (v1.1)
 
 ---
 
-## Design Review Record
+## Design Review Record (QA Evidence)
 
-### Design Review v1 (Jun 22 2026) — Ayyaz
-Feedback document: Claude_Design_-_Feedback_and_updates_Version_2.docx
-Key findings actioned:
-- Urdu toggle removed from scope — NTS exam is English only
-- Missing screens identified: Onboarding, Sub-topic Selection, Mock Test Results
-- Navigation gaps: forward button missing, bottom nav not on all screens
-- Canvas work must persist on navigation
-- Progress screen duplicated data — merged topic overview and sub-topic breakdown
-- Solution screen: show full solution not one step at a time
-- Visual solution must be actual AI-generated diagram not text instruction
-- Profile: mobile number not email, input validation, unsaved changes warning
-- Mock test: auto-submit on timeout, resume if browser closed
-- Multiple attempt history must be preserved on profile
+| Round | Date | Screens | Issues Found | Status |
+|---|---|---|---|---|
+| v1 | Jun 22 2026 | 6 screens | Missing screens, nav gaps, canvas persistence, progress duplication | Actioned |
+| v2 | Jun 23 2026 | 7 screens | Colour not teal, canvas tabs missing, solution depth | Actioned |
+| v3 | Jun 23 2026 | 11 screens | Onboarding multi-step, mode indicator missing, bottom bar overcrowded | Actioned |
+| v4 | Jun 24 2026 | 11 screens | Onboarding not applied, save profile missing, button rendering bug | Actioned |
+| v5 | Jun 24 2026 | 11 screens | Onboarding optional fields, formula depth, C(7,5) repeated, overlapping | Actioned |
 
-### Design Review v2 (Jun 23 2026) — Ayyaz + Claude
-Additional findings:
-- "See All" link on home is redundant — removed
-- "AI Generated" label on Challenge page — removed
-- Challenge page merged into question flow — not a separate screen
-- Today's Focus shows top 3 weakest sub-topics not just one
-- Score trend needs This Week / This Month / All Time toggle
-- First-time user needs onboarding flow before seeing home
-- Mock test results screen needed after test submission
+Full evidence: src/governance/design/ folder
 
 ---
 
 ## Plan Change Propagation Checklist
 
-When the project plan changes, ALWAYS update these before the next session:
+When plan changes, ALWAYS update before next session:
 - [ ] CLAUDE.md (this file)
 - [ ] Turso tasks table (admin panel)
 - [ ] NTS-GOV-001 if governance-relevant
@@ -400,73 +378,65 @@ When the project plan changes, ALWAYS update these before the next session:
 
 ## Phase Roadmap
 
-### Phase 0 — Setup ✅ COMPLETE
-- Claude Code installed and authenticated
-- React 18 + Vite + Tailwind scaffolded
-- Turso connected (database: nts, region: AWS ap-south-1 Mumbai)
-- Admin panel built at /admin
-- CLAUDE.md written and updated twice
-- GitHub repo live at AyyazAI/NTS
-- Deployed to Vercel (nts-xi.vercel.app)
-- Claude Design v1 complete — 6 screens
-- Claude Design v2 complete — 7 screens with updates
-- Claude Design v3 in progress — 11 screens full redesign
-- Governance document NTS-GOV-001 v1.1 committed
-- vercel.json routing config added
+### Phase 0 — Setup (8/9 complete — handoff pending)
+- ✅ Claude Code installed and authenticated
+- ✅ React 18 + Vite + Tailwind scaffolded
+- ✅ Turso connected (nts database, AWS ap-south-1 Mumbai)
+- ✅ Admin panel built at /admin
+- ✅ GitHub repo live at AyyazAI/NTS
+- ✅ Deployed to Vercel (nts-xi.vercel.app)
+- ✅ Claude Design FINAL — 11 screens approved
+- ✅ Design exported (PDF, HTML, ZIP, Master Prompt)
+- ✅ Governance document NTS-GOV-001 v1.1 committed
+- ⬜ Handoff Claude Design to Claude Code ← NEXT TASK
 
-### Phase 1 — Core Loop (Next)
-- Claude Design v3 finalised and approved
-- Questions table schema in Turso (3 tables)
-- Question entry form in admin panel
-- Seed 60 verified questions (20 per section)
-- React components built from Claude Design handoff
-- Topic selector and sub-topic selector (Home + Sub-topic screens)
-- Question display with 4 MCQ options (Practice mode)
-- Answer submission — two-step selection
-- Canvas scratch pad (Draw / Type / Upload tabs) with persistence
-- Practice mode answer flow (wrong → solution, correct → option)
-- Show Solution flow (marks as Learned)
-- Solution screen with full expanded methods
-- Session score display
+### Phase 1 — Core Loop
+- Update admin panel tasks in Turso
+- Questions table schema (3 tables: questions, question_methods, question_flags)
+- Admin question entry form (/admin/questions/new)
+- Seed 60 verified questions (20 per section from NTS past papers)
+- Build 11 React components from approved design:
+  Onboarding, Home, SubTopicSelection, QuestionPractice, QuestionMockTest,
+  SolutionWrong, SolutionCorrect, Progress, MockTest, MockTestResults, Profile
+  Supporting: BottomNav, Canvas, ModeIndicator, MethodTabs
+- Wire Practice Mode core loop
+- Claude API explanation generation (Vercel serverless, GOV-RULE-009 system prompt)
+- Canvas implementation (Draw/Type/Upload with persistence)
 - Deploy Phase 1 to Vercel
 
 ### Phase 2 — Intelligence Layer
-- MCP connector: Claude Code ↔ Turso
-- MCP connector: Claude Code ↔ GitHub
+- MCP connectors (Turso + GitHub)
 - Multi-agent pipeline (Agents 1-5)
-- Claude Vision: read handwritten canvas working
-- Error diagnosis: "You went wrong at step X"
-- Mock test mode (full implementation)
-- Auto difficulty progression (AI-driven)
-- Student-controlled difficulty selector
-- Test-date aware difficulty nudges
+- Claude Vision: canvas working analysis + error diagnosis
+- Mock test mode full implementation
+- Adaptive difficulty engine
 - Phone + OTP authentication
-- Promptfoo automated prompt testing
-- Question bank grows to 150+
+- Promptfoo automated testing suite
+- Question bank 150+
 
 ### Phase 3 — Personalisation
-- Full student profile with history across attempts
-- Weak zone dashboard
-- Readiness score engine
-- RAG: surface similar questions on wrong answers
+- Full student profile with attempt history
+- Weak zone dashboard + readiness score
+- RAG implementation
 - Agent 4: Progress Analyser
-- Error pattern analysis from canvas working
-- Question bank grows to 300+
+- Premium membership model introduction
+- Offline practice pack (PDF download)
+- Question bank 300+
 
 ### Phase 4 — Governance
-- Confidence scoring on every AI explanation
-- Human review queue
-- Audit log
-- Promptfoo regression testing suite
+- Confidence scoring + human review queue
+- Audit log (model, version, timestamp, confidence)
+- Promptfoo regression testing
 - CT-AI v2.0 + ISO 42001 alignment
 - NTS-GOV-001 finalised
+- Upload and analyse offline packs (Claude Vision)
 
 ### Phase 5 — Tutor Marketplace
 - Tutor registration and verification
 - AI-diagnosed student profile handoff
 - WhatsApp-based session facilitation
 - Rating system
-- Revenue: commission per session
+- Commission revenue model
 
 ---
 
@@ -475,21 +445,22 @@ When the project plan changes, ALWAYS update these before the next session:
 **Source 1:** NTS past papers (manual curation) — Phase 1
 **Source 2:** Agent 5 generated (human spot-checked) — Phase 2
 **Source 3:** Community contributions (human-gated) — Phase 3+
-**Minimum for Phase 1 launch:** 60 verified questions (20 per section)
-**Verification rule:** Only verified=1 questions served to students. No exceptions.
+**Minimum for Phase 1:** 60 verified questions (20 per section)
+**Rule:** Only verified=1 questions served to students. No exceptions.
 
 ---
 
 ## Key Product Features
 
-- **Two modes:** Practice (learning, Show Solution available) and Mock Test (exam simulation, no solutions during test)
-- **Answer flow:** Wrong → forced solution with error diagnosis. Correct → optional exploration.
-- **Adaptive difficulty:** AI-driven auto + student-controlled Easy/Medium/Hard + test-date urgency
-- **Canvas working:** Draw / Type / Upload — persists across navigation, feeds Claude Vision
-- **Multiple solution methods:** Minimum 2 per question, all fully expanded, visual methods as actual diagrams
+- **Two modes:** Practice (learning) and Mock Test (exam simulation)
+- **Answer flow:** Wrong → forced solution + error diagnosis. Correct → optional exploration.
+- **Adaptive difficulty:** AI-driven auto + student-controlled + test-date urgency (Phase 2)
+- **Canvas:** Draw/Type/Upload — persists, feeds Claude Vision
+- **Solution methods:** Minimum 2, all expanded, Method 2 maps formula onto Method 1 steps
 - **Negative marking:** -0.25 per wrong answer, skip strategy taught
-- **Student profile:** Goals, test date, target score, attempt history, weak zones, readiness score, streaks
-- **Mock test:** Auto-submit on timeout, resume on browser close, full review after submission
+- **Student profile:** Goals, test date, target score, attempt history, weak zones, streaks
+- **Mock test:** Auto-submit on timeout, resume on close, full review after
+- **Premium:** Rs. 1000/month — history, chatbot, PDF reports, offline packs (Phase 3)
 - **Tutor marketplace:** Phase 5
 
 ---
@@ -508,11 +479,12 @@ Never commit .env.local — excluded by .gitignore and .claudeignore.
 
 ## Session Start Ritual
 
-At the start of every Claude Code session:
+Every Claude Code session:
 1. Read this CLAUDE.md
 2. Confirm current phase and next task
-3. Check admin panel task status before proceeding
-4. Never rely on context memory when Turso data exists
+3. Check admin panel task status
+4. Reference src/governance/design/NTS_Prep_Design.html for UI
+5. Never rely on context memory when Turso data exists
 
 ---
 
@@ -521,120 +493,40 @@ At the start of every Claude Code session:
 | ID | Date | Description | Status |
 |---|---|---|---|
 | INC-001 | Jun 21 2026 | AI used context memory instead of verified database | Resolved |
-| INC-002 | Jun 22 2026 | Admin panel tasks out of sync — Claude Design tasks missing after plan update | Resolved |
+| INC-002 | Jun 22 2026 | Admin panel tasks out of sync after plan update | Resolved |
 
-Full incident details: src/governance/NTS-GOV-001-AI-Governance-Incident-Log.docx
+Full details: src/governance/NTS-GOV-001-AI-Governance-Incident-Log.docx
 
 ---
 
 ## Premium Membership Model (Phase 3-4)
 
-**Positioning:** "Support the platform and get extra features"
-**Price:** Rs. 1000/month — framed as "one McDonald's meal"
-**First 1-2 weeks free** for all students to experience premium
-
-### Free vs Premium Split
+**Price:** Rs. 1000/month — "one McDonald's meal"
+**First 1-2 weeks free** for all students
 
 | Feature | Free | Premium |
 |---|---|---|
-| All questions | ✅ | ✅ |
-| Step-by-step explanations | ✅ | ✅ |
+| All questions + explanations | ✅ | ✅ |
 | Canvas working | ✅ | ✅ |
 | Mock tests | ✅ | ✅ |
-| Basic progress (current session) | ✅ | ✅ |
-| Social sharing achievement cards | ✅ | ✅ |
-| Full history — all attempts | ❌ | ✅ |
-| Canvas working archive | ❌ | ✅ |
-| Live chatbot follow-up (Claude-powered) | ❌ | ✅ |
-| Detailed monthly PDF report | ❌ | ✅ |
-| Offline practice pack download + upload | ❌ | ✅ |
-| Early feature access (beta) | ❌ | ✅ |
-| Community work contribution (opt-in) | ❌ | ✅ |
-| Achievement badges + rewards | ❌ | ✅ |
-| Ad-free (if ads ever introduced) | ❌ | ✅ |
+| Basic progress (session) | ✅ | ✅ |
+| Social sharing cards | ✅ | ✅ |
+| Full attempt history | ❌ | ✅ |
+| Canvas archive | ❌ | ✅ |
+| Live chatbot follow-up | ❌ | ✅ |
+| Monthly PDF report | ❌ | ✅ |
+| Offline practice pack | ❌ | ✅ |
+| Early feature access | ❌ | ✅ |
+| Achievement badges | ❌ | ✅ |
 
-### Premium Feature Details
-
-**Full history** — every attempt, canvas working, solution viewed — searchable and reviewable
-
-**Live chatbot** — Claude-powered follow-up on specific solutions. "I still don't understand step 3 — explain differently." API cost justifies premium placement.
-
-**Rewards system** — achievement badges for good NTS scores. Student uploads NTS result slip. Honour system with community visibility. No cash rewards — profile badges, featured on leaderboard, extended premium trial.
-
-**Community work contribution** — premium students opt in to share anonymised handwritten working. Used to enrich explanations for all students. Explicit consent required, documented in governance.
-
-**Social sharing** — beautiful shareable card: score, streak, improvement. "I scored 78/100 on NAT-I Mock Test on TaleemiMarkaz." Free feature — serves as organic marketing.
-
-**Monthly PDF report** — what they studied, how they improved, what to focus on. Shareable with parents/teachers. Parents in Pakistan are deeply involved in exam prep — this speaks to that.
-
-**Offline practice pack + upload** — see Offline Feature section below.
-
-### Fundraising Compatibility
-
-Freemium model strengthens fundraising story:
-"We serve students free. Premium covers server and AI costs. Your donation funds access for students who cannot afford even our nominal premium."
-
-IGNITE, UNDP, Agha Khan Foundation all fund platforms demonstrating self-sustainability alongside social mission. Revenue model makes the platform more fundable, not less.
-
-### Payment Methods (Pakistan)
-- JazzCash
-- EasyPaisa
-- Credit/debit card
-
-### Timeline
-- Phase 1-2: Free only — prove the product works
-- Phase 3: Introduce premium after 1000+ active users
-- Phase 4: Full premium feature set
+Payment: JazzCash, EasyPaisa, credit/debit card
 
 ---
 
-## Offline Practice Pack Feature (Phase 3-4)
+## Offline Practice Pack (Phase 3-4)
 
-### The Problem It Solves
-Many Pakistani students in smaller cities have unreliable internet. A printed practice pack usable anywhere — bus, home, without WiFi — addresses a real access gap.
-
-### How It Works
-
-**Download:**
-- Student downloads PDF practice pack (10-20 questions)
-- PDF includes: question text, answer bubbles (A/B/C/D), working space
-- Designed to replicate real NTS exam worksheet experience
-- Premium feature
-
-**Solve offline:**
-- Student prints or solves on screen offline
-- Works anywhere, no internet needed
-
-**Upload and analyse:**
-```
-Student photographs completed paper
-        ↓
-Uploads photo to TaleemiMarkaz
-        ↓
-Claude Vision reads:
-  - Filled answer bubbles (highly reliable — binary task)
-  - Handwritten working in margins (best effort)
-        ↓
-Confirmation step shown to student:
-  "Here's what we read:
-   Q1: B ✓  Q2: A ✗  Q3: C ✓
-   Is this correct?"
-  [Yes, save results] [No, let me correct]
-        ↓
-Answers marked against verified answer key
-Wrong answers → full solution shown
-Working analysed for error diagnosis (if readable)
-        ↓
-Results saved to online profile
-```
-
-**Handwriting limitation handling:**
-- Answer bubble reading: always reliable
-- Working analysis: best-effort with graceful fallback
-- If working unreadable: "We couldn't read your working clearly. Here's the full solution anyway."
-- Student confirmation step prevents misread answers from corrupting profile data
-
-### Timeline
-- PDF download: Phase 3
-- Upload and analyse: Phase 4
-
+PDF download (10-20 questions, answer bubbles, working space).
+Student solves offline → photographs → uploads.
+Claude Vision reads bubbles (reliable) + working (best effort).
+Confirmation step before saving results.
+Graceful fallback if handwriting unreadable.
