@@ -1,9 +1,9 @@
 import { useState } from 'react'
 
 const METHODS = [
-  { id: 'count', label: '✓ Method 1: Count' },
-  { id: 'formula', label: 'Method 2: Formula' },
-  { id: 'visual', label: 'Method 3: Grid' },
+  { id: 'count', label: '✓ Count' },
+  { id: 'formula', label: 'Formula' },
+  { id: 'visual', label: 'Grid' },
 ]
 
 export default function MethodTabs({ defaultMethod = 'count', children }) {

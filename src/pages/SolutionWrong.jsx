@@ -68,7 +68,7 @@ function VisualMethod() {
               {row.pairs.map(pair => (
                 <span
                   key={pair}
-                  className="bg-amber-100 text-amber-900 border border-amber-300 rounded-lg px-2 py-1 text-xs font-black"
+                  className="bg-amber-100 text-amber-900 border border-amber-300 rounded px-1.5 py-0.5 text-[11px] font-black"
                 >
                   {pair}
                 </span>
