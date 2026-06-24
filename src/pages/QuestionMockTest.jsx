@@ -44,7 +44,7 @@ export default function QuestionMockTest() {
       <Header />
       <ModeIndicator mode="mock" />
 
-      <main className="flex-1 px-4 pb-28 overflow-y-auto">
+      <main className="flex-1 px-4 pb-48 overflow-y-auto">
         {/* Score + timer row */}
         <div className="flex items-center justify-between mb-3">
           <div className="bg-amber-50 border border-amber-200 rounded-xl px-3 py-2">

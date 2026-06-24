@@ -30,7 +30,7 @@ export default function QuestionPractice() {
       <Header />
       <ModeIndicator mode="practice" />
 
-      <main className="flex-1 px-4 pb-28 overflow-y-auto">
+      <main className="flex-1 px-4 pb-48 overflow-y-auto">
         {/* Topic tag + progress */}
         <div className="flex items-center justify-between mb-3">
           <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">
