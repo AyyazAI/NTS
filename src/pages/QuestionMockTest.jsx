@@ -127,7 +127,7 @@ export default function QuestionMockTest() {
 
           <button
             onClick={() => setShowConfirm(true)}
-            className="flex-1 h-12 rounded-xl border-2 border-amber-400 text-sm font-bold text-amber-600 hover:bg-amber-50 transition-colors"
+            className="flex-1 h-12 rounded-xl border-2 border-teal-600 text-sm font-bold text-teal-600 hover:bg-teal-50 transition-colors"
           >
             Submit Test
           </button>

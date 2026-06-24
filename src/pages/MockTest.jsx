@@ -9,9 +9,9 @@ const SECTIONS = ['English', 'Math', 'Reasoning']
 
 // Per-section question state: answered/flagged/current/unseen
 const INITIAL_STATE = {
-  English:   { current: 3, answered: [0, 1, 2], flagged: [5], total: 10 },
-  Math:      { current: 0, answered: [],         flagged: [],  total: 10 },
-  Reasoning: { current: 0, answered: [],         flagged: [],  total: 10 },
+  English:   { current: 3, answered: [0, 1, 2], flagged: [5], total: 20 },
+  Math:      { current: 0, answered: [],         flagged: [],  total: 20 },
+  Reasoning: { current: 0, answered: [],         flagged: [],  total: 20 },
 }
 
 const QUESTION = {
@@ -24,7 +24,7 @@ const QUESTION = {
   ],
 }
 
-function Timer({ time = '24:38', state = 'normal' }) {
+function Timer({ time = '54:22', state = 'normal' }) {
   const colour = state === 'urgent' ? 'text-red-600' : state === 'warning' ? 'text-amber-600' : 'text-teal-600'
   const size   = state === 'urgent' ? 'text-2xl'     : state === 'warning' ? 'text-xl'        : 'text-lg'
   return <span className={`font-black tabular-nums ${colour} ${size}`}>{time}</span>
@@ -101,7 +101,7 @@ export default function MockTest() {
           </div>
           <div className="text-right">
             <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wide mb-0.5">Time left</p>
-            <Timer time="24:38" state="normal" />
+            <Timer time="54:22" state="normal" />
           </div>
         </div>
 

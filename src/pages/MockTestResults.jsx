@@ -3,9 +3,9 @@ import Header from '../components/Header'
 import BottomNav from '../components/BottomNav'
 
 const SECTIONS = [
-  { name: 'English',   score: 22, total: 30, pct: 73 },
-  { name: 'Math',      score: 19, total: 30, pct: 63 },
-  { name: 'Reasoning', score: 26, total: 30, pct: 87 },
+  { name: 'Verbal',       score: 15, total: 20, pct: 75 },
+  { name: 'Quantitative', score: 13, total: 20, pct: 65 },
+  { name: 'Analytical',   score: 17, total: 20, pct: 85 },
 ]
 
 function SectionBar({ name, score, total, pct }) {
