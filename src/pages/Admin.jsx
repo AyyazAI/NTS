@@ -1,18 +1,61 @@
 import { useState, useEffect } from 'react'
 import { db } from '../utils/db'
 
-// ─── Governance rule: When workflow HTML files in src/governance/docs/ are updated,
-// the iframes below automatically reflect the changes on next page load.
-// No manual update to Admin.jsx is required UNLESS a new phase is added or
-// a doc filename changes. See GOV-RULE-008 and CLAUDE.md for propagation checklist.
+const PHASE_FLOWS = {
+  '0': [
+    { id: 1, label: 'React + Vite\n+ Tailwind', tool: 'Vite' },
+    { id: 2, label: 'Scaffold\nFolders', tool: 'Claude Code' },
+    { id: 3, label: '.env.local\n+ .claudeignore', tool: 'Claude Code' },
+    { id: 4, label: 'Turso DB\nClient', tool: 'Turso' },
+    { id: 5, label: 'Admin\nPanel', tool: 'React' },
+    { id: 6, label: 'Git Init\n+ GitHub', tool: 'Git' },
+    { id: 7, label: 'Deploy\nVercel', tool: 'Vercel' },
+    { id: 8, label: 'Design 11\nScreens', tool: 'Claude Design' },
+    { id: 9, label: 'Design\nHandoff', tool: 'Claude Code' },
+  ],
+  '1': [
+    { id: 1,  label: 'Finalise\n11 UIs', tool: 'React' },
+    { id: 2,  label: 'DB Schema\n4 tables', tool: 'Turso' },
+    { id: 3,  label: 'Admin\nEntry Form', tool: 'React' },
+    { id: 4,  label: 'Seed 90\nQuestions', tool: 'Claude Code' },
+    { id: 5,  label: 'Practice\nMode Loop', tool: 'React' },
+    { id: 6,  label: 'AI Explain\n/api/explain', tool: 'Claude API' },
+    { id: 7,  label: 'Canvas\nDraw/Type/Upload', tool: 'React' },
+    { id: 8,  label: 'Score\nTracking', tool: 'React' },
+    { id: 9,  label: 'Onboarding\nLive', tool: 'React' },
+    { id: 10, label: 'Deploy\ntaleemimarkaz.com', tool: 'Vercel' },
+  ],
+  '2': [
+    { id: 1, label: 'Mock Test\nMode', tool: 'React' },
+    { id: 2, label: 'Activate\nNAT-IM', tool: 'Claude Code' },
+    { id: 3, label: 'Activate\nNAT-ICS', tool: 'Claude Code' },
+    { id: 4, label: 'Activate\nNAT-ICOM', tool: 'Claude Code' },
+    { id: 5, label: 'Activate\nNAT-IGS', tool: 'Claude Code' },
+    { id: 6, label: 'Activate\nNAT-IA', tool: 'Claude Code' },
+    { id: 7, label: 'Attempt\nHistory', tool: 'Turso' },
+  ],
+  '3': [
+    { id: 1, label: 'Performance\nDashboard', tool: 'React' },
+    { id: 2, label: 'Adaptive\nWeighting', tool: 'Claude API' },
+    { id: 3, label: 'Flag &\nReview', tool: 'React' },
+    { id: 4, label: 'Admin\nAnalytics', tool: 'React' },
+  ],
+  '4': [
+    { id: 1, label: 'CT-AI v2.0\nAudit Log', tool: 'Turso' },
+    { id: 2, label: 'Review\nQueue', tool: 'React' },
+    { id: 3, label: 'Content\nFiltering', tool: 'Claude API' },
+    { id: 4, label: 'ISO 42001\nLayer', tool: 'Claude Code' },
+  ],
+}
 
-const WORKFLOW_DOCS = {
-  master: '/src/governance/docs/00-master-workflow.html',
-  '0': '/src/governance/docs/01-phase0-workflow.html',
-  '1': '/src/governance/docs/02-phase1-workflow.html',
-  '2': '/src/governance/docs/03-phase2-workflow.html',
-  '3': '/src/governance/docs/04-phase345-workflow.html',
-  '4': '/src/governance/docs/04-phase345-workflow.html',
+const TOOL_COLORS = {
+  'Vite': '#646cff', 'Claude Code': '#0d9488', 'Turso': '#4f9cf9',
+  'React': '#0ea5e9', 'Git': '#f05032', 'Vercel': '#000000',
+  'Claude Design': '#7c3aed', 'Claude API': '#d97706',
+}
+
+const ACCENT_HEX = {
+  '0': '#1e293b', '1': '#0d9488', '2': '#7c3aed', '3': '#d97706', '4': '#0ea5e9',
 }
 
 const PHASES = [
@@ -93,30 +136,61 @@ function ProgressBar({ pct, barClass }) {
   )
 }
 
-function WorkflowEmbed({ src, title }) {
-  const [open, setOpen] = useState(false)
+function PhaseFlowchart({ phaseId, accentColor }) {
+  const steps = PHASE_FLOWS[phaseId] || []
+  if (!steps.length) return null
+  const BOX_W = 110, BOX_H = 56, GAP_X = 44, GAP_Y = 48, PAD = 16
+  const containerW = 860
+  const perRow = Math.max(1, Math.floor((containerW - PAD * 2 + GAP_X) / (BOX_W + GAP_X)))
+  const rows = []
+  for (let i = 0; i < steps.length; i += perRow) rows.push(steps.slice(i, i + perRow))
+  const svgH = rows.length * (BOX_H + GAP_Y) - GAP_Y + PAD * 2
+  const elements = []
+  rows.forEach((row, rowIdx) => {
+    const y = PAD + rowIdx * (BOX_H + GAP_Y)
+    if (rowIdx > 0) {
+      const prevRow = rows[rowIdx - 1]
+      const prevX = PAD + (prevRow.length - 1) * (BOX_W + GAP_X) + BOX_W
+      const rightEdge = prevX + 20
+      const prevY = PAD + (rowIdx - 1) * (BOX_H + GAP_Y) + BOX_H / 2
+      const curY = y + BOX_H / 2
+      elements.push(<polyline key={`wrap-${rowIdx}`} points={`${prevX},${prevY} ${rightEdge},${prevY} ${rightEdge},${curY} ${PAD},${curY}`} fill="none" stroke="#94a3b8" strokeWidth="1.5" strokeDasharray="4 2" markerEnd="url(#arrow)" />)
+    }
+    row.forEach((step, colIdx) => {
+      const x = PAD + colIdx * (BOX_W + GAP_X)
+      const isLast = rowIdx * perRow + colIdx === steps.length - 1
+      const toolColor = TOOL_COLORS[step.tool] || '#64748b'
+      elements.push(
+        <g key={`box-${step.id}`}>
+          <rect x={x} y={y} width={BOX_W} height={BOX_H} rx={8} fill="#ffffff" stroke={accentColor} strokeWidth="1.5" />
+          <circle cx={x + 14} cy={y + 14} r={9} fill={accentColor} />
+          <text x={x + 14} y={y + 18} textAnchor="middle" fill="#fff" fontSize="9" fontWeight="700">{step.id}</text>
+          {step.label.split('\n').map((line, li) => (
+            <text key={li} x={x + BOX_W / 2} y={y + 22 + li * 13} textAnchor="middle" fill="#0f172a" fontSize="10" fontWeight="600">{line}</text>
+          ))}
+          <circle cx={x + BOX_W - 10} cy={y + BOX_H - 10} r={4} fill={toolColor} />
+        </g>
+      )
+      if (colIdx < row.length - 1 && !isLast) {
+        const ax = x + BOX_W, ay = y + BOX_H / 2
+        elements.push(<line key={`arrow-${step.id}`} x1={ax} y1={ay} x2={ax + GAP_X - 6} y2={ay} stroke="#94a3b8" strokeWidth="1.5" markerEnd="url(#arrow)" />)
+      }
+    })
+  })
   return (
-    <div className="border-t border-gray-100">
-      <button
-        onClick={() => setOpen(o => !o)}
-        className="w-full flex items-center justify-between px-5 py-2.5 bg-gray-100 hover:bg-gray-200 transition-colors text-left"
-      >
-        <span className="text-xs font-semibold text-gray-900 tracking-wide uppercase">
-          📋 {title}
-        </span>
-        <span className={`text-gray-700 text-xs transition-transform duration-200 ${open ? 'rotate-180' : ''}`}>▾</span>
-      </button>
-      {open && (
-        <div className="border-t border-gray-100">
-          <iframe
-            src={src}
-            title={title}
-            className="w-full border-0"
-            style={{ height: '520px' }}
-            loading="lazy"
-          />
-        </div>
-      )}
+    <div className="px-4 py-4 bg-gray-50 border-t border-gray-200 overflow-x-auto">
+      <svg width={containerW} height={svgH} style={{ minWidth: containerW, display: 'block' }}>
+        <defs><marker id="arrow" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto"><path d="M0,0 L0,6 L6,3 z" fill="#94a3b8" /></marker></defs>
+        {elements}
+      </svg>
+      <div className="flex flex-wrap gap-3 mt-3">
+        {[...new Set((PHASE_FLOWS[phaseId] || []).map(s => s.tool))].map(tool => (
+          <div key={tool} className="flex items-center gap-1.5">
+            <div className="w-2.5 h-2.5 rounded-full" style={{ background: TOOL_COLORS[tool] || '#64748b' }} />
+            <span className="text-xs text-gray-900 font-medium">{tool}</span>
+          </div>
+        ))}
+      </div>
     </div>
   )
 }
@@ -132,7 +206,7 @@ export default function Admin() {
   const [dbError, setDbError] = useState('')
   const [expanded, setExpanded] = useState({ '0': true, '1': true, '2': true, '3': true, '4': true })
   const [toggling, setToggling] = useState(null)
-  const [masterWorkflowOpen, setMasterWorkflowOpen] = useState(false)
+  const [flowOpen, setFlowOpen] = useState({ '0': false, '1': false, '2': false, '3': false, '4': false })
 
   useEffect(() => {
     if (authenticated) initAndLoad()
@@ -271,31 +345,6 @@ export default function Admin() {
           </div>
         )}
 
-        {/* Master workflow diagram */}
-        <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
-          <button
-            onClick={() => setMasterWorkflowOpen(o => !o)}
-            className="w-full flex items-center justify-between px-5 py-4 hover:bg-gray-50 transition-colors"
-          >
-            <div>
-              <p className="text-sm font-bold text-gray-900 text-left">Master Project Workflow</p>
-              <p className="text-xs text-gray-700 text-left mt-0.5">All phases · All actors · End-to-end delivery map</p>
-            </div>
-            <span className={`text-gray-700 text-xs transition-transform duration-200 ${masterWorkflowOpen ? 'rotate-180' : ''}`}>▾</span>
-          </button>
-          {masterWorkflowOpen && (
-            <div className="border-t border-gray-100">
-              <iframe
-                src={WORKFLOW_DOCS.master}
-                title="Master Project Workflow"
-                className="w-full border-0"
-                style={{ height: '600px' }}
-                loading="lazy"
-              />
-            </div>
-          )}
-        </div>
-
         {/* Global progress card */}
         <div className="bg-white rounded-2xl border border-gray-200 p-5">
           <div className="flex items-center justify-between mb-2">
@@ -316,6 +365,7 @@ export default function Admin() {
             const pct = total ? Math.round((done / total) * 100) : 0
             const c = COLORS[phase.id]
             const isOpen = expanded[phase.id]
+            const accent = ACCENT_HEX[phase.id]
 
             return (
               <div key={phase.id} className={`bg-white rounded-2xl border ${c.border} overflow-hidden`}>
@@ -331,14 +381,14 @@ export default function Admin() {
                     <span className={`font-semibold text-sm ${c.heading}`}>{phase.name}</span>
                   </div>
                   <div className="flex items-center gap-3">
-                    <span className="text-xs text-gray-400 tabular-nums">{done}/{total}</span>
-                    <div className="w-20 bg-white bg-opacity-60 rounded-full h-1.5">
+                    <span className="text-xs text-white text-opacity-80 tabular-nums">{done}/{total}</span>
+                    <div className="w-20 bg-white bg-opacity-30 rounded-full h-1.5">
                       <div
                         className={`${c.bar} h-1.5 rounded-full transition-all duration-500`}
                         style={{ width: `${pct}%` }}
                       />
                     </div>
-                    <span className={`text-gray-400 text-xs transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}>
+                    <span className={`text-white text-opacity-80 text-xs transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}>
                       ▾
                     </span>
                   </div>
@@ -346,13 +396,15 @@ export default function Admin() {
 
                 {isOpen && (
                   <>
-                    {/* Phase workflow diagram — collapsible */}
-                    {WORKFLOW_DOCS[phase.id] && (
-                      <WorkflowEmbed
-                        src={WORKFLOW_DOCS[phase.id]}
-                        title={`Phase ${phase.id} Workflow`}
-                      />
-                    )}
+                    {/* Flowchart toggle */}
+                    <button
+                      onClick={() => setFlowOpen(prev => ({ ...prev, [phase.id]: !prev[phase.id] }))}
+                      className="w-full flex items-center justify-between px-5 py-2.5 bg-gray-100 hover:bg-gray-200 transition-colors border-b border-gray-200"
+                    >
+                      <span className="text-xs font-bold text-gray-900 tracking-wide uppercase">◈ Phase {phase.id} Flowchart</span>
+                      <span className={`text-gray-700 text-xs font-bold transition-transform duration-200 ${flowOpen[phase.id] ? 'rotate-180' : ''}`}>▾</span>
+                    </button>
+                    {flowOpen[phase.id] && <PhaseFlowchart phaseId={phase.id} accentColor={accent} />}
 
                     {/* Task list */}
                     <ul className="divide-y divide-gray-100">
