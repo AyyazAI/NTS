@@ -96,11 +96,22 @@ const SEED_TASKS = [
   { id: 'p2-05', phase_id: '2', phase_name: 'Mock Test + All Categories', label: 'Activate General Sciences (NAT-IGS) — seed 30 verified subject questions', tool: 'Claude Code' },
   { id: 'p2-06', phase_id: '2', phase_name: 'Mock Test + All Categories', label: 'Activate Arts (NAT-IA) — seed 30 verified subject questions', tool: 'Claude Code' },
   { id: 'p2-07', phase_id: '2', phase_name: 'Mock Test + All Categories', label: 'Attempt history & tracking (attempts table · Powers Progress screen)', tool: 'Turso' },
+  { id: 'p2-08', phase_id: '2', phase_name: 'Mock Test + All Categories', label: 'Login/auth — OTP via mobile or magic link via email', tool: 'Turso' },
+  { id: 'p2-09', phase_id: '2', phase_name: 'Mock Test + All Categories', label: 'Hint mode — 3 levels, Practice only, tracked in attempts table (PD-006)', tool: 'Claude API' },
+  { id: 'p2-10', phase_id: '2', phase_name: 'Mock Test + All Categories', label: 'Readiness score — correct/total metric replacing raw accuracy (PD-004)', tool: 'React' },
+  { id: 'p2-11', phase_id: '2', phase_name: 'Mock Test + All Categories', label: 'Mock test redesign — subject-focused 25min sessions + difficulty picker (UX-007)', tool: 'React' },
+  // Phase 1 additions
+  { id: 'p1-11', phase_id: '1', phase_name: 'Core Learning Engine', label: 'NTS test dates admin management (add/remove upcoming NAT-I dates)', tool: 'React' },
+  { id: 'p1-12', phase_id: '1', phase_name: 'Core Learning Engine', label: 'Content moderation — file type/size + Claude prompt guardrails (GOV-RULE-011)', tool: 'Claude API' },
+  { id: 'p1-13', phase_id: '1', phase_name: 'Core Learning Engine', label: 'Field validation — name, mobile/email, all forms (Category H)', tool: 'React' },
   // Phase 3 — Analytics & Personalisation
   { id: 'p3-01', phase_id: '3', phase_name: 'Analytics & Personalisation', label: 'Student performance dashboard (section-wise accuracy · weak area detection)', tool: 'React' },
   { id: 'p3-02', phase_id: '3', phase_name: 'Analytics & Personalisation', label: 'Adaptive question weighting (AI classifies difficulty · serves weak sections more)', tool: 'Claude API' },
   { id: 'p3-03', phase_id: '3', phase_name: 'Analytics & Personalisation', label: 'Question flag & review system (student flags · admin resolves · closed loop)', tool: 'React' },
   { id: 'p3-04', phase_id: '3', phase_name: 'Analytics & Personalisation', label: 'Admin analytics dashboard (attempts per question · flag queue · category breakdown)', tool: 'React' },
+  { id: 'p3-05', phase_id: '3', phase_name: 'Analytics & Personalisation', label: 'Avoidance pattern recognition — detect and intervene on skipped topics (PD-005)', tool: 'Claude API' },
+  { id: 'p3-06', phase_id: '3', phase_name: 'Analytics & Personalisation', label: 'Dynamic target progression — suggest new target when current crossed (PD-001)', tool: 'React' },
+  { id: 'p3-07', phase_id: '3', phase_name: 'Analytics & Personalisation', label: 'Progress graph — target score + passing mark reference lines', tool: 'React' },
   // Phase 4 — Governance & Compliance
   { id: 'p4-01', phase_id: '4', phase_name: 'Governance & Compliance', label: 'CT-AI v2.0 audit logging (model · version · timestamp · confidence per explanation)', tool: 'Turso' },
   { id: 'p4-02', phase_id: '4', phase_name: 'Governance & Compliance', label: 'Low-confidence explanation review queue (GOV-RULE-006)', tool: 'React' },
@@ -227,15 +238,12 @@ export default function Admin() {
           updated_at TEXT
         )
       `)
-      const { rows } = await db.execute('SELECT COUNT(*) as count FROM tasks')
-      if (Number(rows[0].count) === 0) {
-        await db.batch(
-          SEED_TASKS.map(t => ({
-            sql: 'INSERT OR IGNORE INTO tasks (id, phase_id, phase_name, label, tool, done) VALUES (?, ?, ?, ?, ?, 0)',
-            args: [t.id, t.phase_id, t.phase_name, t.label, t.tool],
-          }))
-        )
-      }
+      await db.batch(
+        SEED_TASKS.map(t => ({
+          sql: 'INSERT OR IGNORE INTO tasks (id, phase_id, phase_name, label, tool, done) VALUES (?, ?, ?, ?, ?, 0)',
+          args: [t.id, t.phase_id, t.phase_name, t.label, t.tool],
+        }))
+      )
       const all = await db.execute('SELECT * FROM tasks ORDER BY id')
       setTasks(all.rows)
     } catch (e) {
