@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Phase 2 — Mock Test Mode &amp; All NAT-I Categories · TaleemiMarkaz NTS Prep</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', system-ui, sans-serif; background: #ffffff; color: #0f172a; font-size: 14px; line-height: 1.5; }
+
+  .page-header { background: #7c3aed; color: #fff; padding: 32px 48px; display: flex; align-items: flex-start; justify-content: space-between; gap: 24px; }
+  .page-header h1 { font-size: 20px; font-weight: 700; }
+  .page-header .sub { font-size: 12px; color: #ddd6fe; margin-top: 4px; }
+  .phase-badge { background: rgba(255,255,255,0.15); border: 2px solid rgba(255,255,255,0.5); color: #fff; font-size: 11px; font-weight: 800; letter-spacing: 0.8px; text-transform: uppercase; padding: 5px 16px; border-radius: 20px; white-space: nowrap; }
+  .status-badge { background: #1e293b; color: #a78bfa; font-size: 11px; font-weight: 700; padding: 4px 12px; border-radius: 20px; margin-top: 8px; display: inline-block; }
+
+  .page-body { padding: 40px 48px; max-width: 1100px; margin: 0 auto; }
+
+  .meta-band { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: #e2e8f0; border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; margin-bottom: 36px; }
+  .meta-cell { background: #f8fafc; padding: 14px 18px; }
+  .meta-cell .label { font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: #64748b; margin-bottom: 3px; }
+  .meta-cell .value { font-size: 13px; font-weight: 600; color: #0f172a; }
+
+  .section-title { font-size: 11px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: #7c3aed; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 2px solid #7c3aed; }
+
+  .actor-legend { display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 32px; padding: 14px 18px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; }
+  .actor-item { display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 600; }
+  .actor-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
+  .dot-product { background: #0d9488; } .dot-student { background: #7c3aed; } .dot-admin { background: #d97706; } .dot-infra { background: #64748b; } .dot-ai { background: #0ea5e9; }
+
+  .group-label { font-size: 10px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; color: #64748b; padding: 16px 0 8px 76px; display: flex; align-items: center; gap: 10px; }
+  .group-label::after { content: ''; flex: 1; height: 1px; background: #e2e8f0; }
+
+  .flow-container { display: flex; flex-direction: column; gap: 0; }
+  .flow-step { display: grid; grid-template-columns: 60px 1fr; gap: 0; }
+  .step-left { display: flex; flex-direction: column; align-items: center; padding-top: 18px; }
+  .step-number { width: 36px; height: 36px; border-radius: 50%; background: #7c3aed; color: #fff; font-size: 13px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0; z-index: 1; }
+  .step-number.admin-step { background: #d97706; }
+  .step-number.infra-step { background: #475569; }
+  .step-number.product-step { background: #0d9488; }
+  .step-line { width: 2px; flex: 1; background: #e2e8f0; margin-top: 4px; min-height: 24px; }
+  .flow-step:last-child .step-line { display: none; }
+  .step-right { padding: 12px 0 24px 16px; }
+  .step-title { font-size: 14px; font-weight: 700; color: #0f172a; margin-bottom: 6px; }
+  .step-actors { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 8px; }
+  .actor-tag { display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: 0.5px; padding: 2px 8px; border-radius: 4px; }
+  .tag-product { background: #ccfbf1; color: #0f766e; }
+  .tag-student { background: #ede9fe; color: #5b21b6; }
+  .tag-admin { background: #fef3c7; color: #92400e; }
+  .tag-infra { background: #f1f5f9; color: #334155; }
+  .step-details { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 12px 14px; }
+  .detail-row { display: flex; gap: 8px; margin-bottom: 5px; font-size: 12px; align-items: flex-start; }
+  .detail-row:last-child { margin-bottom: 0; }
+  .detail-icon { color: #7c3aed; font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+  .detail-text { color: #334155; }
+  .output-box { margin-top: 8px; padding: 10px 14px; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 6px; font-size: 12px; color: #14532d; }
+  .output-box strong { font-size: 10px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; display: block; margin-bottom: 3px; color: #15803d; }
+  .decision-box { margin-top: 8px; padding: 10px 14px; background: #fffbeb; border: 1px solid #fde68a; border-radius: 6px; font-size: 12px; color: #78350f; }
+  .decision-box strong { font-size: 10px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; display: block; margin-bottom: 3px; color: #92400e; }
+
+  /* Category activation cards */
+  .category-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 10px; }
+  .cat-card { padding: 10px 12px; border-radius: 6px; border: 1px solid #e2e8f0; font-size: 11px; }
+  .cat-card .cat-name { font-weight: 700; color: #0f172a; font-size: 12px; margin-bottom: 3px; }
+  .cat-card .cat-sub { color: #64748b; }
+  .cat-card.active { background: #f0fdf4; border-color: #86efac; }
+  .cat-card.pending { background: #faf5ff; border-color: #ddd6fe; }
+  .cat-label { font-size: 9px; font-weight: 800; letter-spacing: 0.5px; text-transform: uppercase; padding: 1px 6px; border-radius: 3px; display: inline-block; margin-bottom: 4px; }
+  .label-active { background: #dcfce7; color: #15803d; }
+  .label-phase2 { background: #ede9fe; color: #5b21b6; }
+
+  .prerequisite-banner { background: #faf5ff; border: 1px solid #ddd6fe; border-radius: 8px; padding: 16px 20px; display: flex; align-items: center; gap: 12px; margin-bottom: 32px; }
+  .prereq-icon { font-size: 20px; }
+  .prereq-text strong { display: block; font-size: 13px; font-weight: 700; color: #5b21b6; }
+  .prereq-text span { font-size: 12px; color: #7c3aed; }
+
+  /* Mock test flow */
+  .mock-flow { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; margin-top: 8px; padding: 10px 14px; background: #faf5ff; border: 1px solid #ddd6fe; border-radius: 6px; font-size: 11px; font-weight: 600; color: #5b21b6; }
+  .mock-node { background: #7c3aed; color: #fff; padding: 4px 10px; border-radius: 4px; white-space: nowrap; }
+  .mock-arrow { color: #94a3b8; }
+
+  .page-footer { margin-top: 48px; padding-top: 20px; border-top: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; font-size: 11px; color: #94a3b8; }
+  .footer-logo { font-weight: 800; color: #0d9488; font-size: 13px; }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <div>
+    <h1>Phase 2 — Mock Test Mode &amp; All NAT-I Categories</h1>
+    <div class="sub">TaleemiMarkaz · NTS Prep · Full exam simulation + 5 remaining category unlocks · Detailed phase workflow</div>
+    <div class="status-badge">⏳ Pending Phase 1</div>
+  </div>
+  <div class="phase-badge">Phase 2 of 5</div>
+</div>
+
+<div class="page-body">
+
+  <div class="meta-band">
+    <div class="meta-cell"><div class="label">Phase</div><div class="value">2 — Mock Test + Categories</div></div>
+    <div class="meta-cell"><div class="label">Prerequisite</div><div class="value">Phase 1 complete</div></div>
+    <div class="meta-cell"><div class="label">New Categories</div><div class="value">NAT-IM, ICS, ICOM, IGS, IA</div></div>
+    <div class="meta-cell"><div class="label">Exam Simulation</div><div class="value">90 MCQs · 120 min · Real format</div></div>
+  </div>
+
+  <div class="prerequisite-banner">
+    <div class="prereq-icon">⏳</div>
+    <div class="prereq-text">
+      <strong>Prerequisite: Phase 1 must be fully complete</strong>
+      <span>Phase 2 begins only after taleemimarkaz.com is live, Practice Mode works end-to-end, and 90 NAT-IE questions are verified in DB.</span>
+    </div>
+  </div>
+
+  <div class="section-title">Category unlock sequence (Phase 2)</div>
+  <div class="category-grid" style="margin-bottom: 32px;">
+    <div class="cat-card active"><div class="cat-label label-active">Phase 1 — Active</div><div class="cat-name">Engineering (NAT-IE)</div><div class="cat-sub">Physics · Chemistry · Mathematics · English</div></div>
+    <div class="cat-card pending"><div class="cat-label label-phase2">Phase 2 — Step 2.2</div><div class="cat-name">Medical (NAT-IM)</div><div class="cat-sub">Biology · Chemistry · Physics · English</div></div>
+    <div class="cat-card pending"><div class="cat-label label-phase2">Phase 2 — Step 2.3</div><div class="cat-name">Computer Science (NAT-ICS)</div><div class="cat-sub">CS · Mathematics · Physics · English</div></div>
+    <div class="cat-card pending"><div class="cat-label label-phase2">Phase 2 — Step 2.4</div><div class="cat-name">Commerce (NAT-ICOM)</div><div class="cat-sub">Accounts · Business · Economics · English</div></div>
+    <div class="cat-card pending"><div class="cat-label label-phase2">Phase 2 — Step 2.5</div><div class="cat-name">General Sciences (NAT-IGS)</div><div class="cat-sub">To be confirmed</div></div>
+    <div class="cat-card pending"><div class="cat-label label-phase2">Phase 2 — Step 2.6</div><div class="cat-name">Arts (NAT-IA)</div><div class="cat-sub">To be confirmed</div></div>
+  </div>
+
+  <div class="section-title">Actors in this phase</div>
+  <div class="actor-legend">
+    <div class="actor-item"><div class="actor-dot dot-product"></div> Product / Dev Team</div>
+    <div class="actor-item"><div class="actor-dot dot-student"></div> Student</div>
+    <div class="actor-item"><div class="actor-dot dot-admin"></div> Admin / Content Team</div>
+    <div class="actor-item"><div class="actor-dot dot-infra"></div> Infrastructure</div>
+  </div>
+
+  <div class="section-title">Execution Flow</div>
+
+  <div class="flow-container">
+
+    <!-- 2.1 Mock Test Mode -->
+    <div class="flow-step">
+      <div class="step-left"><div class="step-number product-step">2.1</div><div class="step-line"></div></div>
+      <div class="step-right">
+        <div class="step-title">Activate Mock Test Mode</div>
+        <div class="step-actors"><span class="actor-tag tag-product">Product Team</span><span class="actor-tag tag-student">Student</span></div>
+        <div class="step-details">
+          <div class="detail-row"><div class="detail-icon">→</div><div class="detail-text">Full exam simulation: 90 MCQs · 120 minute countdown timer · Real exam conditions</div></div>
+          <div class="detail-row"><div class="detail-icon">→</div><div class="detail-text">4 sections: Verbal (S1) · Analytical (S2) · Quantitative (S3) · Subject-Specific (S4) — navigation between sections</div></div>
+          <div class="detail-row"><div class="detail-icon">→</div><div class="detail-text">No Show Solution button during mock test — solutions available only after test ends</div></div>
+          <div class="detail-row"><div class="detail-icon">→</div><div class="detail-text">Auto-submit when timer reaches zero OR student submits early</div></div>
+          <div class="detail-row"><div class="detail-icon">→</div><div class="detail-text">MockTestResults: overall score / 90 · 4-row section breakdown · Time taken</div></div>
+        </div>
+        <div class="mock-flow">
+          <span class="mock-node">Home → Start Test</span>
+          <span class="mock-arrow">→</span>
+          <span class="mock-node">S1 Verbal (20)</span>
+          <span class="mock-arrow">→</span>
+          <span class="mock-node">S2 Analytical (20)</span>
+          <span class="mock-arrow">→</span>
+          <span class="mock-node">S3 Quantitative (20)</span>
+          <span class="mock-arrow">→</span>
+          <span class="mock-node">S4 Subject (30)</span>
+          <span class="mock-arrow">→</span>
+          <span class="mock-node">Results</span>
+        </div>
+        <div class="output-box"><strong>Output</strong>Mock Test Mode live · Full 120-min simulation · Section navigation · Results with 4-row breakdown</div>
+      </div>
+    </div>
+
+    <!-- 2.2 Activate NAT-IM -->
+    <div class="flow-step">
+      <div class="step-left"><div class="step-number admin-step">2.2</div><div class="step-line"></div></div>
+      <div class="step-right">
+        <div class="step-title">Activate Medical category (NAT-IM)</div>
+        <div class="step-actors"><span class="actor-tag tag-admin">Admin Team</span></div>
+        <div class="step-details">
+          <div class="detail-row"><div class="detail-icon">→</div><div class="detail-text">CLAUDE.md updated with NAT-IM sub-topics before work begins (GOV-RULE-008)</div></div>
+          <div class="detail-row"><div class="detail-icon">→</div><div class="detail-text">Seed 30 verified subject questions: Biology · Chemistry · Physics · English</div></div>
+          <div class="detail-row"><div class="detail-icon">→</div><div class="detail-text">category = NAT-IM on all 30 questions · verified=1 set for each</div></div>
+          <div class="detail-row"><div class="detail-icon">→</div><div class="detail-text">Unlock NAT-IM in onboarding category selector (enable card in DB config or flag)</div></div>
+        </div>
+        <div class="output-box"><strong>Output</strong>NAT-IM live · Medical students can now onboard and practice</div>
+      </div>
+    </div>
+
+    <!-- 2.3 Activate NAT-ICS -->
+    <div class="flow-step">
+      <div class="step-left"><div class="step-number admin-step">2.3</div><div class="step-line"></div></div>
+      <div class="step-right">
+        <div class="step-title">Activate Computer Science category (NAT-ICS)</div>
+        <div class="step-actors"><span class="actor-tag tag-admin">Admin Team</span></div>
+        <div class="step-details">
+          <div class="detail-row"><div class="detail-icon">→</div><div class="detail-text">Seed 30 verified subject questions: Computer Science · Mathematics · Physics · English</div></div>
+          <div class="detail-row"><div class="detail-icon">→</div><div class="detail-text">Same activation pattern as NAT-IM: seed → verify → unlock</div></div>
+        </div>
+        <div class="output-box"><strong>Output</strong>NAT-ICS live · CS students can now onboard and practice</div>
+      </div>
+    </div>
+
+    <!-- 2.4 Activate NAT-ICOM -->
+    <div class="flow-step">
+      <div class="step-left"><div class="step-number admin-step">2.4</div><div class="step-line"></div></div>
+      <div class="step-right">
+        <div class="step-title">Activate Commerce category (NAT-ICOM)</div>
+        <div class="step-actors"><span class="actor-tag tag-admin">Admin Team</span></div>
+        <div class="step-details">
+          <div class="detail-row"><div class="detail-icon">→</div><div class="detail-text">Seed 30 verified subject questions: Accounts · Business Studies · Economics · English</div></div>
+          <div class="detail-row"><div class="detail-icon">→</div><div class="detail-text">Same activation pattern: seed → verify → unlock</div></div>
+        </div>
+        <div class="output-box"><strong>Output</strong>NAT-ICOM live · Commerce students can now onboard and practice</div>
+      </div>
+    </div>
+
+    <!-- 2.5 Activate NAT-IGS -->
+    <div class="flow-step">
+      <div class="step-left"><div class="step-number admin-step">2.5</div><div class="step-line"></div></div>
+      <div class="step-right">
+        <div class="step-title">Activate General Sciences category (NAT-IGS)</div>
+        <div class="step-actors"><span class="actor-tag tag-admin">Admin Team</span></div>
+        <div class="step-details">
+          <div class="detail-row"><div class="detail-icon">→</div><div class="detail-text">Sub-topics to be confirmed and added to CLAUDE.md before seeding begins</div></div>
+          <div class="detail-row"><div class="detail-icon">→</div><div class="detail-text">Seed 30 verified subject questions · Same activation pattern</div></div>
+        </div>
+        <div class="output-box"><strong>Output</strong>NAT-IGS live · General Sciences students can now onboard and practice</div>
+      </div>
+    </div>
+
+    <!-- 2.6 Activate NAT-IA -->
+    <div class="flow-step">
+      <div class="step-left"><div class="step-number admin-step">2.6</div><div class="step-line"></div></div>
+      <div class="step-right">
+        <div class="step-title">Activate Arts category (NAT-IA)</div>
+        <div class="step-actors"><span class="actor-tag tag-admin">Admin Team</span></div>
+        <div class="step-details">
+          <div class="detail-row"><div class="detail-icon">→</div><div class="detail-text">Sub-topics to be confirmed and added to CLAUDE.md before seeding begins</div></div>
+          <div class="detail-row"><div class="detail-icon">→</div><div class="detail-text">Seed 30 verified subject questions · Same activation pattern</div></div>
+          <div class="detail-row"><div class="detail-icon">→</div><div class="detail-text">All 6 NAT-I categories now active — full NAT-I coverage achieved</div></div>
+        </div>
+        <div class="output-box"><strong>Output</strong>NAT-IA live · All 6 NAT-I categories complete · Platform serves all NAT-I students</div>
+      </div>
+    </div>
+
+    <!-- 2.7 Attempt history -->
+    <div class="flow-step">
+      <div class="step-left"><div class="step-number infra-step">2.7</div><div class="step-line"></div></div>
+      <div class="step-right">
+        <div class="step-title">Implement full attempt history tracking</div>
+        <div class="step-actors"><span class="actor-tag tag-infra">Infrastructure</span><span class="actor-tag tag-product">Product Team</span></div>
+        <div class="step-details">
+          <div class="detail-row"><div class="detail-icon">→</div><div class="detail-text">attempts table: id, student_id, question_id, mode (practice|mock), action, selected_option, is_correct, time_spent, created_at</div></div>
+          <div class="detail-row"><div class="detail-icon">→</div><div class="detail-text">Powers Progress screen: per-section accuracy, attempt history, improvement over time</div></div>
+          <div class="detail-row"><div class="detail-icon">→</div><div class="detail-text">Foundation for Phase 3 adaptive question weighting</div></div>
+        </div>
+        <div class="decision-box"><strong>Gate → Phase 3</strong>Mock Test Mode live · All 6 categories active · Attempt history captured → Phase 3 analytics and personalisation can begin</div>
+        <div class="output-box"><strong>Output</strong>attempts table live · Progress screen reads from DB · Phase 2 complete</div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="page-footer">
+    <div class="footer-logo">TaleemiMarkaz</div>
+    <div>NTS-GOV-001 v1.1 · Phase 2 Workflow v1.0 · Generated June 2026</div>
+    <div>github.com/AyyazAI/NTS</div>
+  </div>
+
+</div>
+</body>
+</html>

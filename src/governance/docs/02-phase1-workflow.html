@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Phase 1 — Core Learning Engine · TaleemiMarkaz NTS Prep</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', system-ui, sans-serif; background: #ffffff; color: #0f172a; font-size: 14px; line-height: 1.5; }
+
+  .page-header { background: #0d9488; color: #fff; padding: 32px 48px; display: flex; align-items: flex-start; justify-content: space-between; gap: 24px; }
+  .page-header h1 { font-size: 20px; font-weight: 700; }
+  .page-header .sub { font-size: 12px; color: #99f6e4; margin-top: 4px; }
+  .phase-badge { background: rgba(255,255,255,0.15); border: 2px solid rgba(255,255,255,0.5); color: #fff; font-size: 11px; font-weight: 800; letter-spacing: 0.8px; text-transform: uppercase; padding: 5px 16px; border-radius: 20px; white-space: nowrap; }
+  .status-badge { background: #0f172a; color: #34d399; font-size: 11px; font-weight: 700; padding: 4px 12px; border-radius: 20px; margin-top: 8px; display: inline-block; }
+
+  .page-body { padding: 40px 48px; max-width: 1100px; margin: 0 auto; }
+
+  .meta-band { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: #e2e8f0; border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; margin-bottom: 36px; }
+  .meta-cell { background: #f8fafc; padding: 14px 18px; }
+  .meta-cell .label { font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: #64748b; margin-bottom: 3px; }
+  .meta-cell .value { font-size: 13px; font-weight: 600; color: #0f172a; }
+
+  .section-title { font-size: 11px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: #0d9488; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 2px solid #0d9488; }
+
+  .actor-legend { display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 32px; padding: 14px 18px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; }
+  .actor-item { display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 600; }
+  .actor-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
+  .dot-product { background: #0d9488; } .dot-student { background: #7c3aed; } .dot-admin { background: #d97706; } .dot-infra { background: #64748b; } .dot-ai { background: #0ea5e9; }
+
+  /* Group labels */
+  .group-label {
+    font-size: 10px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase;
+    color: #64748b; padding: 16px 0 8px 76px; display: flex; align-items: center; gap: 10px;
+  }
+  .group-label::after { content: ''; flex: 1; height: 1px; background: #e2e8f0; }
+
+  /* Linear flow steps */
+  .flow-container { display: flex; flex-direction: column; gap: 0; }
+  .flow-step { display: grid; grid-template-columns: 60px 1fr; gap: 0; position: relative; }
+  .step-left { display: flex; flex-direction: column; align-items: center; padding-top: 18px; }
+  .step-number { width: 36px; height: 36px; border-radius: 50%; background: #0d9488; color: #fff; font-size: 13px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0; z-index: 1; }
+  .step-number.admin-step { background: #d97706; }
+  .step-number.infra-step { background: #475569; }
+  .step-number.student-step { background: #7c3aed; }
+  .step-number.ai-step { background: #0ea5e9; }
+  .step-line { width: 2px; flex: 1; background: #e2e8f0; margin-top: 4px; min-height: 24px; }
+  .flow-step:last-child .step-line { display: none; }
+  .step-right { padding: 12px 0 12px 16px; padding-bottom: 24px; }
+  .step-title { font-size: 14px; font-weight: 700; color: #0f172a; margin-bottom: 6px; }
+  .step-actors { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 8px; }
+  .actor-tag { display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: 0.5px; padding: 2px 8px; border-radius: 4px; }
+  .tag-product { background: #ccfbf1; color: #0f766e; }
+  .tag-student { background: #ede9fe; color: #5b21b6; }
+  .tag-admin { background: #fef3c7; color: #92400e; }
+  .tag-infra { background: #f1f5f9; color: #334155; }
+  .tag-ai { background: #e0f2fe; color: #0369a1; }
+
+  .step-details { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 12px 14px; }
+  .detail-row { display: flex; gap: 8px; margin-bottom: 5px; font-size: 12px; align-items: flex-start; }
+  .detail-row:last-child { margin-bottom: 0; }
+  .detail-icon { color: #0d9488; font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+  .detail-text { color: #334155; }
+
+  .output-box { margin-top: 8px; padding: 10px 14px; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 6px; font-size: 12px; color: #14532d; }
+  .output-box strong { font-size: 10px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; display: block; margin-bottom: 3px; color: #15803d; }
+  .decision-box { margin-top: 8px; padding: 10px 14px; background: #fffbeb; border: 1px solid #fde68a; border-radius: 6px; font-size: 12px; color: #78350f; }
+  .decision-box strong { font-size: 10px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; display: block; margin-bottom: 3px; color: #92400e; }
+  .gov-box { margin-top: 8px; padding: 10px 14px; background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 6px; font-size: 12px; color: #1e3a8a; }
+  .gov-box strong { font-size: 10px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; display: block; margin-bottom: 3px; color: #1d4ed8; }
+
+  /* UX flow inline diagram */
+  .ux-flow {
+    display: flex; align-items: center; flex-wrap: wrap; gap: 6px;
+    margin-top: 8px; padding: 10px 14px;
+    background: #f0fdfa; border: 1px solid #99f6e4; border-radius: 6px;
+    font-size: 11px; font-weight: 600; color: #0f766e;
+  }
+  .ux-node { background: #0d9488; color: #fff; padding: 4px 10px; border-radius: 4px; white-space: nowrap; }
+  .ux-arrow { color: #64748b; font-weight: 400; }
+  .ux-branch { color: #7c3aed; font-weight: 700; }
+
+  .inprogress-banner { background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 8px; padding: 16px 20px; display: flex; align-items: center; gap: 12px; margin-bottom: 32px; }
+  .inprogress-icon { font-size: 24px; }
+  .inprogress-text strong { display: block; font-size: 14px; font-weight: 700; color: #1e3a8a; }
+  .inprogress-text span { font-size: 12px; color: #1d4ed8; }
+
+  .page-footer { margin-top: 48px; padding-top: 20px; border-top: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; font-size: 11px; color: #94a3b8; }
+  .footer-logo { font-weight: 800; color: #0d9488; font-size: 13px; }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <div>
+    <h1>Phase 1 — Core Learning Engine</h1>
+    <div class="sub">TaleemiMarkaz · NTS Prep · Engineering (NAT-IE) · Detailed phase workflow</div>
+    <div class="status-badge">🔄 In Progress</div>
+  </div>
+  <div class="phase-badge">Phase 1 of 5</div>
+</div>
+
+<div class="page-body">
+
+  <div class="meta-band">
+    <div class="meta-cell"><div class="label">Phase</div><div class="value">1 — Core Engine</div></div>
+    <div class="meta-cell"><div class="label">Status</div><div class="value">🔄 In Progress</div></div>
+    <div class="meta-cell"><div class="label">Active Category</div><div class="value">Engineering (NAT-IE)</div></div>
+    <div class="meta-cell"><div class="label">Question Target</div><div class="value">90 verified MCQs</div></div>
+  </div>
+
+  <div class="inprogress-banner">
+    <div class="inprogress-icon">🔄</div>
+    <div class="inprogress-text">
+      <strong>Phase 1 is currently active</strong>
+      <span>UI screens complete. Next: Turso schema → Admin question form → Seed 90 questions → Wire Practice Mode → AI explanation engine → Canvas → Deploy.</span>
+    </div>
+  </div>
+
+  <div class="section-title">Actors in this phase</div>
+  <div class="actor-legend">
+    <div class="actor-item"><div class="actor-dot dot-product"></div> Product / Dev Team</div>
+    <div class="actor-item"><div class="actor-dot dot-student"></div> Student</div>
+    <div class="actor-item"><div class="actor-dot dot-admin"></div> Admin / Content Team</div>
+    <div class="actor-item"><div class="actor-dot dot-infra"></div> Infrastructure</div>
+    <div class="actor-item"><div class="actor-dot dot-ai"></div> AI System (Claude)</div>
+  </div>
+
+  <div class="section-title">Execution Flow</div>
+
+  <div class="flow-container">
+
+    <!-- 1.1 -->
+    <div class="flow-step">
+      <div class="step-left"><div class="step-number">1.1</div><div class="step-line"></div></div>
+      <div class="step-right">
+        <div class="step-title">Finalise &amp; verify all 11 screen UIs</div>
+        <div class="step-actors"><span class="actor-tag tag-product">Product Team</span></div>
+        <div class="step-details">
+          <div class="detail-row"><div class="detail-icon">→</div><div class="detail-text">SolutionWrong: tab labels shortened to [✓ Count] [Formula] [Grid] — fits 390px with no scrollbar</div></div>
+          <div class="detail-row"><div class="detail-icon">→</div><div class="detail-text">QuestionMockTest: amber → teal on primary buttons (amber retained for mode pill and timer warning only)</div></div>
+          <div class="detail-row"><div class="detail-icon">→</div><div class="detail-text">MockTest + MockTestResults: 90 MCQs, 120 min, 4 sections, dynamic subject label</div></div>
+          <div class="detail-row"><div class="detail-icon">→</div><div class="detail-text">Onboarding Step 2: NAT-I category selector mandatory · 6 cards · CTA disabled until category selected</div></div>
+          <div class="detail-row"><div class="detail-icon">→</div><div class="detail-text">Mobile viewport verified at 390px across all 11 screens</div></div>
+        </div>
+        <div class="output-box"><strong>Output</strong>11 screens complete · UI bug-free · Visual QA passed · Ready for data wiring</div>
+      </div>
+    </div>
+
+    <!-- 1.2 -->
+    <div class="flow-step">
+      <div class="step-left"><div class="step-number infra-step">1.2</div><div class="step-line"></div></div>
+      <div class="step-right">
+        <div class="step-title">Create Turso database schema</div>
+        <div class="step-actors"><span class="actor-tag tag-infra">Infrastructure</span><span class="actor-tag tag-product">Product Team</span></div>
+        <div class="step-details">
+          <div class="detail-row"><div class="detail-icon">→</div><div class="detail-text"><strong>questions</strong>: id, topic, sub_topic, difficulty, question_text, option_a–d, correct_option, explanation_en, section, category, verified, ai_generated, times_attempted, times_correct</div></div>
+          <div class="detail-row"><div class="detail-icon">→</div><div class="detail-text"><strong>question_methods</strong>: id, question_id, method_number, method_title, method_steps (JSON)</div></div>
+          <div class="detail-row"><div class="detail-icon">→</div><div class="detail-text"><strong>question_flags</strong>: id, question_id, flagged_by, flag_reason, status, resolved_by, resolved_at</div></div>
+          <div class="detail-row"><div class="detail-icon">→</div><div class="detail-text"><strong>students</strong>: id, full_name, mobile, nat_category, test_date, target_score, created_at</div></div>
+        </div>
+        <div class="gov-box"><strong>GOV-RULE-007</strong>verified=1 is a hard gate — no question served to a student until an admin marks it verified</div>
+        <div class="output-box"><strong>Output</strong>4 tables created in Turso · Schema enforces GOV-RULE-007 · DB ready for seeding</div>
+      </div>
+    </div>
+
+    <!-- 1.3 -->
+    <div class="flow-step">
+      <div class="step-left"><div class="step-number admin-step">1.3</div><div class="step-line"></div></div>
+      <div class="step-right">
+        <div class="step-title">Build admin question entry form</div>
+        <div class="step-actors"><span class="actor-tag tag-admin">Admin Team</span><span class="actor-tag tag-product">Product Team</span></div>
+        <div class="step-details">
+          <div class="detail-row"><div class="detail-icon">→</div><div class="detail-text">Route: /admin/questions/new</div></div>
+          <div class="detail-row"><div class="detail-icon">→</div><div class="detail-text">Fields: section selector · category selector · question text · options A–D · correct answer · difficulty</div></div>
+          <div class="detail-row"><div class="detail-icon">→</div><div class="detail-text">3 method fields: method_title + method_steps (JSON) for each of 3 required methods</div></div>
+          <div class="detail-row"><div class="detail-icon">→</div><div class="detail-text">verified toggle (admin sets to 1 when question is confirmed correct)</div></div>
+          <div class="detail-row"><div class="detail-icon">→</div><div class="detail-text">Writes to Turso questions + question_methods tables on submit</div></div>
+        </div>
+        <div class="output-box"><strong>Output</strong>/admin/questions/new live · Admin can enter and verify questions · Method fields enforced</div>
+      </div>
+    </div>
+
+    <!-- 1.4 -->
+    <div class="flow-step">
+      <div class="step-left"><div class="step-number admin-step">1.4</div><div class="step-line"></div></div>
+      <div class="step-right">
+        <div class="step-title">Seed verified question bank (90 questions)</div>
+        <div class="step-actors"><span class="actor-tag tag-admin">Admin Team</span></div>
+        <div class="step-details">
+          <div class="detail-row"><div class="detail-icon">→</div><div class="detail-text">Verbal: 20 questions (section = verbal, category = null — common to all categories)</div></div>
+          <div class="detail-row"><div class="detail-icon">→</div><div class="detail-text">Analytical: 20 questions (section = analytical, category = null)</div></div>
+          <div class="detail-row"><div class="detail-icon">→</div><div class="detail-text">Quantitative: 20 questions (section = quantitative, category = null)</div></div>
+          <div class="detail-row"><div class="detail-icon">→</div><div class="detail-text">Subject-Specific (NAT-IE): 30 questions (section = subject_specific, category = NAT-IE) · Sub-topics: Physics, Chemistry, Mathematics, English</div></div>
+          <div class="detail-row"><div class="detail-icon">→</div><div class="detail-text">Each question verified=1 before being eligible for student sessions</div></div>
+        </div>
+        <div class="decision-box"><strong>Quality Gate</strong>All 90 questions must be: human-authored or AI-drafted then human-reviewed · correct_option confirmed · 3 methods entered · verified=1 set</div>
+        <div class="output-box"><strong>Output</strong>90 verified questions in Turso · Ready to power Practice Mode sessions</div>
+      </div>
+    </div>
+
+    <!-- 1.5 -->
+    <div class="flow-step">
+      <div class="step-left"><div class="step-number">1.5</div><div class="step-line"></div></div>
+      <div class="step-right">
+        <div class="step-title">Wire Practice Mode core loop</div>
+        <div class="step-actors"><span class="actor-tag tag-product">Product Team</span><span class="actor-tag tag-student">Student</span></div>
+        <div class="step-details">
+          <div class="detail-row"><div class="detail-icon">→</div><div class="detail-text">Home → SubTopicSelection → QuestionPractice: questions fetched from Turso by section + category</div></div>
+          <div class="detail-row"><div class="detail-icon">→</div><div class="detail-text">Student answers → if wrong: forced to SolutionWrong (no skip allowed)</div></div>
+          <div class="detail-row"><div class="detail-icon">→</div><div class="detail-text">Student answers → if correct: SolutionCorrect with optional method exploration</div></div>
+          <div class="detail-row"><div class="detail-icon">→</div><div class="detail-text">Show Solution button always available in Practice Mode regardless of answer</div></div>
+          <div class="detail-row"><div class="detail-icon">→</div><div class="detail-text">Session score increments · Next question loaded from Turso</div></div>
+        </div>
+        <div class="ux-flow">
+          <span class="ux-node">Home</span><span class="ux-arrow">→</span>
+          <span class="ux-node">Topic Select</span><span class="ux-arrow">→</span>
+          <span class="ux-node">Question</span><span class="ux-arrow">→</span>
+          <span class="ux-branch">Wrong?</span><span class="ux-arrow">→</span>
+          <span class="ux-node">Forced Solution</span>
+          <span style="display:block;width:100%;padding-left:8px;color:#0d9488">Correct? → Optional Solution → Next Question</span>
+        </div>
+        <div class="output-box"><strong>Output</strong>Practice Mode fully wired · Reads from Turso · Correct/wrong routing live · Score tracking active</div>
+      </div>
+    </div>
+
+    <!-- 1.6 -->
+    <div class="flow-step">
+      <div class="step-left"><div class="step-number ai-step">1.6</div><div class="step-line"></div></div>
+      <div class="step-right">
+        <div class="step-title">Deploy AI explanation serverless function</div>
+        <div class="step-actors"><span class="actor-tag tag-ai">AI System</span><span class="actor-tag tag-infra">Infrastructure</span></div>
+        <div class="step-details">
+          <div class="detail-row"><div class="detail-icon">→</div><div class="detail-text">Vercel serverless function at /api/explain</div></div>
+          <div class="detail-row"><div class="detail-icon">→</div><div class="detail-text">Model: Claude Sonnet 4.6 · GOV-RULE-009 system prompt enforced</div></div>
+          <div class="detail-row"><div class="detail-icon">→</div><div class="detail-text">Rules enforced: no assumed knowledge · no skipped steps · 3 methods minimum · plain language before formula</div></div>
+          <div class="detail-row"><div class="detail-icon">→</div><div class="detail-text">Method 3 always includes actual SVG diagram (not placeholder)</div></div>
+          <div class="detail-row"><div class="detail-icon">→</div><div class="detail-text">AI determines explanation only — never determines correct answer (GOV-RULE-004)</div></div>
+        </div>
+        <div class="gov-box"><strong>GOV-RULE-004 + GOV-RULE-009</strong>AI is the explanation engine only. Correct answer is always sourced from DB correct_option field. AI never overrides or guesses the answer.</div>
+        <div class="output-box"><strong>Output</strong>/api/explain live · GOV-RULE-009 enforced · SVG diagrams generated · 3 methods always returned</div>
+      </div>
+    </div>
+
+    <!-- 1.7 -->
+    <div class="flow-step">
+      <div class="step-left"><div class="step-number student-step">1.7</div><div class="step-line"></div></div>
+      <div class="step-right">
+        <div class="step-title">Implement Canvas (Draw / Type / Upload)</div>
+        <div class="step-actors"><span class="actor-tag tag-student">Student</span><span class="actor-tag tag-product">Product Team</span></div>
+        <div class="step-details">
+          <div class="detail-row"><div class="detail-icon">→</div><div class="detail-text">Canvas appears on SolutionWrong screen — working area for student to try the problem</div></div>
+          <div class="detail-row"><div class="detail-icon">→</div><div class="detail-text">Three modes: Draw (stylus/finger) · Type (keyboard) · Upload (photo of handwritten working)</div></div>
+          <div class="detail-row"><div class="detail-icon">→</div><div class="detail-text">Persists within session — student can return to their working</div></div>
+          <div class="detail-row"><div class="detail-icon">→</div><div class="detail-text">Photo upload feeds into AI analysis — AI reviews student's working and gives targeted feedback</div></div>
+        </div>
+        <div class="output-box"><strong>Output</strong>Canvas live on SolutionWrong · All 3 modes working · Photo-to-AI feedback pipeline active</div>
+      </div>
+    </div>
+
+    <!-- 1.8 -->
+    <div class="flow-step">
+      <div class="step-left"><div class="step-number infra-step">1.8</div><div class="step-line"></div></div>
+      <div class="step-right">
+        <div class="step-title">Implement session score tracking</div>
+        <div class="step-actors"><span class="actor-tag tag-infra">Infrastructure</span><span class="actor-tag tag-product">Product Team</span></div>
+        <div class="step-details">
+          <div class="detail-row"><div class="detail-icon">→</div><div class="detail-text">Per-session attempt counts stored · correct / incorrect tracked per question</div></div>
+          <div class="detail-row"><div class="detail-icon">→</div><div class="detail-text">Progress screen reads live from Turso (not from context/state only)</div></div>
+          <div class="detail-row"><div class="detail-icon">→</div><div class="detail-text">times_attempted and times_correct updated on questions table</div></div>
+        </div>
+        <div class="output-box"><strong>Output</strong>Score tracking live · Progress screen shows real data · Foundation for Phase 3 analytics</div>
+      </div>
+    </div>
+
+    <!-- 1.9 -->
+    <div class="flow-step">
+      <div class="step-left"><div class="step-number student-step">1.9</div><div class="step-line"></div></div>
+      <div class="step-right">
+        <div class="step-title">Student onboarding (live, writes to DB)</div>
+        <div class="step-actors"><span class="actor-tag tag-student">Student</span><span class="actor-tag tag-infra">Infrastructure</span></div>
+        <div class="step-details">
+          <div class="detail-row"><div class="detail-icon">→</div><div class="detail-text">Step 1: full name (mandatory) + mobile number (mandatory)</div></div>
+          <div class="detail-row"><div class="detail-icon">→</div><div class="detail-text">Step 2: NAT-I category selection (mandatory — CTA disabled until selected) + test date + target score</div></div>
+          <div class="detail-row"><div class="detail-icon">→</div><div class="detail-text">On complete: writes to students table in Turso · nat_category stored → drives subject-specific question serving</div></div>
+          <div class="detail-row"><div class="detail-icon">→</div><div class="detail-text">Category change in Profile triggers warning dialog (GOV-RULE applies: DB is the source of truth)</div></div>
+        </div>
+        <div class="output-box"><strong>Output</strong>Onboarding writes to students table · nat_category drives question delivery · Profile edit gated with warning</div>
+      </div>
+    </div>
+
+    <!-- 1.10 -->
+    <div class="flow-step">
+      <div class="step-left"><div class="step-number infra-step">1.10</div><div class="step-line"></div></div>
+      <div class="step-right">
+        <div class="step-title">Production deployment to taleemimarkaz.com</div>
+        <div class="step-actors"><span class="actor-tag tag-infra">Infrastructure</span><span class="actor-tag tag-product">Product Team</span></div>
+        <div class="step-details">
+          <div class="detail-row"><div class="detail-icon">→</div><div class="detail-text">Pre-launch QA: Practice Mode end-to-end · Onboarding · AI explanations · Canvas · Score tracking</div></div>
+          <div class="detail-row"><div class="detail-icon">→</div><div class="detail-text">Custom domain live: taleemimarkaz.com → Vercel · SSL active</div></div>
+          <div class="detail-row"><div class="detail-icon">→</div><div class="detail-text">Verify Turso connection in production environment · Environment variables confirmed</div></div>
+          <div class="detail-row"><div class="detail-icon">→</div><div class="detail-text">Admin panel accessible at taleemimarkaz.com/admin</div></div>
+        </div>
+        <div class="decision-box"><strong>Gate → Phase 2</strong>Practice Mode working end-to-end · 90 verified questions in DB · AI explanation live · taleemimarkaz.com live → Phase 2 begins</div>
+        <div class="output-box"><strong>Output</strong>taleemimarkaz.com live · Phase 1 complete · Engineering students can practice NAT-IE</div>
+      </div>
+    </div>
+
+  </div><!-- /flow-container -->
+
+  <div class="page-footer">
+    <div class="footer-logo">TaleemiMarkaz</div>
+    <div>NTS-GOV-001 v1.1 · Phase 1 Workflow v1.0 · Generated June 2026</div>
+    <div>github.com/AyyazAI/NTS</div>
+  </div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>High-Level Architecture · TaleemiMarkaz NTS Prep</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', system-ui, sans-serif; background: #ffffff; color: #0f172a; font-size: 14px; line-height: 1.5; }
+
+  .page-header { background: #0f172a; color: #fff; padding: 28px 48px; display: flex; align-items: flex-start; justify-content: space-between; gap: 24px; }
+  .page-header h1 { font-size: 20px; font-weight: 700; }
+  .page-header .sub { font-size: 12px; color: #94a3b8; margin-top: 4px; }
+  .doc-badge { background: #0d9488; color: #fff; font-size: 11px; font-weight: 700; letter-spacing: 0.5px; padding: 4px 14px; border-radius: 20px; white-space: nowrap; }
+
+  .page-body { padding: 40px 48px; max-width: 1200px; margin: 0 auto; }
+
+  /* Legend */
+  .legend { display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 36px; padding: 14px 18px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; align-items: center; }
+  .legend-title { font-size: 10px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; color: #64748b; margin-right: 8px; }
+  .legend-item { display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; }
+  .legend-box { width: 16px; height: 16px; border-radius: 3px; }
+  .lb-user { background: #7c3aed; }
+  .lb-app { background: #0d9488; }
+  .lb-api { background: #0ea5e9; }
+  .lb-data { background: #d97706; }
+  .lb-infra { background: #475569; }
+  .lb-gov { background: #dc2626; }
+
+  /* Architecture canvas */
+  .arch-canvas {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 36px;
+    position: relative;
+  }
+
+  /* Layer rows */
+  .layer {
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+    margin-bottom: 0;
+    position: relative;
+  }
+
+  .layer-label {
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    transform: rotate(180deg);
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #94a3b8;
+    padding: 0 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 36px;
+    border-right: 1px solid #f1f5f9;
+  }
+
+  .layer-content {
+    flex: 1;
+    padding: 20px 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  /* Layer backgrounds */
+  .layer-users    { background: #faf5ff; border: 1px solid #ddd6fe; border-radius: 8px; margin-bottom: 12px; }
+  .layer-frontend { background: #f0fdfa; border: 1px solid #99f6e4; border-radius: 8px; margin-bottom: 12px; }
+  .layer-api      { background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 8px; margin-bottom: 12px; }
+  .layer-data     { background: #fffbeb; border: 1px solid #fde68a; border-radius: 8px; margin-bottom: 12px; }
+  .layer-infra    { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; margin-bottom: 12px; }
+  .layer-gov      { background: #fff1f2; border: 1px solid #fecdd3; border-radius: 8px; margin-bottom: 0; }
+
+  /* Component boxes */
+  .comp {
+    padding: 12px 16px;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 140px;
+  }
+  .comp-name { font-size: 12px; font-weight: 700; }
+  .comp-sub  { font-size: 10px; color: #64748b; line-height: 1.3; }
+  .comp-tag  { font-size: 9px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; padding: 1px 6px; border-radius: 3px; display: inline-block; align-self: flex-start; margin-top: 2px; }
+
+  /* Component colour variants */
+  .c-user    { background: #ede9fe; border: 1px solid #c4b5fd; }
+  .c-app     { background: #ccfbf1; border: 1px solid #5eead4; }
+  .c-ai      { background: #e0f2fe; border: 1px solid #7dd3fc; }
+  .c-data    { background: #fef3c7; border: 1px solid #fcd34d; }
+  .c-infra   { background: #f1f5f9; border: 1px solid #cbd5e1; }
+  .c-gov     { background: #ffe4e6; border: 1px solid #fda4af; }
+
+  .t-user    { background: #ede9fe; color: #5b21b6; }
+  .t-app     { background: #ccfbf1; color: #0f766e; }
+  .t-ai      { background: #e0f2fe; color: #0369a1; }
+  .t-data    { background: #fef3c7; color: #92400e; }
+  .t-infra   { background: #f1f5f9; color: #334155; }
+  .t-gov     { background: #ffe4e6; color: #9f1239; }
+
+  /* Arrow flow */
+  .flow-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 6px 0;
+    position: relative;
+  }
+  .flow-arrow {
+    font-size: 20px;
+    color: #cbd5e1;
+    font-weight: 300;
+  }
+  .flow-label {
+    font-size: 10px;
+    color: #94a3b8;
+    font-weight: 600;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    padding: 2px 8px;
+    border-radius: 10px;
+  }
+
+  /* Vertical arrows between layers */
+  .layer-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px 0 4px 36px;
+    gap: 8px;
+    margin-bottom: 4px;
+  }
+  .larrow-line {
+    flex: 0 0 2px;
+    height: 28px;
+    background: linear-gradient(to bottom, #e2e8f0, #cbd5e1);
+    position: relative;
+  }
+  .larrow-line::after {
+    content: '↓';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 14px;
+    color: #94a3b8;
+  }
+  .larrow-label {
+    font-size: 10px;
+    color: #94a3b8;
+    font-weight: 600;
+  }
+
+  /* Simplified arrow row */
+  .between-layers {
+    display: flex;
+    align-items: center;
+    padding-left: 52px;
+    gap: 12px;
+    margin: 0 0 12px 0;
+    color: #94a3b8;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .between-layers .arr { font-size: 18px; color: #cbd5e1; }
+
+  /* Section title */
+  .section-title { font-size: 11px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: #0d9488; margin-bottom: 20px; padding-bottom: 8px; border-bottom: 2px solid #0d9488; }
+
+  /* Data flow diagram — simplified horizontal */
+  .hflow {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    padding: 24px 0;
+    overflow-x: auto;
+  }
+  .hf-node {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    min-width: 110px;
+  }
+  .hf-box {
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 11px;
+    font-weight: 700;
+    text-align: center;
+    width: 100%;
+  }
+  .hf-sub { font-size: 9px; color: #64748b; text-align: center; font-weight: 500; }
+  .hf-arrow {
+    display: flex;
+    align-items: center;
+    padding: 0 8px;
+    margin-bottom: 20px;
+  }
+  .hf-arrow svg { display: block; }
+
+  .page-footer { margin-top: 48px; padding-top: 20px; border-top: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; font-size: 11px; color: #94a3b8; }
+  .footer-logo { font-weight: 800; color: #0d9488; font-size: 13px; }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <div>
+    <h1>High-Level System Architecture</h1>
+    <div class="sub">TaleemiMarkaz · NTS Prep — System components, data flow, and infrastructure overview</div>
+  </div>
+  <div class="doc-badge">Architecture · High-Level · v1.0</div>
+</div>
+
+<div class="page-body">
+
+  <!-- Legend -->
+  <div class="legend">
+    <span class="legend-title">Layer key:</span>
+    <div class="legend-item"><div class="legend-box lb-user"></div> Users / Actors</div>
+    <div class="legend-item"><div class="legend-box lb-app"></div> Application (Frontend)</div>
+    <div class="legend-item"><div class="legend-box lb-api"></div> API / Services</div>
+    <div class="legend-item"><div class="legend-box lb-data"></div> Data Layer</div>
+    <div class="legend-item"><div class="legend-box lb-infra"></div> Infrastructure</div>
+    <div class="legend-item"><div class="legend-box lb-gov"></div> Governance</div>
+  </div>
+
+  <div class="arch-canvas">
+
+    <!-- LAYER 1: Users -->
+    <div class="layer layer-users">
+      <div class="layer-label">Users</div>
+      <div class="layer-content">
+        <div class="comp c-user">
+          <div class="comp-name">Student</div>
+          <div class="comp-sub">Age 17–19 · Pakistani · NAT-I candidate</div>
+          <div class="comp-tag t-user">Primary User</div>
+        </div>
+        <div class="comp c-user">
+          <div class="comp-name">Admin / Content Team</div>
+          <div class="comp-sub">Enters questions · Verifies content · Manages flags</div>
+          <div class="comp-tag t-user">Internal</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="between-layers"><span class="arr">↕</span> HTTPS (mobile browser / web)</div>
+
+    <!-- LAYER 2: Frontend -->
+    <div class="layer layer-frontend">
+      <div class="layer-label">Frontend</div>
+      <div class="layer-content">
+        <div class="comp c-app">
+          <div class="comp-name">Student App</div>
+          <div class="comp-sub">React 18 · Vite · Tailwind · 11 screens · Mobile-first (390px)</div>
+          <div class="comp-tag t-app">React SPA</div>
+        </div>
+        <div class="comp c-app">
+          <div class="comp-name">Admin Panel</div>
+          <div class="comp-sub">Task tracker · Question entry · Flag queue · Analytics</div>
+          <div class="comp-tag t-app">/admin route</div>
+        </div>
+        <div class="comp c-app">
+          <div class="comp-name">Canvas</div>
+          <div class="comp-sub">Draw · Type · Upload photo of working</div>
+          <div class="comp-tag t-app">In-App Tool</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="between-layers"><span class="arr">↕</span> Fetch / REST API calls</div>
+
+    <!-- LAYER 3: API Services -->
+    <div class="layer layer-api">
+      <div class="layer-label">API / Services</div>
+      <div class="layer-content">
+        <div class="comp c-ai">
+          <div class="comp-name">Explanation Engine</div>
+          <div class="comp-sub">/api/explain · Vercel Serverless · GOV-RULE-009 system prompt</div>
+          <div class="comp-tag t-ai">Claude Sonnet 4.6</div>
+        </div>
+        <div class="comp c-ai">
+          <div class="comp-name">Photo Analysis</div>
+          <div class="comp-sub">Student uploads working image · AI reviews and gives feedback</div>
+          <div class="comp-tag t-ai">Claude Vision</div>
+        </div>
+        <div class="comp c-app">
+          <div class="comp-name">Question API</div>
+          <div class="comp-sub">Fetches questions from Turso · Enforces verified=1 gate · Filters by section + category</div>
+          <div class="comp-tag t-app">Vercel Serverless</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="between-layers"><span class="arr">↕</span> libSQL / Turso HTTP driver</div>
+
+    <!-- LAYER 4: Data -->
+    <div class="layer layer-data">
+      <div class="layer-label">Data</div>
+      <div class="layer-content">
+        <div class="comp c-data">
+          <div class="comp-name">questions</div>
+          <div class="comp-sub">MCQs · section · category · verified flag · 3 methods</div>
+          <div class="comp-tag t-data">Turso (SQLite)</div>
+        </div>
+        <div class="comp c-data">
+          <div class="comp-name">students</div>
+          <div class="comp-sub">name · mobile · nat_category · test_date · target_score</div>
+          <div class="comp-tag t-data">Turso (SQLite)</div>
+        </div>
+        <div class="comp c-data">
+          <div class="comp-name">attempts</div>
+          <div class="comp-sub">student_id · question_id · mode · is_correct · time_spent</div>
+          <div class="comp-tag t-data">Turso (Phase 2)</div>
+        </div>
+        <div class="comp c-data">
+          <div class="comp-name">question_flags</div>
+          <div class="comp-sub">flagged questions · admin resolution · closed loop</div>
+          <div class="comp-tag t-data">Turso (Phase 3)</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="between-layers"><span class="arr">↕</span> Hosted on / Deployed to</div>
+
+    <!-- LAYER 5: Infrastructure -->
+    <div class="layer layer-infra">
+      <div class="layer-label">Infrastructure</div>
+      <div class="layer-content">
+        <div class="comp c-infra">
+          <div class="comp-name">Vercel</div>
+          <div class="comp-sub">Frontend hosting · Serverless functions · Auto-deploy from GitHub</div>
+          <div class="comp-tag t-infra">Hosting + CDN</div>
+        </div>
+        <div class="comp c-infra">
+          <div class="comp-name">Turso</div>
+          <div class="comp-sub">Edge SQLite database · AWS ap-south-1 (Mumbai) · Low-latency for Pakistan</div>
+          <div class="comp-tag t-infra">Database</div>
+        </div>
+        <div class="comp c-infra">
+          <div class="comp-name">GitHub</div>
+          <div class="comp-sub">AyyazAI/NTS · Version control · CI/CD trigger</div>
+          <div class="comp-tag t-infra">Source Control</div>
+        </div>
+        <div class="comp c-infra">
+          <div class="comp-name">Anthropic API</div>
+          <div class="comp-sub">Claude Sonnet 4.6 · Explanation + photo analysis endpoints</div>
+          <div class="comp-tag t-infra">AI Provider</div>
+        </div>
+        <div class="comp c-infra">
+          <div class="comp-name">Domain</div>
+          <div class="comp-sub">taleemimarkaz.com + .com.pk · SSL via Vercel</div>
+          <div class="comp-tag t-infra">DNS + SSL</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="between-layers"><span class="arr">↕</span> Governs all layers</div>
+
+    <!-- LAYER 6: Governance -->
+    <div class="layer layer-gov">
+      <div class="layer-label">Governance</div>
+      <div class="layer-content">
+        <div class="comp c-gov">
+          <div class="comp-name">NTS-GOV-001 v1.1</div>
+          <div class="comp-sub">9 active rules · Incident log · Session ritual</div>
+          <div class="comp-tag t-gov">Governance Doc</div>
+        </div>
+        <div class="comp c-gov">
+          <div class="comp-name">CLAUDE.md</div>
+          <div class="comp-sub">Living project spec · 609 lines · Updated before every session</div>
+          <div class="comp-tag t-gov">Living Spec</div>
+        </div>
+        <div class="comp c-gov">
+          <div class="comp-name">Content Quality Gate</div>
+          <div class="comp-sub">verified=1 required before any question served · GOV-RULE-007</div>
+          <div class="comp-tag t-gov">Quality Control</div>
+        </div>
+        <div class="comp c-gov">
+          <div class="comp-name">AI Boundary</div>
+          <div class="comp-sub">AI explains only · never determines correct answer · GOV-RULE-004</div>
+          <div class="comp-tag t-gov">AI Safety</div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /arch-canvas -->
+
+  <!-- Request flow diagram -->
+  <div style="margin-top: 40px;">
+    <div class="section-title">Core request flow — Student answers a question</div>
+    <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 24px;">
+      <div class="hflow">
+
+        <div class="hf-node">
+          <div class="hf-box c-user">Student answers MCQ</div>
+          <div class="hf-sub">React UI</div>
+        </div>
+        <div class="hf-arrow">
+          <svg width="40" height="20" viewBox="0 0 40 20"><line x1="2" y1="10" x2="34" y2="10" stroke="#cbd5e1" stroke-width="2"/><polygon points="30,5 40,10 30,15" fill="#cbd5e1"/></svg>
+        </div>
+        <div class="hf-node">
+          <div class="hf-box c-data">Check correct_option in DB</div>
+          <div class="hf-sub">Turso · questions table</div>
+        </div>
+        <div class="hf-arrow">
+          <svg width="40" height="20" viewBox="0 0 40 20"><line x1="2" y1="10" x2="34" y2="10" stroke="#cbd5e1" stroke-width="2"/><polygon points="30,5 40,10 30,15" fill="#cbd5e1"/></svg>
+        </div>
+        <div class="hf-node">
+          <div class="hf-box c-ai">Call /api/explain</div>
+          <div class="hf-sub">Vercel Serverless</div>
+        </div>
+        <div class="hf-arrow">
+          <svg width="40" height="20" viewBox="0 0 40 20"><line x1="2" y1="10" x2="34" y2="10" stroke="#cbd5e1" stroke-width="2"/><polygon points="30,5 40,10 30,15" fill="#cbd5e1"/></svg>
+        </div>
+        <div class="hf-node">
+          <div class="hf-box c-ai">Claude generates 3-method explanation + SVG</div>
+          <div class="hf-sub">Anthropic API · GOV-RULE-009</div>
+        </div>
+        <div class="hf-arrow">
+          <svg width="40" height="20" viewBox="0 0 40 20"><line x1="2" y1="10" x2="34" y2="10" stroke="#cbd5e1" stroke-width="2"/><polygon points="30,5 40,10 30,15" fill="#cbd5e1"/></svg>
+        </div>
+        <div class="hf-node">
+          <div class="hf-box c-app">Solution screen rendered</div>
+          <div class="hf-sub">SolutionWrong / SolutionCorrect</div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <div class="footer-logo">TaleemiMarkaz</div>
+    <div>NTS-GOV-001 v1.1 · Architecture High-Level v1.0 · Generated June 2026</div>
+    <div>github.com/AyyazAI/NTS</div>
+  </div>
+
+</div>
+</body>
+</html>

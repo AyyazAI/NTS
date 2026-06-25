@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Phase 0 — Foundation &amp; Governance · TaleemiMarkaz NTS Prep</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', system-ui, sans-serif; background: #ffffff; color: #0f172a; font-size: 14px; line-height: 1.5; }
+
+  .page-header { background: #1e293b; color: #fff; padding: 32px 48px; display: flex; align-items: flex-start; justify-content: space-between; gap: 24px; }
+  .page-header h1 { font-size: 20px; font-weight: 700; }
+  .page-header .sub { font-size: 12px; color: #94a3b8; margin-top: 4px; }
+  .phase-badge { background: #1e293b; border: 2px solid #0d9488; color: #0d9488; font-size: 11px; font-weight: 800; letter-spacing: 0.8px; text-transform: uppercase; padding: 5px 16px; border-radius: 20px; white-space: nowrap; }
+  .status-badge { background: #14532d; color: #bbf7d0; font-size: 11px; font-weight: 700; padding: 4px 12px; border-radius: 20px; margin-top: 8px; display: inline-block; }
+
+  .page-body { padding: 40px 48px; max-width: 1100px; margin: 0 auto; }
+
+  .meta-band { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: #e2e8f0; border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; margin-bottom: 36px; }
+  .meta-cell { background: #f8fafc; padding: 14px 18px; }
+  .meta-cell .label { font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: #64748b; margin-bottom: 3px; }
+  .meta-cell .value { font-size: 13px; font-weight: 600; color: #0f172a; }
+
+  .section-title { font-size: 11px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: #0d9488; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 2px solid #0d9488; }
+
+  .actor-legend { display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 32px; padding: 14px 18px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; }
+  .actor-item { display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 600; }
+  .actor-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
+  .dot-product { background: #0d9488; } .dot-admin { background: #d97706; } .dot-infra { background: #64748b; } .dot-ai { background: #0ea5e9; }
+
+  /* Linear flow steps */
+  .flow-container { display: flex; flex-direction: column; gap: 0; }
+
+  .flow-step {
+    display: grid;
+    grid-template-columns: 60px 1fr;
+    gap: 0;
+    position: relative;
+  }
+
+  .step-left {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 18px;
+  }
+  .step-number {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: #0d9488;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 800;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    z-index: 1;
+  }
+  .step-line {
+    width: 2px;
+    flex: 1;
+    background: #e2e8f0;
+    margin-top: 4px;
+    min-height: 24px;
+  }
+  .flow-step:last-child .step-line { display: none; }
+
+  .step-right {
+    padding: 12px 0 12px 16px;
+    padding-bottom: 24px;
+  }
+  .step-title { font-size: 14px; font-weight: 700; color: #0f172a; margin-bottom: 6px; }
+  .step-actors { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 8px; }
+  .actor-tag { display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: 0.5px; padding: 2px 8px; border-radius: 4px; }
+  .tag-product { background: #ccfbf1; color: #0f766e; }
+  .tag-admin { background: #fef3c7; color: #92400e; }
+  .tag-infra { background: #f1f5f9; color: #334155; }
+  .tag-ai { background: #e0f2fe; color: #0369a1; }
+
+  .step-details { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 12px 14px; }
+  .detail-row { display: flex; gap: 8px; margin-bottom: 5px; font-size: 12px; align-items: flex-start; }
+  .detail-row:last-child { margin-bottom: 0; }
+  .detail-icon { color: #0d9488; font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+  .detail-text { color: #334155; }
+
+  .output-box {
+    margin-top: 8px;
+    padding: 10px 14px;
+    background: #f0fdf4;
+    border: 1px solid #bbf7d0;
+    border-radius: 6px;
+    font-size: 12px;
+    color: #14532d;
+  }
+  .output-box strong { font-size: 10px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; display: block; margin-bottom: 3px; color: #15803d; }
+
+  .decision-box {
+    margin-top: 8px;
+    padding: 10px 14px;
+    background: #fffbeb;
+    border: 1px solid #fde68a;
+    border-radius: 6px;
+    font-size: 12px;
+    color: #78350f;
+  }
+  .decision-box strong { font-size: 10px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; display: block; margin-bottom: 3px; color: #92400e; }
+
+  .gov-box {
+    margin-top: 8px;
+    padding: 10px 14px;
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+    border-radius: 6px;
+    font-size: 12px;
+    color: #1e3a8a;
+  }
+  .gov-box strong { font-size: 10px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; display: block; margin-bottom: 3px; color: #1d4ed8; }
+
+  .complete-banner {
+    background: #f0fdf4;
+    border: 1px solid #86efac;
+    border-radius: 8px;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 32px;
+  }
+  .complete-icon { font-size: 24px; }
+  .complete-text strong { display: block; font-size: 14px; font-weight: 700; color: #14532d; }
+  .complete-text span { font-size: 12px; color: #166534; }
+
+  .page-footer { margin-top: 48px; padding-top: 20px; border-top: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; font-size: 11px; color: #94a3b8; }
+  .footer-logo { font-weight: 800; color: #0d9488; font-size: 13px; }
+
+  @media print { body { font-size: 12px; } .page-body { padding: 24px; } }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <div>
+    <h1>Phase 0 — Foundation &amp; Governance</h1>
+    <div class="sub">TaleemiMarkaz · NTS Prep · Detailed phase workflow · All actors · Linear execution sequence</div>
+    <div class="status-badge">✅ Complete</div>
+  </div>
+  <div class="phase-badge">Phase 0 of 5</div>
+</div>
+
+<div class="page-body">
+
+  <div class="meta-band">
+    <div class="meta-cell"><div class="label">Phase</div><div class="value">0 — Foundation</div></div>
+    <div class="meta-cell"><div class="label">Status</div><div class="value">✅ Complete</div></div>
+    <div class="meta-cell"><div class="label">Next Phase</div><div class="value">Phase 1 — Core Engine</div></div>
+    <div class="meta-cell"><div class="label">Governance</div><div class="value">NTS-GOV-001 v1.1</div></div>
+  </div>
+
+  <div class="complete-banner">
+    <div class="complete-icon">✅</div>
+    <div class="complete-text">
+      <strong>Phase 0 is fully complete</strong>
+      <span>All foundation work delivered: governance, stack, prototype, admin panel, live deployment. Phase 1 is now active.</span>
+    </div>
+  </div>
+
+  <div class="section-title">Actors in this phase</div>
+  <div class="actor-legend">
+    <div class="actor-item"><div class="actor-dot dot-product"></div> Product / Dev Team</div>
+    <div class="actor-item"><div class="actor-dot dot-admin"></div> Admin Team</div>
+    <div class="actor-item"><div class="actor-dot dot-infra"></div> Infrastructure</div>
+    <div class="actor-item"><div class="actor-dot dot-ai"></div> AI System (Claude)</div>
+  </div>
+
+  <div class="section-title">Execution Flow</div>
+
+  <div class="flow-container">
+
+    <!-- Step 0.1 -->
+    <div class="flow-step">
+      <div class="step-left">
+        <div class="step-number">0.1</div>
+        <div class="step-line"></div>
+      </div>
+      <div class="step-right">
+        <div class="step-title">Define product scope &amp; NAT-I structure</div>
+        <div class="step-actors">
+          <span class="actor-tag tag-product">Product Team</span>
+        </div>
+        <div class="step-details">
+          <div class="detail-row"><div class="detail-icon">→</div><div class="detail-text">NAT-I exam mapped: 4 sections · 90 MCQs total · 120 minutes</div></div>
+          <div class="detail-row"><div class="detail-icon">→</div><div class="detail-text">Sections defined: Verbal (20) · Analytical (20) · Quantitative (20) · Subject-Specific (30)</div></div>
+          <div class="detail-row"><div class="detail-icon">→</div><div class="detail-text">6 NAT-I categories identified: Engineering, Medical, CS, Commerce, General Sciences, Arts</div></div>
+          <div class="detail-row"><div class="detail-icon">→</div><div class="detail-text">Phase 1 scope: NAT-IE (Engineering) only · Other categories unlocked in Phase 2</div></div>
+          <div class="detail-row"><div class="detail-icon">→</div><div class="detail-text">Two modes defined: Practice Mode (solutions visible) · Mock Test Mode (real simulation)</div></div>
+        </div>
+        <div class="output-box"><strong>Output</strong>Product scope document · Section and category list · Two-mode UX definition</div>
+      </div>
+    </div>
+
+    <!-- Step 0.2 -->
+    <div class="flow-step">
+      <div class="step-left">
+        <div class="step-number">0.2</div>
+        <div class="step-line"></div>
+      </div>
+      <div class="step-right">
+        <div class="step-title">Establish governance framework</div>
+        <div class="step-actors">
+          <span class="actor-tag tag-product">Product Team</span>
+        </div>
+        <div class="step-details">
+          <div class="detail-row"><div class="detail-icon">→</div><div class="detail-text">NTS-GOV-001 v1.1 authored: 9 active rules covering AI use, content quality, explanation standards</div></div>
+          <div class="detail-row"><div class="detail-icon">→</div><div class="detail-text">CLAUDE.md established as living project specification — updated before every work session</div></div>
+          <div class="detail-row"><div class="detail-icon">→</div><div class="detail-text">Incident log format defined — 3 incidents logged to date (INC-001, INC-002, INC-003)</div></div>
+          <div class="detail-row"><div class="detail-icon">→</div><div class="detail-text">GOV-RULE-009 established: AI explanation engine rules — no assumed knowledge, 3 methods minimum, plain language before formula, SVG diagrams</div></div>
+        </div>
+        <div class="gov-box"><strong>Governance</strong>NTS-GOV-001 v1.1 · GOV-RULE-001 through GOV-RULE-009 active · Session start ritual: read CLAUDE.md → confirm status → check admin panel → never use context when DB data exists</div>
+        <div class="output-box"><strong>Output</strong>NTS-GOV-001 v1.1 document · CLAUDE.md (609 lines) · Incident log template</div>
+      </div>
+    </div>
+
+    <!-- Step 0.3 -->
+    <div class="flow-step">
+      <div class="step-left">
+        <div class="step-number">0.3</div>
+        <div class="step-line"></div>
+      </div>
+      <div class="step-right">
+        <div class="step-title">Set up tech stack &amp; repository</div>
+        <div class="step-actors">
+          <span class="actor-tag tag-infra">Infrastructure</span>
+          <span class="actor-tag tag-product">Product Team</span>
+        </div>
+        <div class="step-details">
+          <div class="detail-row"><div class="detail-icon">→</div><div class="detail-text">React 18 + Vite + Tailwind CSS scaffolded · Mobile-first configuration</div></div>
+          <div class="detail-row"><div class="detail-icon">→</div><div class="detail-text">GitHub repository created: github.com/AyyazAI/NTS</div></div>
+          <div class="detail-row"><div class="detail-icon">→</div><div class="detail-text">Turso database provisioned: AWS ap-south-1 (Mumbai) · Low-latency for Pakistan users</div></div>
+          <div class="detail-row"><div class="detail-icon">→</div><div class="detail-text">Vercel project connected to GitHub · Auto-deploy on push · Environment variables configured</div></div>
+          <div class="detail-row"><div class="detail-icon">→</div><div class="detail-text">Claude Code installed (E:\Claude - NTS) as primary development tool</div></div>
+        </div>
+        <div class="output-box"><strong>Output</strong>Live GitHub repo · Turso DB provisioned · Vercel project live · Dev environment ready</div>
+      </div>
+    </div>
+
+    <!-- Step 0.4 -->
+    <div class="flow-step">
+      <div class="step-left">
+        <div class="step-number">0.4</div>
+        <div class="step-line"></div>
+      </div>
+      <div class="step-right">
+        <div class="step-title">Build 11-screen mobile-first prototype</div>
+        <div class="step-actors">
+          <span class="actor-tag tag-product">Product Team</span>
+          <span class="actor-tag tag-ai">AI System</span>
+        </div>
+        <div class="step-details">
+          <div class="detail-row"><div class="detail-icon">→</div><div class="detail-text">Onboarding Step 1 &amp; Step 2 · Home · SubTopicSelection</div></div>
+          <div class="detail-row"><div class="detail-icon">→</div><div class="detail-text">QuestionPractice · SolutionCorrect · SolutionWrong · QuestionMockTest</div></div>
+          <div class="detail-row"><div class="detail-icon">→</div><div class="detail-text">MockTest (full session) · MockTestResults · Progress · Profile</div></div>
+          <div class="detail-row"><div class="detail-icon">→</div><div class="detail-text">Subject-specific section added to all relevant screens (INC-003 corrected)</div></div>
+          <div class="detail-row"><div class="detail-icon">→</div><div class="detail-text">Multiple Claude Design iterations · UI fixes applied: tab labels, colours, counts</div></div>
+        </div>
+        <div class="output-box"><strong>Output</strong>11 React screens · Subject section on all screens · Mobile viewport tested · Static UI complete</div>
+      </div>
+    </div>
+
+    <!-- Step 0.5 -->
+    <div class="flow-step">
+      <div class="step-left">
+        <div class="step-number">0.5</div>
+        <div class="step-line"></div>
+      </div>
+      <div class="step-right">
+        <div class="step-title">Build admin panel with persistent task tracker</div>
+        <div class="step-actors">
+          <span class="actor-tag tag-product">Product Team</span>
+          <span class="actor-tag tag-admin">Admin Team</span>
+        </div>
+        <div class="step-details">
+          <div class="detail-row"><div class="detail-icon">→</div><div class="detail-text">Admin panel at /admin — password protected (nts2024, never committed)</div></div>
+          <div class="detail-row"><div class="detail-icon">→</div><div class="detail-text">Persistent task tracking: phase-organised, status visible, progress at a glance</div></div>
+          <div class="detail-row"><div class="detail-icon">→</div><div class="detail-text">Foundation for future admin features: question entry, flag queue, analytics</div></div>
+        </div>
+        <div class="output-box"><strong>Output</strong>/admin route live · Task tracker with phase visibility · Admin-only access gate</div>
+      </div>
+    </div>
+
+    <!-- Step 0.6 -->
+    <div class="flow-step">
+      <div class="step-left">
+        <div class="step-number">0.6</div>
+        <div class="step-line"></div>
+      </div>
+      <div class="step-right">
+        <div class="step-title">Deploy to Vercel · Register domain</div>
+        <div class="step-actors">
+          <span class="actor-tag tag-infra">Infrastructure</span>
+        </div>
+        <div class="step-details">
+          <div class="detail-row"><div class="detail-icon">→</div><div class="detail-text">Deployed to nts-xi.vercel.app (staging)</div></div>
+          <div class="detail-row"><div class="detail-icon">→</div><div class="detail-text">Domain registered: taleemimarkaz.com + taleemimarkaz.com.pk</div></div>
+          <div class="detail-row"><div class="detail-icon">→</div><div class="detail-text">SSL active · Production deployment pending Phase 1 completion</div></div>
+        </div>
+        <div class="output-box"><strong>Output</strong>nts-xi.vercel.app live · Domain registered · Platform ready for Phase 1</div>
+        <div class="decision-box"><strong>Gate → Phase 1</strong>All 11 screens built · Governance active · Stack live · Admin panel ready → Phase 1 can begin</div>
+      </div>
+    </div>
+
+  </div><!-- /flow-container -->
+
+  <div class="page-footer">
+    <div class="footer-logo">TaleemiMarkaz</div>
+    <div>NTS-GOV-001 v1.1 · Phase 0 Workflow v1.0 · Generated June 2026</div>
+    <div>github.com/AyyazAI/NTS</div>
+  </div>
+
+</div>
+</body>
+</html>
