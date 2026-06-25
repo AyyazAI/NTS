@@ -12,6 +12,12 @@
 
 ---
 
+## Product Mission
+
+**"Every student gets the same quality explanation a patient expert tutor sitting next to them would give. No student left behind."**
+
+---
+
 ## Design Status
 
 **Claude Design: FINAL — 11 screens approved**
@@ -37,12 +43,12 @@ When building UI components, reference the HTML file for exact:
 
 **Sections covered (Phase 1 — all 4 sections):**
 - English (Verbal) — synonyms, antonyms, grammar, sentence completion, comprehension, analogies
-- Math (Quantitative) — arithmetic, percentages, ratios, algebra, averages, geometry
+- Quantitative Reasoning — arithmetic, percentages, ratios, algebra, averages, geometry
 - Analytical Reasoning — selection, sequencing, blood relations, directions, syllogisms, combinations
 - Subject-Specific — 30 MCQs, varies by NAT-I category (Phase 1 seeds NAT-IE only)
 
 **NAT-I Categories (6 total):**
-- Engineering (NAT-IE) — Physics, Chemistry, Mathematics, English ← Phase 1 active
+- Engineering (NAT-IE) — subject section: Physics, Chemistry, FSc Mathematics ← Phase 1 active
 - Medical (NAT-IM) ← Phase 2
 - Computer Science (NAT-ICS) ← Phase 2
 - Commerce (NAT-ICOM) ← Phase 2
@@ -53,6 +59,31 @@ When building UI components, reference the HTML file for exact:
 - GAT, HAT, recruitment tests
 - GK, Islamiat, Current Affairs
 - NAT-IM, NAT-ICS, NAT-ICOM, NAT-IGS, NAT-IA subject sections (Phase 2)
+
+---
+
+## NAT-I Paper Structure (Verified)
+
+**Total: 90 MCQs, 120 minutes. NAT-I has NO negative marking.**
+
+### Common Sections — all 6 categories (60 MCQs)
+
+| Section | MCQs | Sub-topics |
+|---|---|---|
+| Section 1: Verbal (English) | 20 | Synonyms, antonyms, grammar, sentence completion, comprehension, analogies |
+| Section 2: Analytical Reasoning | 20 | Selection, sequencing, blood relations, directions, syllogisms, combinations |
+| Section 3: Quantitative Reasoning | 20 | Arithmetic, percentages, ratios, algebra, averages, geometry |
+
+### Subject-Specific Section — varies by category (30 MCQs)
+
+| Category | Sub-topic 1 | Sub-topic 2 | Sub-topic 3 | Total |
+|---|---|---|---|---|
+| NAT-IE Engineering | Physics (10) | Chemistry (10) | FSc Mathematics (10) | 30 |
+| NAT-IM Medical | Biology (10) | Chemistry (10) | Physics (10) | 30 |
+| NAT-ICS Computer Science | Physics (10) | FSc Mathematics (10) | Computer Science (10) | 30 |
+| NAT-ICOM Commerce | Accounting (10) | Economics (10) | Business Studies (10) | 30 |
+| NAT-IGS General Sciences | Biology (10) | Physics & Chemistry (10) | Mathematics (10) | 30 |
+| NAT-IA Arts | Urdu (10) | Islamic Studies / Ethics (10) | Pakistan Studies (10) | 30 |
 
 ---
 
@@ -143,7 +174,7 @@ Every AI-generated explanation must follow these rules:
 ### Mock Test Mode (Exam Simulation)
 - No Show Solution during test — exam conditions
 - 120 minute countdown timer (90 MCQs, all 4 sections)
-- Negative marking -0.25 per wrong answer
+- No negative marking — NAT-I has no negative marking (SC-01)
 - Flag (🚩) and navigate questions freely
 - No sub-topic selection — full mixed paper
 - Progress tracked under Mock Tests tab
@@ -152,6 +183,24 @@ Every AI-generated explanation must follow these rules:
 - When timer runs out → test auto-submits immediately
 - Full solution review only AFTER test submitted
 - If browser closed mid-test → test resumes on return
+
+### Mode Comparison Table
+
+| Feature | Practice Mode | Mock Test Mode |
+|---|---|---|
+| Purpose | Learning and understanding | Exam simulation |
+| Mode pill | 📚 Practice Mode (teal) | ⏱️ NAT-I Mock Test (amber) |
+| Timer | None | 120 min countdown |
+| Negative marking | None | None (NAT-I has no negative marking) |
+| Show Solution | Always available | Never — only after submit |
+| Sub-topic selection | Yes — multi-select | No — full paper |
+| Question count | Per topic / session | 90 MCQs, 4 sections |
+| Difficulty | Easy / Medium / Hard / Mixed | Full NAT-I mix |
+| Canvas | Draw / Type / Upload | Draw / Type / Upload |
+| Flag questions | Yes | Yes |
+| Wrong answer | Auto-show solution immediately | Stored — full review after |
+| Progress tracking | Practice tab | Mock Tests tab |
+| Skip strategy | Optional — Show Solution available | Flag and return — no skip penalty |
 
 ---
 
@@ -194,30 +243,33 @@ Every AI-generated explanation must follow these rules:
 
 ### Screen 1 — Onboarding (First-time user — 2 steps)
 Step 1 — Mandatory:
-- Full name + Mobile number (Pakistani format, inline validation)
-- "Skip setup — take me to practice →" link
+- Name field (required, letters/spaces/hyphens only, min 2 chars, max 50 chars, blur validation)
+- Contact toggle: [Mobile] [Email] — both optional
+- No skip link — onboarding is mandatory
 
 Step 2 — Mixed (category mandatory, goals optional):
+- Heading: "Welcome aboard, [Name]!"
 - **NAT-I category selector — MANDATORY**
-  - Label: "Which NAT-I are you preparing for?"
-  - 6 options as selectable cards: Engineering (NAT-IE), Medical (NAT-IM),
+  - Label: "Which NAT-I category are you preparing for?"
+  - 6 options as compact selectable pills: Engineering (NAT-IE), Medical (NAT-IM),
     Computer Science (NAT-ICS), Commerce (NAT-ICOM),
     General Sciences (NAT-IGS), Arts (NAT-IA)
-  - Selected state: teal border + teal tick
+  - Selected state: teal background + white text
   - "Let's go! →" disabled until category selected
-- Test date toggle (Yes/Not yet) → date picker if Yes
-- Target score toggle (Yes/Not yet) → slider 40-100 if Yes
+- Test date: 4 NTS preset date radio options (no free-text date picker)
+- Target score: defaults to Yes, slider min=50, max=90, step=5, default=60
+  - Helper text: "NAT-I passing mark is 50/90"
 - No university field in onboarding (Profile only)
 - "Let's go! →" button
 
 ### Screen 2 — Home (Returning user)
 - TaleemiMarkaz logo + "NTS Prep" header — every screen
-- "Assalam-o-Alaikum, [Name] 👋"
-- Daily Goal card: "Practice 20 questions today" + progress bar
+- "Welcome, [Name]! 👋" (reads student_name from localStorage)
+- "Ready to practice? Pick a section below."
 - Mode cards: [📚 Practice Mode] [⏱️ Mock Test]
 - Practice selected → 4 topic cards:
   - English — X of 20 questions attempted
-  - Math — X of 20 questions attempted
+  - Quantitative Reasoning — X of 20 questions attempted
   - Analytical Reasoning — X of 20 questions attempted
   - [Subject label e.g. "Engineering (NAT-IE)"] — X of 30 questions attempted
 - Mock Test selected → topic cards hidden, "Start Mock Test → 90 MCQs · 120 min" CTA
@@ -226,10 +278,11 @@ Step 2 — Mixed (category mandatory, goals optional):
 ### Screen 3 — Sub-topic Selection (Practice Mode only)
 - "📚 Practice Mode" pill below header
 - "Choose what to practice" + topic name
+- Sub-topic rows — multi-selectable (teal border + "✓ Selected" badge when selected)
 - Sub-topic list with progress bars, "⚠️ Focus here" on weakest
-- For subject-specific section (NAT-IE): Physics, Chemistry, Mathematics, English
+- For NAT-IE subject section: Physics, Chemistry, FSc Mathematics
 - Difficulty: [Easy] [Medium] [Hard] [Mixed]
-- "Start Practice →" button
+- "Start Practice — Mixed →" (no selection) or "Practice N topic(s) →" (with selection)
 
 ### Screen 4 — Question Screen (Practice Mode)
 - "📚 Practice Mode" pill
@@ -238,8 +291,8 @@ Step 2 — Mixed (category mandatory, goals optional):
 - 4 answer options — two-step selection
 - Canvas: [✏️ Draw] [⌨️ Type] [📷 Upload] tabs
   - Draw: toolbar (thick pen, thin pen, eraser, undo, clear)
-  - Upload: JPG/PNG/PDF max 5MB, inline error
-  - Canvas persists across navigation
+  - Upload: JPG/PNG/PDF max 5MB, inline error, thumbnail preview
+  - Canvas persists across navigation, tab tracked in localStorage (canvas_last_tab)
 - Bottom bar Q1: [Show Solution] [Submit Answer] [›]
 - Bottom bar Q2+: [‹] [Show Solution] [Submit Answer] [›]
 - Submit Answer greyed until option selected
@@ -253,16 +306,20 @@ Step 2 — Mixed (category mandatory, goals optional):
   - Q61–90: "Section 4: [Subject label]" ← dynamic per nat_category
 - Timer top right (colour changes at 5min and 1min), starts at 120:00
 - Question counter: Q X of 90
-- Score + NEG MARKING display
+- Score display (teal card, no negative marking display)
 - Flag 🚩 top right of question card
 - NO Show Solution button
-- Bottom bar: [‹] [Submit Answer] [›]
+- Bottom bar: [‹] [Submit Answer] [›] only — no Submit Test in persistent bar
 - Canvas available (Draw/Type/Upload)
 
 ### Screen 6 — Solution Screen Variant A (Wrong Answer)
 - "Not quite — let's see why 🤔" — neutral/amber, never red
 - "You selected B — Correct answer is A" side by side
-- YOUR WORKING section: submitted canvas shown, ⚠️ error marker
+- YOUR WORKING section: shown only if canvas_last_tab is set in localStorage
+  - draw tab used → canvas sketch placeholder + ⚠️ Error here marker
+  - type tab used → typed text + ⚠️ Error here marker
+  - upload tab used → image placeholder + ⚠️ Error here marker
+  - null (no canvas used) → section hidden entirely
 - "Three ways to see the solution"
 - Method tabs: [✓ Count] [Formula] [Grid]
   - Method 1 (Count): full listing method, zero formula, zero C(n,r)
@@ -276,6 +333,7 @@ Step 2 — Mixed (category mandatory, goals optional):
 ### Screen 7 — Solution Screen Variant B (Correct Answer)
 - "Correct — nice work! 🎉" teal
 - "You answered in 47 seconds"
+- No XP badges or speed bonus cards
 - [Explore methods] [Next Question →]
 
 ### Screen 8 — Progress Screen
@@ -283,24 +341,30 @@ Toggle: [Practice] [Mock Tests]
 
 Practice tab:
 - Score trend line chart + This Week/Month/All Time toggle
+  - Y-axis labels: 100 / 75 / 50
+  - Dashed red pass mark line at 50% with "Pass" label
+  - X-axis labels: day or date
+  - Data point value shown on last point
 - Sub-topic breakdown accordion — 4 sections:
-  - English, Math, Reasoning, [Subject label e.g. "Engineering (NAT-IE)"]
-- Each topic: expandable, sub-topic bars, weakest in red "⚠️ Focus here"
-- TODAY'S FOCUS sticky: top 3 weakest + [Start →] per item
+  - English, Quantitative Reasoning, Analytical Reasoning, [Subject label e.g. "Engineering (NAT-IE)"]
+- Each topic: expandable, shows topic-level warning header if below 65%
+  - ⚠️ At risk (below 50%) or 💡 Needs attention (50–65%)
+- Sub-topic bars with focus labels:
+  - ⚠️ Focus here (below 50%) or 💡 Needs work (50–65%)
+- "Start here →" button inside accordion for weakest sub-topic only
 - Empty state: "Complete your first session to see progress"
 
 Mock Tests tab:
 - Score trend across tests
-- Tests completed, best/average score
-- Negative marks lost
+- Tests completed, best/average score, highest section
 - Readiness score gauge
 - Sub-topic breakdown from mock test performance
 
 ### Screen 9 — Mock Test Screen
 - "⏱️ NAT-I Mock Test" amber pill
-- Section tabs: [English] [Math] [Reasoning] [Subject label]
+- Section tabs: [English] [Reasoning] [Quantitative] [Subject label]
 - Timer (colour changes), starts at 120:00
-- Score + NEG MARKING
+- Score display (no negative marking)
 - 10-question navigator grid per section (30-question grid for subject section)
   - ● Teal = Answered, ◻ Teal border = Current, ◐ Amber = Flagged, ○ Grey = Unseen
 - Question + 4 options below
@@ -313,22 +377,22 @@ Mock Tests tab:
 - "Test Complete ✓" teal
 - Score out of 90, large + "↑ X points from last test"
 - Section breakdown (4 rows):
-  - English: score/20, %
-  - Math: score/20, %
-  - Reasoning: score/20, %
+  - Verbal: score/20, %
+  - Analytical Reasoning: score/20, %
+  - Quantitative Reasoning: score/20, %
   - [Subject label]: score/30, % ← out of 30, dynamic label
 - Attempted/Skipped/Flagged stats
-- Negative marking: "−X marks lost (Y wrong × 0.25)"
 - Attempt history: "Test 1: 52 | Test 2: 61 | Test 3: 67 ↑"
 - [Review All Questions →] [Practice Weak Areas →]
 
 ### Screen 11 — Profile Screen (Two States)
 View state:
 - Avatar (initial teal circle) + name
-- Mobile number
+- Mobile number or email
 - NAT-I Category display: e.g. "Engineering (NAT-IE)"
 - "18 days to NAT-I" countdown
-- Goal tracker, Streak calendar, Test details, Practice stats, Mock stats
+- Goal tracker, Streak calendar, Test details
+- (Practice stats and Mock Test stats live on Progress screen — not duplicated here)
 - [✏️ Edit Profile] teal outline button
 
 Edit state:
@@ -340,7 +404,7 @@ Edit state:
 - Streak reminders toggle
 - "You have unsaved changes" warning + [Discard] [Save] inline
 - [Cancel] [Save Profile] at bottom
-- Input validation: mobile format, date range, score 40-100
+- Input validation: mobile format, date range, score 50-90 (NAT-I passing mark is 50)
 
 ---
 
@@ -384,10 +448,25 @@ nat_category (NAT-IE | NAT-IM | NAT-ICS | NAT-ICOM | NAT-IGS | NAT-IA),
 test_date, target_score,
 created_at, updated_at
 
+**Phase 2 additions (schema-ready, not yet active):**
+login_method (mobile | email),
+login_identifier,
+otp_hash,
+otp_expires_at
+
 ### attempts (Phase 2)
 id, student_id, question_id, mode (practice/mock_test),
 action (attempted/skipped/learned),
 selected_option, is_correct, time_spent, created_at
+
+**Additional columns (SC-07):**
+attempt_number,
+is_first_attempt,
+previous_result,
+hints_used,
+hint_assisted,
+skipped,
+time_spent
 
 ---
 
@@ -404,8 +483,25 @@ selected_option, is_correct, time_spent, created_at
 | GOV-RULE-007 | Factual questions require human-verified answer keys | Active |
 | GOV-RULE-008 | Plan changes propagated to CLAUDE.md and all dependent docs before next session | Active |
 | GOV-RULE-009 | Explanations never assume prior knowledge, never skip steps, multiple methods, plain language before formula, visual as actual diagrams, formula mapped onto intuitive method | Active |
+| GOV-RULE-010 | AI must select appropriate visual type per question — not default to one format | Active |
+| GOV-RULE-011 | All UGC passes moderation before AI processing or permanent storage | Phase 2 |
+| GOV-RULE-012 | No light gray text on white/light backgrounds. Ever. No exceptions. | Active |
 
 **Governance document:** src/governance/NTS-GOV-001-AI-Governance-Incident-Log.docx (v1.1)
+
+---
+
+## QA Policy — 3-Layer Requirement
+
+**No phase moves forward without all 3 layers complete:**
+
+| Layer | Method | Owner |
+|---|---|---|
+| Layer 1 — Automation | Playwright suite, 100% pass rate | Claude Code |
+| Layer 2 — Visual | Screenshot review of all screens | Ayyaz |
+| Layer 3 — Human | Manual walkthrough of all core user flows | Ayyaz |
+
+Evidence of all 3 layers must be recorded before phase sign-off.
 
 ---
 
@@ -418,6 +514,7 @@ selected_option, is_correct, time_spent, created_at
 | v3 | Jun 23 2026 | 11 screens | Onboarding multi-step, mode indicator missing, bottom bar overcrowded | Actioned |
 | v4 | Jun 24 2026 | 11 screens | Onboarding not applied, save profile missing, button rendering bug | Actioned |
 | v5 | Jun 24 2026 | 11 screens | Onboarding optional fields, formula depth, C(7,5) repeated, overlapping | Actioned |
+| v6 | Jun 25-26 2026 | 11 screens | 50+ issues — full findings in src/governance/FINDINGS.md | Actioned — 961095d |
 
 Full evidence: src/governance/design/ folder
 
@@ -430,6 +527,25 @@ When plan changes, ALWAYS update before next session:
 - [ ] Turso tasks table (admin panel)
 - [ ] NTS-GOV-001 if governance-relevant
 - [ ] Log as incident if a dependent document was missed
+
+---
+
+## Scope Corrections Log
+
+Applied corrections from June 25-26 testing session (commit 961095d):
+
+| ID | Correction | Applied |
+|---|---|---|
+| SC-01 | NAT-I has NO negative marking — confirmed across all 6 categories. All -0.25 references removed from UI, spec, and CLAUDE.md | ✅ |
+| SC-02 | Common section "Math" renamed to "Quantitative Reasoning" throughout — avoids confusion with Engineering subject Mathematics | ✅ |
+| SC-03 | NAT-ICS CS subject section: Physics (10) + FSc Mathematics (10) + Computer Science (10) | ✅ |
+| SC-04 | All 6 category subject sections verified and documented in NAT-I Paper Structure table | ✅ |
+| SC-05 | Login / OTP authentication deferred to Phase 2 — Phase 1 uses localStorage only | ✅ |
+| SC-06 | students table: schema-ready columns added for Phase 2 login (login_method, login_identifier, otp_hash, otp_expires_at) | ✅ |
+| SC-07 | attempts table: additional columns added (attempt_number, is_first_attempt, previous_result, hints_used, hint_assisted, skipped, time_spent) | ✅ |
+| SC-08 | Two-mode comparison table locked in CLAUDE.md | ✅ |
+| SC-09 | QA Policy: 3-layer requirement documented — no phase moves forward without automation + visual + human QA complete | ✅ |
+| SC-10 | Product mission statement added | ✅ |
 
 ---
 
@@ -453,14 +569,15 @@ When plan changes, ALWAYS update before next session:
 - ✅ NAT-IE (Engineering) seeded as Phase 1 active category
 - ✅ Onboarding updated with mandatory NAT-I category selector
 - ✅ Mock test updated to 90 MCQs, 120 minutes (4 sections)
-- ⬜ Pending fixes: SolutionWrong tabs, QuestionMockTest colour audit (in progress via Claude Code)
-- ⬜ Visual verification across all 11 screens
+- ✅ Comprehensive UI/spec fixes from June 25-26 testing session — 50+ issues resolved (commit 961095d)
+- ✅ Visual verification and comprehensive fixes — all 11 screens (commit 961095d)
+- ✅ Playwright suite — 57/57 tests passing (commit 961095d)
 - ⬜ Questions table schema (questions, question_methods, question_flags)
 - ⬜ Admin question entry form (/admin/questions/new)
 - ⬜ Seed 90 verified questions:
     - Verbal: 20 questions
     - Analytical Reasoning: 20 questions
-    - Quantitative: 20 questions
+    - Quantitative Reasoning: 20 questions
     - Subject-Specific (NAT-IE Engineering): 30 questions
 - ⬜ Wire Practice Mode core loop
 - ⬜ Claude API explanation generation (Vercel serverless, GOV-RULE-009 system prompt)
@@ -470,6 +587,8 @@ When plan changes, ALWAYS update before next session:
 - ⬜ Remaining 5 categories content added to CLAUDE.md
 
 ### Phase 2 — Intelligence Layer
+**Note: Login / OTP authentication is deferred to Phase 2. Phase 1 uses localStorage only.**
+- Phone + OTP authentication (students table: login_method, login_identifier, otp_hash, otp_expires_at)
 - Activate remaining NAT-I categories one at a time:
   NAT-IM (Medical), NAT-ICS (Computer Science), NAT-ICOM (Commerce),
   NAT-IGS (General Sciences), NAT-IA (Arts)
@@ -479,7 +598,6 @@ When plan changes, ALWAYS update before next session:
 - Claude Vision: canvas working analysis + error diagnosis
 - Mock test mode full implementation
 - Adaptive difficulty engine
-- Phone + OTP authentication
 - Promptfoo automated testing suite
 - Question bank 150+
 
@@ -518,7 +636,7 @@ When plan changes, ALWAYS update before next session:
 **Phase 1 question targets:**
 - Verbal: 20 questions
 - Analytical Reasoning: 20 questions
-- Quantitative: 20 questions
+- Quantitative Reasoning: 20 questions
 - Subject-Specific (NAT-IE Engineering): 30 questions
 - Total Phase 1: 90 verified questions
 
@@ -528,12 +646,12 @@ When plan changes, ALWAYS update before next session:
 
 ## Key Product Features
 
-- **Two modes:** Practice (learning) and Mock Test (exam simulation)
+- **Two modes:** Practice (learning) and Mock Test (exam simulation) — see Mode Comparison Table above
 - **Answer flow:** Wrong → forced solution + error diagnosis. Correct → optional exploration.
 - **Adaptive difficulty:** AI-driven auto + student-controlled + test-date urgency (Phase 2)
-- **Canvas:** Draw/Type/Upload — persists, feeds Claude Vision
+- **Canvas:** Draw/Type/Upload — persists, feeds Claude Vision, tab tracked in localStorage
 - **Solution methods:** Minimum 2, all expanded, Method 2 maps formula onto Method 1 steps
-- **Negative marking:** -0.25 per wrong answer, skip strategy taught
+- **No negative marking:** NAT-I has no negative marking across all 6 categories (SC-01)
 - **Student profile:** Goals, test date, target score, NAT-I category, attempt history, weak zones, streaks
 - **Mock test:** 90 MCQs, 120 min, 4 sections, auto-submit on timeout, resume on close, full review after
 - **Premium:** Rs. 1000/month — history, chatbot, PDF reports, offline packs (Phase 3)
