@@ -151,7 +151,7 @@ function PhaseFlowchart({ phaseId, accentColor }) {
     if (rowIdx > 0) {
       const prevRow = rows[rowIdx - 1]
       const prevX = PAD + (prevRow.length - 1) * (BOX_W + GAP_X) + BOX_W
-      const rightEdge = prevX + 20
+      const rightEdge = PAD + (perRow - 1) * (BOX_W + GAP_X) + BOX_W + 20
       const prevY = PAD + (rowIdx - 1) * (BOX_H + GAP_Y) + BOX_H / 2
       const curY = y + BOX_H / 2
       elements.push(<polyline key={`wrap-${rowIdx}`} points={`${prevX},${prevY} ${rightEdge},${prevY} ${rightEdge},${curY} ${PAD},${curY}`} fill="none" stroke="#94a3b8" strokeWidth="1.5" strokeDasharray="4 2" markerEnd="url(#arrow)" />)
