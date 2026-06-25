@@ -99,12 +99,12 @@ function WorkflowEmbed({ src, title }) {
     <div className="border-t border-gray-100">
       <button
         onClick={() => setOpen(o => !o)}
-        className="w-full flex items-center justify-between px-5 py-2.5 bg-gray-50 hover:bg-gray-100 transition-colors text-left"
+        className="w-full flex items-center justify-between px-5 py-2.5 bg-gray-100 hover:bg-gray-200 transition-colors text-left"
       >
-        <span className="text-xs font-semibold text-gray-500 tracking-wide uppercase">
+        <span className="text-xs font-semibold text-gray-900 tracking-wide uppercase">
           📋 {title}
         </span>
-        <span className={`text-gray-400 text-xs transition-transform duration-200 ${open ? 'rotate-180' : ''}`}>▾</span>
+        <span className={`text-gray-700 text-xs transition-transform duration-200 ${open ? 'rotate-180' : ''}`}>▾</span>
       </button>
       {open && (
         <div className="border-t border-gray-100">
@@ -370,7 +370,7 @@ export default function Admin() {
                             }`}>
                               {task.done && <Checkmark />}
                             </div>
-                            <span className={`flex-1 text-sm ${task.done ? 'line-through text-gray-400' : 'text-gray-900 font-medium'}`}>
+                            <span className={`flex-1 text-sm ${task.done ? 'line-through text-gray-500' : 'text-gray-900 font-medium'}`}>
                               {task.label}
                             </span>
                             <span className="text-xs text-white bg-gray-700 px-2.5 py-0.5 rounded-full shrink-0 font-medium">
