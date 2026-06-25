@@ -65,13 +65,13 @@ const SEED_TASKS = [
   { id: 'p4-04', phase_id: '4', phase_name: 'Governance & Compliance', label: 'ISO 42001 management layer · NTS-GOV-001 finalised', tool: 'Claude Code' },
 ]
 
-// Governance colour system — aligned with workflow documents
+// Governance colour system — high contrast: solid dark headers, white text
 const COLORS = {
-  '0': { bg: 'bg-slate-50', border: 'border-slate-300', bar: 'bg-slate-700', badge: 'bg-slate-200 text-slate-800', heading: 'text-slate-800', check: 'bg-slate-700' },
-  '1': { bg: 'bg-teal-50', border: 'border-teal-200', bar: 'bg-teal-600', badge: 'bg-teal-100 text-teal-800', heading: 'text-teal-800', check: 'bg-teal-600' },
-  '2': { bg: 'bg-violet-50', border: 'border-violet-200', bar: 'bg-violet-600', badge: 'bg-violet-100 text-violet-800', heading: 'text-violet-800', check: 'bg-violet-600' },
-  '3': { bg: 'bg-amber-50', border: 'border-amber-200', bar: 'bg-amber-500', badge: 'bg-amber-100 text-amber-800', heading: 'text-amber-800', check: 'bg-amber-500' },
-  '4': { bg: 'bg-sky-50', border: 'border-sky-200', bar: 'bg-sky-600', badge: 'bg-sky-100 text-sky-800', heading: 'text-sky-800', check: 'bg-sky-600' },
+  '0': { bg: 'bg-slate-800',   border: 'border-slate-800',   bar: 'bg-teal-400',  badge: 'bg-slate-700 text-white',   heading: 'text-white', check: 'bg-teal-400' },
+  '1': { bg: 'bg-teal-700',    border: 'border-teal-700',    bar: 'bg-white',     badge: 'bg-teal-600 text-white',    heading: 'text-white', check: 'bg-white'    },
+  '2': { bg: 'bg-violet-700',  border: 'border-violet-700',  bar: 'bg-white',     badge: 'bg-violet-600 text-white',  heading: 'text-white', check: 'bg-white'    },
+  '3': { bg: 'bg-amber-600',   border: 'border-amber-600',   bar: 'bg-white',     badge: 'bg-amber-500 text-white',   heading: 'text-white', check: 'bg-white'    },
+  '4': { bg: 'bg-sky-700',     border: 'border-sky-700',     bar: 'bg-white',     badge: 'bg-sky-600 text-white',     heading: 'text-white', check: 'bg-white'    },
 }
 
 function Checkmark() {
