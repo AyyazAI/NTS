@@ -78,8 +78,26 @@ export default function MockTest() {
   const [activeSection,  setActiveSection]  = useState('Verbal')
   const [sectionState,   setSectionState]   = useState(INITIAL_STATE)
   const [selected,       setSelected]       = useState(null)
-  const [flagged,        setFlagged]        = useState(false)
   const [showConfirm,    setShowConfirm]    = useState(false)
+
+  const currentIdx   = sectionState[activeSection].current
+  const isFlagged    = sectionState[activeSection].flagged.includes(currentIdx)
+
+  function handleFlag() {
+    setSectionState(s => {
+      const sec = s[activeSection]
+      const wasFlagged = sec.flagged.includes(currentIdx)
+      return {
+        ...s,
+        [activeSection]: {
+          ...sec,
+          flagged: wasFlagged
+            ? sec.flagged.filter(i => i !== currentIdx)
+            : [...sec.flagged, currentIdx],
+        },
+      }
+    })
+  }
 
   const current = sectionState[activeSection]
 
@@ -106,15 +124,14 @@ export default function MockTest() {
       <main className="flex-1 px-4 pb-48 overflow-y-auto">
         {/* Score + timer */}
         <div className="flex items-center justify-between mb-3">
-          <div className="bg-amber-50 border border-amber-200 rounded-xl px-3 py-2">
-            <p className="text-xs font-bold text-amber-700">Score</p>
-            <p className="text-lg font-black text-amber-700">+18.25</p>
-            <p className="text-[10px] font-bold text-amber-500">NEG: −0.25/wrong</p>
+          <div className="bg-teal-50 border border-teal-200 rounded-xl px-3 py-2">
+            <p className="text-xs font-bold text-teal-700">Score</p>
+            <p className="text-lg font-black text-teal-700">18 / 90</p>
           </div>
           <div className="text-right">
-            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wide mb-0.5">Time left</p>
+            <p className="text-[10px] font-bold text-gray-700 uppercase tracking-wide mb-0.5">Time left</p>
             <Timer time="67:15" state="normal" />
-            <p className="text-[10px] text-gray-400">of 120 min</p>
+            <p className="text-[10px] text-gray-700">of 120 min</p>
           </div>
         </div>
 
@@ -140,7 +157,7 @@ export default function MockTest() {
           <span className="text-xs font-bold text-gray-500">
             {activeSection === 'Subject' ? subjectLabel : activeSection} · {SECTION_TOTALS[activeSection]} MCQs
           </span>
-          <span className="text-xs font-bold text-gray-400">
+          <span className="text-xs font-bold text-gray-700">
             Q{current.current + 1} of {current.total}
           </span>
         </div>
@@ -153,8 +170,11 @@ export default function MockTest() {
         {/* Question card */}
         <div className="bg-gray-50 border border-gray-100 rounded-2xl p-4 mb-4 relative">
           <button
-            onClick={() => setFlagged(f => !f)}
-            className={`absolute top-3 right-3 text-lg transition-transform hover:scale-110 ${flagged ? 'opacity-100' : 'opacity-30 hover:opacity-60'}`}
+            onClick={handleFlag}
+            title="Flag this question"
+            className={`absolute top-3 right-3 text-lg transition-transform hover:scale-110 ${
+              isFlagged ? 'text-amber-500 opacity-100' : 'opacity-30 hover:opacity-60'
+            }`}
           >
             🚩
           </button>
@@ -224,7 +244,7 @@ export default function MockTest() {
             <p className="text-sm text-gray-500 mb-6">
               You have <span className="font-bold text-amber-600">3 flagged questions</span>. What would you like to do?
             </p>
-            <div className="space-y-3">
+            <div className="space-y-4">
               <button
                 onClick={() => setShowConfirm(false)}
                 className="w-full py-4 rounded-xl border-2 border-gray-200 text-sm font-bold text-gray-700 hover:bg-gray-50"

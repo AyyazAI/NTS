@@ -11,18 +11,25 @@ test.describe('Progress Screen', () => {
   })
 
   test('4 topic sections are present including Engineering', async ({ page }) => {
-    // Accordion headers: font-black spans inside buttons — use first() to avoid strict-mode issues
     await expect(page.locator('button').filter({ hasText: 'English' }).first()).toBeVisible()
-    await expect(page.locator('button').filter({ hasText: 'Math' }).first()).toBeVisible()
+    await expect(page.locator('button').filter({ hasText: 'Quantitative Reasoning' }).first()).toBeVisible()
     await expect(page.locator('button').filter({ hasText: 'Reasoning' }).first()).toBeVisible()
     await expect(page.locator('button').filter({ hasText: 'Engineering' }).first()).toBeVisible()
   })
 
-  test("Today's Focus shows a maximum of 3 items", async ({ page }) => {
-    const focusSection = page.locator('text=Today\'s Focus').locator('..')
-    // Count the Start → buttons — one per focus item
-    const startButtons = focusSection.locator('button:has-text("Start →")')
-    const count = await startButtons.count()
-    expect(count).toBeLessThanOrEqual(3)
+  test("Today's Focus block is removed — not visible", async ({ page }) => {
+    await expect(page.locator("text=Today's Focus")).not.toBeVisible()
+  })
+
+  test('score trend chart is visible with pass mark reference', async ({ page }) => {
+    await expect(page.locator('text=Score Trend')).toBeVisible()
+    // SVG pass mark label
+    await expect(page.locator('text=Pass').first()).toBeVisible()
+  })
+
+  test('topic accordion shows Start here button for weakest sub-topic', async ({ page }) => {
+    // Open English accordion
+    await page.locator('button').filter({ hasText: 'English' }).first().click()
+    await expect(page.locator('button:has-text("Start here →")').first()).toBeVisible()
   })
 })

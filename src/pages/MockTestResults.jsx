@@ -38,7 +38,7 @@ export default function MockTestResults() {
         <div className="text-center py-6">
           <p className="text-teal-600 font-black text-lg mb-1">Test Complete ✓</p>
           <p className="text-6xl font-black text-gray-900 leading-none">67</p>
-          <p className="text-xl font-bold text-gray-400">/90</p>
+          <p className="text-xl font-bold text-gray-600">/90</p>
           <p className="mt-2 text-sm font-bold text-teal-600">↑ 5 points from your last test</p>
         </div>
 
@@ -57,16 +57,9 @@ export default function MockTestResults() {
           ].map(s => (
             <div key={s.label} className="bg-gray-50 border border-gray-100 rounded-xl p-3 text-center">
               <p className="text-xl font-black text-gray-900">{s.value}</p>
-              <p className="text-[11px] font-bold text-gray-400 mt-0.5">{s.label}</p>
+              <p className="text-[11px] font-bold text-gray-600 mt-0.5">{s.label}</p>
             </div>
           ))}
-        </div>
-
-        {/* Negative marking */}
-        <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4 mb-4">
-          <p className="text-xs font-black text-amber-700 uppercase tracking-wider mb-1">Negative Marking</p>
-          <p className="text-lg font-black text-amber-800">−5.25 marks lost</p>
-          <p className="text-xs text-amber-600 mt-0.5">21 wrong × 0.25 per wrong answer</p>
         </div>
 
         {/* Attempt history */}
@@ -92,7 +85,7 @@ export default function MockTestResults() {
         </div>
 
         {/* CTAs */}
-        <div className="space-y-3">
+        <div className="space-y-4">
           <Link to="/solution/wrong">
             <button className="w-full py-4 rounded-xl bg-teal-600 text-white font-bold text-sm hover:bg-teal-700 transition-colors">
               Review All Questions →

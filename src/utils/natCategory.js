@@ -1,5 +1,5 @@
 export const NAT_CATEGORIES = [
-  { id: 'NAT-IE',   label: 'Engineering',      short: 'Engg'    },
+  { id: 'NAT-IE',   label: 'Engineering',      short: 'Engineering' },
   { id: 'NAT-IM',   label: 'Medical',          short: 'Medical' },
   { id: 'NAT-ICS',  label: 'Computer Science', short: 'CS'      },
   { id: 'NAT-ICOM', label: 'Commerce',         short: 'Commerce'},

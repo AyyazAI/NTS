@@ -12,7 +12,6 @@ test.describe('Practice Question Screen', () => {
   test('Submit Answer is greyed out until an option is selected', async ({ page }) => {
     const submit = page.locator('button:has-text("Submit Answer")')
     await expect(submit).toBeDisabled()
-    // Select an option then button should activate
     await page.locator('button:has-text("21")').click()
     await expect(submit).toBeEnabled()
   })
@@ -21,10 +20,8 @@ test.describe('Practice Question Screen', () => {
     await expect(page.locator('button:has-text("Show Solution")')).toBeVisible()
   })
 
-  test('back arrow is hidden on Question 1 (Q1 shows placeholder, not button)', async ({ page }) => {
-    // Static page is Q4 — back arrow IS rendered because isFirst = false.
-    // This test documents the intended Q1 behaviour: the ‹ button should not exist.
-    // On Q4 the selector finds the button, so this intentionally fails to surface the gap.
+  test('back arrow is hidden on Question 1', async ({ page }) => {
+    // Static page is now Q1 — back arrow should not be visible
     const backBtn = page.locator('button:has-text("‹")')
     await expect(backBtn).not.toBeVisible()
   })

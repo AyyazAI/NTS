@@ -49,7 +49,7 @@ function CategorySelector({ value, onChange }) {
             {selected && (
               <span className="absolute top-2 right-2 w-4 h-4 rounded-full bg-teal-600 flex items-center justify-center text-white text-[9px] font-black">✓</span>
             )}
-            <p className={`text-[10px] font-black mb-0.5 ${selected ? 'text-teal-600' : 'text-gray-400'}`}>{cat.id}</p>
+            <p className={`text-[10px] font-black mb-0.5 ${selected ? 'text-teal-600' : 'text-gray-700'}`}>{cat.id}</p>
             <p className={`text-xs font-bold leading-tight ${selected ? 'text-teal-800' : 'text-gray-700'}`}>{cat.label}</p>
           </button>
         )
@@ -89,7 +89,7 @@ function ViewMode({ natCategory, onEdit }) {
         <div className="h-3 bg-gray-200 rounded-full overflow-hidden mb-1">
           <div className="h-full bg-teal-500 rounded-full" style={{ width: '74%' }} />
         </div>
-        <div className="flex justify-between text-xs text-gray-400">
+        <div className="flex justify-between text-xs text-gray-600">
           <span>Current avg: 67</span>
           <span>Target: 75</span>
         </div>
@@ -102,7 +102,7 @@ function ViewMode({ natCategory, onEdit }) {
           <span className="font-black text-gray-800">🔥 7 days</span>
         </div>
         <StreakCalendar />
-        <p className="text-xs text-gray-400 mt-2">Last 30 days</p>
+        <p className="text-xs text-gray-600 mt-2">Last 30 days</p>
       </div>
 
       {/* Test details — includes NAT-I category */}
@@ -111,24 +111,6 @@ function ViewMode({ natCategory, onEdit }) {
         <StatRow label="Test date"        value="12 Jul 2026" />
         <StatRow label="Category"         value={getCategoryLabel(natCategory)} />
         <StatRow label="Target university" value="LUMS" />
-      </div>
-
-      {/* Practice stats */}
-      <div className="bg-gray-50 border border-gray-100 rounded-2xl p-4">
-        <p className="text-xs font-black text-gray-500 uppercase tracking-wider mb-2">Practice Stats</p>
-        <StatRow label="Questions attempted" value="142" />
-        <StatRow label="Solutions viewed"    value="38"  />
-        <StatRow label="Topics covered"      value="4/4" />
-        <StatRow label="Accuracy"            value="67%" />
-      </div>
-
-      {/* Mock stats */}
-      <div className="bg-gray-50 border border-gray-100 rounded-2xl p-4">
-        <p className="text-xs font-black text-gray-500 uppercase tracking-wider mb-2">Mock Test Stats</p>
-        <StatRow label="Tests completed"  value="3"      />
-        <StatRow label="Best score"       value="67/90"  />
-        <StatRow label="Average score"    value="60/90"  />
-        <StatRow label="Neg marks lost"   value="−12.5"  />
       </div>
 
       <button
@@ -267,7 +249,7 @@ function EditMode({ initialCategory, onCancel }) {
         <div className="flex items-center justify-between bg-gray-50 border border-gray-100 rounded-xl px-4 py-3">
           <div>
             <p className="text-sm font-bold text-gray-800">Streak reminders</p>
-            <p className="text-xs text-gray-400">Daily notification to keep your streak</p>
+            <p className="text-xs text-gray-600">Daily notification to keep your streak</p>
           </div>
           <button
             onClick={() => { setReminders(r => !r); mark() }}

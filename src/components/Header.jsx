@@ -5,7 +5,7 @@ export default function Header() {
         <span className="font-black text-xl tracking-tight text-gray-900">Taleemi</span>
         <span className="font-black text-xl tracking-tight text-teal-600">Markaz</span>
       </div>
-      <span className="text-xs font-bold text-gray-400 tracking-widest uppercase">NTS Prep</span>
+      <span className="text-xs font-bold text-gray-600 tracking-widest uppercase">NTS Prep</span>
     </header>
   )
 }

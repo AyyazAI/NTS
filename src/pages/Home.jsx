@@ -5,9 +5,9 @@ import BottomNav from '../components/BottomNav'
 import { getNatCategory, getCategoryLabel } from '../utils/natCategory'
 
 const COMMON_TOPICS = [
-  { id: 'english',   name: 'English',   icon: '📖', attempted: 17, total: 20, pct: 68 },
-  { id: 'math',      name: 'Math',      icon: '🔢', attempted: 8,  total: 20, pct: 32 },
-  { id: 'reasoning', name: 'Reasoning', icon: '🧩', attempted: 21, total: 20, pct: 84 },
+  { id: 'english',    name: 'English',                 icon: '📖', attempted: 17, total: 20, pct: 68 },
+  { id: 'math',       name: 'Quantitative Reasoning',  icon: '🔢', attempted: 8,  total: 20, pct: 32 },
+  { id: 'reasoning',  name: 'Reasoning',               icon: '🧩', attempted: 21, total: 20, pct: 84 },
 ]
 
 function barColor(pct) {
@@ -16,9 +16,14 @@ function barColor(pct) {
   return 'bg-red-500'
 }
 
+function getStudentName() {
+  try { return localStorage.getItem('student_name') || '' } catch { return '' }
+}
+
 export default function Home() {
   const [mode, setMode] = useState('practice')
   const [natCategory] = useState(() => getNatCategory() || 'NAT-IE')
+  const [studentName] = useState(() => getStudentName())
 
   const subjectTopic = {
     id: 'subject',
@@ -29,24 +34,17 @@ export default function Home() {
     pct: 58,
   }
   const allTopics = [...COMMON_TOPICS, subjectTopic]
+  const greeting = studentName ? `Welcome, ${studentName}! 👋` : 'Welcome! 👋'
 
   return (
     <div className="min-h-screen bg-white flex flex-col max-w-sm mx-auto">
       <Header />
 
       <main className="flex-1 px-4 pt-4 pb-28">
-        <h1 className="text-2xl font-black text-gray-900 mb-4">
-          Assalam-o-Alaikum, Hamza 👋
+        <h1 className="text-2xl font-black text-gray-900 mb-2">
+          {greeting}
         </h1>
-
-        {/* Daily goal */}
-        <div className="bg-teal-600 rounded-2xl p-4 mb-5 shadow-sm">
-          <p className="font-bold text-sm text-white mb-2">Practice 20 questions today</p>
-          <div className="bg-white bg-opacity-30 rounded-full h-2 mb-1.5">
-            <div className="bg-white h-2 rounded-full" style={{ width: '40%' }} />
-          </div>
-          <p className="text-xs text-teal-100">8 of 20 done · You're doing great — keep going!</p>
-        </div>
+        <p className="text-sm text-gray-600 mb-5">Ready to practice? Pick a section below.</p>
 
         {/* Mode selector */}
         <div className="flex gap-2 mb-5">
@@ -86,7 +84,7 @@ export default function Home() {
                         style={{ width: `${topic.pct}%` }}
                       />
                     </div>
-                    <p className="text-xs text-gray-500">
+                    <p className="text-xs text-gray-600">
                       {topic.attempted} of {topic.total} questions attempted
                     </p>
                   </div>
@@ -100,8 +98,8 @@ export default function Home() {
         {/* Mock test */}
         {mode === 'mock' && (
           <div className="pt-2 text-center">
-            <p className="text-sm text-gray-400 mb-4">
-              Last score: <span className="font-bold text-gray-600">67/100</span>
+            <p className="text-sm text-gray-600 mb-4">
+              Last score: <span className="font-bold text-gray-700">67/90</span>
             </p>
             <Link to="/mock-test">
               <button className="w-full bg-teal-600 text-white font-bold py-4 rounded-xl text-base hover:bg-teal-700 transition-colors">

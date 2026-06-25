@@ -45,14 +45,6 @@ export default function SolutionCorrect() {
           </Link>
         </div>
 
-        {/* XP earned badge */}
-        <div className="mt-6 bg-amber-50 border border-amber-200 rounded-xl px-4 py-3 flex items-center gap-3">
-          <span className="text-2xl">⚡</span>
-          <div>
-            <p className="text-sm font-black text-amber-800">+10 XP earned</p>
-            <p className="text-xs text-amber-600">Under 60 seconds — speed bonus!</p>
-          </div>
-        </div>
       </main>
 
       <BottomNav />

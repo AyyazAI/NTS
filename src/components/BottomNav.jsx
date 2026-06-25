@@ -24,7 +24,7 @@ export default function BottomNav() {
             key={item.path}
             to={item.path}
             className={`flex-1 flex flex-col items-center gap-0.5 pt-2 pb-1 transition-colors ${
-              isActive(item.path) ? 'text-teal-600' : 'text-gray-400 hover:text-gray-600'
+              isActive(item.path) ? 'text-teal-600' : 'text-gray-600 hover:text-gray-800'
             }`}
           >
             <span className="text-xl leading-none">{item.icon}</span>

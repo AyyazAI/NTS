@@ -58,13 +58,12 @@ export default function QuestionMockTest() {
       <main className="flex-1 px-4 pb-48 overflow-y-auto">
         {/* Score + timer row */}
         <div className="flex items-center justify-between mb-3">
-          <div className="bg-amber-50 border border-amber-200 rounded-xl px-3 py-2">
-            <p className="text-xs font-bold text-amber-700">Score</p>
-            <p className="text-lg font-black text-amber-700">+18.25</p>
-            <p className="text-[10px] font-bold text-amber-500">NEG: −0.25/wrong</p>
+          <div className="bg-teal-50 border border-teal-200 rounded-xl px-3 py-2">
+            <p className="text-xs font-bold text-teal-700">Score</p>
+            <p className="text-lg font-black text-teal-700">18 / 90</p>
           </div>
           <div className="text-right">
-            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wide mb-0.5">Time left</p>
+            <p className="text-[10px] font-bold text-gray-700 uppercase tracking-wide mb-0.5">Time left</p>
             <Timer time="120:00" state="normal" />
           </div>
         </div>
@@ -74,7 +73,7 @@ export default function QuestionMockTest() {
           <span className="text-xs font-bold text-teal-700 bg-teal-50 border border-teal-200 rounded-full px-2.5 py-1">
             {sectionLabel}
           </span>
-          <span className="text-xs font-bold text-gray-400">
+          <span className="text-xs font-bold text-gray-700">
             Q{QUESTION.number} of {QUESTION.total}
           </span>
         </div>
@@ -85,7 +84,7 @@ export default function QuestionMockTest() {
             onClick={() => setFlagged(f => !f)}
             title="Flag this question"
             className={`absolute top-3 right-3 text-lg transition-transform hover:scale-110 ${
-              flagged ? 'opacity-100' : 'opacity-30 hover:opacity-60'
+              flagged ? 'text-amber-500 opacity-100' : 'opacity-30 hover:opacity-60'
             }`}
           >
             🚩
@@ -127,7 +126,7 @@ export default function QuestionMockTest() {
         <Canvas />
       </main>
 
-      {/* Bottom action bar — no Show Solution in mock mode */}
+      {/* Bottom action bar — [‹] [Submit Answer] [›] only, no Submit Test */}
       <div className="fixed bottom-20 left-1/2 -translate-x-1/2 w-full max-w-sm bg-white border-t border-gray-100 px-4 py-3 z-20">
         <div className="flex items-center gap-2">
           <Link to="/mock-test">
@@ -135,13 +134,6 @@ export default function QuestionMockTest() {
               ‹
             </button>
           </Link>
-
-          <button
-            onClick={() => setShowConfirm(true)}
-            className="flex-1 h-12 rounded-xl border-2 border-teal-600 text-sm font-bold text-teal-600 hover:bg-teal-50 transition-colors"
-          >
-            Submit Test
-          </button>
 
           <button
             disabled={!selected}

@@ -22,7 +22,6 @@ test.describe('Mock Test Question Screen', () => {
   })
 
   test('section label is visible above the question card', async ({ page }) => {
-    // Section label shows "Section 1: Verbal" for Q1-20
     await expect(page.locator('text=Section')).toBeVisible()
   })
 
@@ -30,7 +29,24 @@ test.describe('Mock Test Question Screen', () => {
     await expect(page.locator('text=Score')).toBeVisible()
   })
 
-  test('negative marking display is visible', async ({ page }) => {
-    await expect(page.locator('text=NEG')).toBeVisible()
+  test('no negative marking indicator — NAT-I has no negative marking', async ({ page }) => {
+    await expect(page.locator('text=NEG')).not.toBeVisible()
+  })
+
+  test('Submit Test button is NOT in the persistent bottom bar', async ({ page }) => {
+    const actionBar = page.locator('.fixed.bottom-20')
+    await expect(actionBar.locator('button:has-text("Submit Test")')).not.toBeVisible()
+  })
+
+  test('flag icon is present on question card', async ({ page }) => {
+    const flagBtn = page.locator('button[title="Flag this question"]')
+    await expect(flagBtn).toBeVisible()
+  })
+
+  test('flag icon changes to amber when tapped', async ({ page }) => {
+    const flagBtn = page.locator('button[title="Flag this question"]')
+    await flagBtn.click()
+    // After flagging, button should have amber styling
+    await expect(flagBtn).toHaveClass(/text-amber-500/)
   })
 })

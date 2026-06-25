@@ -61,7 +61,7 @@ function VisualMethod() {
       <div className="space-y-2">
         {rows.map(row => (
           <div key={row.label} className="flex items-center gap-2">
-            <span className="text-[10px] font-bold text-gray-400 w-16 flex-shrink-0 leading-tight">
+            <span className="text-[10px] font-bold text-gray-700 w-16 flex-shrink-0 leading-tight">
               {row.label}
             </span>
             <div className="flex flex-wrap gap-1 flex-1">
@@ -74,7 +74,7 @@ function VisualMethod() {
                 </span>
               ))}
             </div>
-            <span className="text-[10px] font-bold text-gray-400 w-10 text-right flex-shrink-0">
+            <span className="text-[10px] font-bold text-gray-700 w-10 text-right flex-shrink-0">
               {row.count} pairs
             </span>
           </div>
@@ -228,7 +228,57 @@ Formula saves hours compared to listing.`}
   )
 }
 
+function getCanvasTab() {
+  try { return localStorage.getItem('canvas_last_tab') || null } catch { return null }
+}
+
+function YourWorking({ canvasTab }) {
+  if (!canvasTab) return null
+
+  return (
+    <div className="bg-gray-50 border border-gray-200 rounded-2xl p-4 mb-5">
+      <p className="text-xs font-black text-gray-700 uppercase tracking-wider mb-2">Your working</p>
+
+      {canvasTab === 'draw' && (
+        <div className="bg-white border border-dashed border-gray-300 rounded-xl h-20 flex items-center justify-center relative mb-2">
+          <span className="text-xs text-gray-600 italic">Your drawing</span>
+          <div className="absolute top-2 right-2 bg-amber-100 border border-amber-300 rounded-lg px-2 py-1 flex items-center gap-1">
+            <span className="text-amber-600">⚠️</span>
+            <span className="text-xs font-bold text-amber-700">Error here</span>
+          </div>
+        </div>
+      )}
+
+      {canvasTab === 'type' && (
+        <div className="bg-white border border-gray-200 rounded-xl p-3 mb-2 relative">
+          <p className="text-sm text-gray-700 font-mono">7 × 5 = 35</p>
+          <div className="absolute top-2 right-2 bg-amber-100 border border-amber-300 rounded-lg px-2 py-1 flex items-center gap-1">
+            <span className="text-amber-600">⚠️</span>
+            <span className="text-xs font-bold text-amber-700">Error here</span>
+          </div>
+        </div>
+      )}
+
+      {canvasTab === 'upload' && (
+        <div className="bg-white border border-dashed border-gray-300 rounded-xl h-20 flex items-center justify-center relative mb-2">
+          <span className="text-xs text-gray-600 italic">Your uploaded image</span>
+          <div className="absolute top-2 right-2 bg-amber-100 border border-amber-300 rounded-lg px-2 py-1 flex items-center gap-1">
+            <span className="text-amber-600">⚠️</span>
+            <span className="text-xs font-bold text-amber-700">Error here</span>
+          </div>
+        </div>
+      )}
+
+      <p className="text-xs text-gray-700 leading-relaxed">
+        You went wrong here — <span className="font-bold">you multiplied 7 × 5 = 35 instead of using combinations.</span>
+      </p>
+    </div>
+  )
+}
+
 export default function SolutionWrong() {
+  const canvasTab = getCanvasTab()
+
   return (
     <div className="min-h-screen bg-white flex flex-col max-w-sm mx-auto">
       <Header />
@@ -249,20 +299,7 @@ export default function SolutionWrong() {
           </div>
         </div>
 
-        {/* Your working section */}
-        <div className="bg-gray-50 border border-gray-200 rounded-2xl p-4 mb-5">
-          <p className="text-xs font-black text-gray-500 uppercase tracking-wider mb-2">Your working</p>
-          <div className="bg-white border border-dashed border-gray-300 rounded-xl h-20 flex items-center justify-center relative mb-2">
-            <span className="text-xs text-gray-300 italic">Canvas working submitted</span>
-            <div className="absolute top-2 right-2 bg-amber-100 border border-amber-300 rounded-lg px-2 py-1 flex items-center gap-1">
-              <span className="text-amber-600">⚠️</span>
-              <span className="text-xs font-bold text-amber-700">Error here</span>
-            </div>
-          </div>
-          <p className="text-xs text-gray-600 leading-relaxed">
-            You went wrong here — <span className="font-bold">you multiplied 7 × 5 = 35 instead of using combinations.</span>
-          </p>
-        </div>
+        <YourWorking canvasTab={canvasTab} />
 
         {/* Methods */}
         <p className="text-sm font-black text-gray-700 mb-3">Three ways to see the solution</p>

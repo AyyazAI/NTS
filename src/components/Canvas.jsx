@@ -1,37 +1,86 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 
 const TABS = [
-  { id: 'draw', label: '✏️ Draw' },
-  { id: 'type', label: '⌨️ Type' },
+  { id: 'draw',   label: '✏️ Draw'   },
+  { id: 'type',   label: '⌨️ Type'   },
   { id: 'upload', label: '📷 Upload' },
 ]
 
 const DRAW_TOOLS = [
-  { id: 'thick', icon: '✏️', title: 'Thick pen' },
-  { id: 'thin', icon: '🖊️', title: 'Thin pen' },
-  { id: 'eraser', icon: '◻', title: 'Eraser' },
-  { id: 'undo', icon: '↩', title: 'Undo' },
-  { id: 'clear', icon: '✕', title: 'Clear' },
+  { id: 'thick',  icon: '✏️', title: 'Thick pen' },
+  { id: 'thin',   icon: '🖊️', title: 'Thin pen'  },
+  { id: 'eraser', icon: '◻',  title: 'Eraser'    },
+  { id: 'undo',   icon: '↩',  title: 'Undo'      },
+  { id: 'clear',  icon: '✕',  title: 'Clear'     },
 ]
+
+const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'application/pdf']
+const MAX_SIZE_MB = 5
 
 export default function Canvas() {
   const [tab, setTab] = useState('draw')
   const [activeTool, setActiveTool] = useState('thick')
+  const [uploadFile, setUploadFile] = useState(null)
+  const [uploadError, setUploadError] = useState('')
+  const [previewUrl, setPreviewUrl] = useState(null)
+  const fileInputRef = useRef(null)
+
+  function switchTab(id) {
+    setTab(id)
+    try { localStorage.setItem('canvas_last_tab', id) } catch {}
+  }
+
+  function handleFileChange(e) {
+    const file = e.target.files?.[0]
+    if (!file) return
+
+    if (!ALLOWED_TYPES.includes(file.type)) {
+      setUploadError('Only JPG, PNG or PDF files are allowed')
+      setUploadFile(null)
+      setPreviewUrl(null)
+      e.target.value = ''
+      return
+    }
+
+    if (file.size > MAX_SIZE_MB * 1024 * 1024) {
+      setUploadError('File must be under 5MB')
+      setUploadFile(null)
+      setPreviewUrl(null)
+      e.target.value = ''
+      return
+    }
+
+    setUploadError('')
+    setUploadFile(file)
+
+    if (file.type !== 'application/pdf') {
+      const url = URL.createObjectURL(file)
+      setPreviewUrl(url)
+    } else {
+      setPreviewUrl(null)
+    }
+  }
+
+  function formatSize(bytes) {
+    return bytes < 1024 * 1024
+      ? `${(bytes / 1024).toFixed(0)} KB`
+      : `${(bytes / (1024 * 1024)).toFixed(1)} MB`
+  }
 
   return (
     <div className="rounded-xl border border-gray-200 overflow-hidden mt-4">
       {/* Tab bar */}
       <div className="bg-gray-50 px-4 pt-3 pb-2 border-b border-gray-100">
-        <p className="text-xs font-bold text-gray-500 mb-2">
+        <p className="text-xs font-bold text-gray-700 mb-2">
           Scratch pad — work it out below
         </p>
         <div className="flex gap-1 bg-gray-200 rounded-lg p-0.5">
           {TABS.map(t => (
             <button
               key={t.id}
-              onClick={() => setTab(t.id)}
+              onClick={() => switchTab(t.id)}
               className={`flex-1 py-1.5 text-xs font-bold rounded-md transition-all ${
-                tab === t.id ? 'bg-white text-teal-600 shadow-sm' : 'text-gray-500'
+                tab === t.id ? 'bg-white text-teal-600 shadow-sm' : 'text-gray-600'
               }`}
             >
               {t.label}
@@ -52,7 +101,7 @@ export default function Canvas() {
                 className={`w-9 h-9 text-sm rounded-lg border flex items-center justify-center transition-all ${
                   activeTool === tool.id
                     ? 'border-teal-500 bg-teal-50 text-teal-600'
-                    : 'border-gray-200 text-gray-500 hover:border-gray-300'
+                    : 'border-gray-200 text-gray-600 hover:border-gray-300'
                 }`}
               >
                 {tool.icon}
@@ -60,7 +109,7 @@ export default function Canvas() {
             ))}
           </div>
           <div className="h-28 bg-gray-50 rounded-lg border-2 border-dashed border-gray-200 flex items-center justify-center select-none">
-            <span className="text-xs text-gray-300">Draw your working here</span>
+            <span className="text-xs text-gray-600">Draw your working here</span>
           </div>
         </div>
       )}
@@ -79,20 +128,51 @@ export default function Canvas() {
       {/* Upload */}
       {tab === 'upload' && (
         <div className="bg-white p-3">
-          <label className="block border-2 border-dashed border-gray-300 rounded-xl p-6 text-center cursor-pointer hover:border-teal-400 transition-colors">
-            <p className="text-3xl mb-1">📷</p>
-            <p className="text-sm font-semibold text-gray-600">Upload photo of your working</p>
-            <p className="text-xs text-gray-400 mt-1">JPG / PNG / PDF · max 5MB</p>
-            <span className="inline-block mt-3 text-xs font-bold text-teal-600 border border-teal-600 rounded-lg px-4 py-1.5">
-              Choose file
-            </span>
-            <input type="file" accept=".jpg,.jpeg,.png,.pdf" className="hidden" />
-          </label>
+          {!uploadFile ? (
+            <label className="block border-2 border-dashed border-gray-300 rounded-xl p-6 text-center cursor-pointer hover:border-teal-400 transition-colors">
+              <p className="text-3xl mb-1">📷</p>
+              <p className="text-sm font-semibold text-gray-700">Upload photo of your working</p>
+              <p className="text-xs text-gray-600 mt-1">JPG / PNG / PDF · max 5MB</p>
+              <span className="inline-block mt-3 text-xs font-bold text-teal-600 border border-teal-600 rounded-lg px-4 py-1.5">
+                Choose file
+              </span>
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept=".jpg,.jpeg,.png,.pdf"
+                className="hidden"
+                onChange={handleFileChange}
+              />
+            </label>
+          ) : (
+            <div className="border border-gray-200 rounded-xl p-3">
+              {previewUrl ? (
+                <img src={previewUrl} alt="Uploaded working" className="w-full max-h-40 object-contain rounded-lg mb-2" />
+              ) : (
+                <div className="flex items-center gap-2 mb-2 bg-gray-50 rounded-lg p-3">
+                  <span className="text-2xl">📄</span>
+                  <span className="text-sm font-bold text-gray-700">{uploadFile.name}</span>
+                </div>
+              )}
+              <div className="flex items-center justify-between">
+                <p className="text-xs text-gray-600">{uploadFile.name} · {formatSize(uploadFile.size)}</p>
+                <button
+                  onClick={() => { setUploadFile(null); setPreviewUrl(null); if (fileInputRef.current) fileInputRef.current.value = '' }}
+                  className="text-xs font-bold text-red-500 hover:text-red-700"
+                >
+                  Remove
+                </button>
+              </div>
+            </div>
+          )}
+          {uploadError && (
+            <p className="text-xs text-red-600 font-bold mt-2">{uploadError}</p>
+          )}
         </div>
       )}
 
       <div className="bg-gray-50 px-4 py-2 border-t border-gray-100">
-        <p className="text-xs text-gray-400">Your work is saved if you navigate away</p>
+        <p className="text-xs text-gray-700">Your work is saved if you navigate away</p>
       </div>
     </div>
   )
