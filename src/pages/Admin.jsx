@@ -254,7 +254,7 @@ export default function Admin() {
       <header className="bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between sticky top-0 z-10">
         <div>
           <h1 className="text-lg font-bold text-gray-900">NTS Prep — Admin</h1>
-          <p className="text-xs text-gray-400">Project tracker · NTS-GOV-001 v1.1</p>
+          <p className="text-xs text-gray-700 font-medium">Project tracker · NTS-GOV-001 v1.1</p>
         </div>
         <button
           onClick={handleLogout}
@@ -279,9 +279,9 @@ export default function Admin() {
           >
             <div>
               <p className="text-sm font-bold text-gray-900 text-left">Master Project Workflow</p>
-              <p className="text-xs text-gray-400 text-left mt-0.5">All phases · All actors · End-to-end delivery map</p>
+              <p className="text-xs text-gray-700 text-left mt-0.5">All phases · All actors · End-to-end delivery map</p>
             </div>
-            <span className={`text-gray-400 text-xs transition-transform duration-200 ${masterWorkflowOpen ? 'rotate-180' : ''}`}>▾</span>
+            <span className={`text-gray-700 text-xs transition-transform duration-200 ${masterWorkflowOpen ? 'rotate-180' : ''}`}>▾</span>
           </button>
           {masterWorkflowOpen && (
             <div className="border-t border-gray-100">
@@ -303,7 +303,7 @@ export default function Admin() {
             <span className="text-sm font-bold text-gray-900">{totalDone} / {totalTasks}</span>
           </div>
           <ProgressBar pct={globalPct} barClass="bg-gray-800" />
-          <p className="text-right text-xs text-gray-400 mt-1">{globalPct}% complete</p>
+          <p className="text-right text-xs text-gray-700 font-medium mt-1">{globalPct}% complete</p>
         </div>
 
         {/* Phase cards */}
