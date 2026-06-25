@@ -370,10 +370,10 @@ export default function Admin() {
                             }`}>
                               {task.done && <Checkmark />}
                             </div>
-                            <span className={`flex-1 text-sm ${task.done ? 'line-through text-gray-400' : 'text-gray-700'}`}>
+                            <span className={`flex-1 text-sm ${task.done ? 'line-through text-gray-400' : 'text-gray-900 font-medium'}`}>
                               {task.label}
                             </span>
-                            <span className="text-xs text-gray-400 bg-gray-100 px-2 py-0.5 rounded-full shrink-0">
+                            <span className="text-xs text-white bg-gray-700 px-2.5 py-0.5 rounded-full shrink-0 font-medium">
                               {task.tool}
                             </span>
                           </button>
