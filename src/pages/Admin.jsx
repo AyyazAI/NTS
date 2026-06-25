@@ -1,57 +1,77 @@
 import { useState, useEffect } from 'react'
 import { db } from '../utils/db'
 
+// ─── Governance rule: When workflow HTML files in src/governance/docs/ are updated,
+// the iframes below automatically reflect the changes on next page load.
+// No manual update to Admin.jsx is required UNLESS a new phase is added or
+// a doc filename changes. See GOV-RULE-008 and CLAUDE.md for propagation checklist.
+
+const WORKFLOW_DOCS = {
+  master: '/src/governance/docs/00-master-workflow.html',
+  '0': '/src/governance/docs/01-phase0-workflow.html',
+  '1': '/src/governance/docs/02-phase1-workflow.html',
+  '2': '/src/governance/docs/03-phase2-workflow.html',
+  '3': '/src/governance/docs/04-phase345-workflow.html',
+  '4': '/src/governance/docs/04-phase345-workflow.html',
+}
+
 const PHASES = [
-  { id: '0', name: 'Setup' },
-  { id: '1', name: 'Core Loop' },
-  { id: '2', name: 'Intelligence' },
-  { id: '3', name: 'Personalisation' },
-  { id: '4', name: 'Governance' },
+  { id: '0', name: 'Foundation & Governance' },
+  { id: '1', name: 'Core Learning Engine' },
+  { id: '2', name: 'Mock Test + All Categories' },
+  { id: '3', name: 'Analytics & Personalisation' },
+  { id: '4', name: 'Governance & Compliance' },
 ]
 
 const SEED_TASKS = [
-  // Phase 0 — Setup
-  { id: 'p0-01', phase_id: '0', phase_name: 'Setup', label: 'Initialize React + Vite + Tailwind', tool: 'Vite' },
-  { id: 'p0-02', phase_id: '0', phase_name: 'Setup', label: 'Scaffold src folder structure', tool: 'Claude Code' },
-  { id: 'p0-03', phase_id: '0', phase_name: 'Setup', label: 'Configure .env.local and .claudeignore', tool: 'Claude Code' },
-  { id: 'p0-04', phase_id: '0', phase_name: 'Setup', label: 'Set up Turso DB client', tool: 'Turso' },
-  { id: 'p0-05', phase_id: '0', phase_name: 'Setup', label: 'Build Admin panel', tool: 'React' },
-  { id: 'p0-06', phase_id: '0', phase_name: 'Setup', label: 'Initialise git and push to GitHub', tool: 'Git' },
-  { id: 'p0-07', phase_id: '0', phase_name: 'Setup', label: 'Deploy to Vercel', tool: 'Vercel' },
-  { id: 't0-claude-design', phase_id: '0', phase_name: 'Setup', label: 'Design core UI screens in Claude Design (Home, Question, Solution, Canvas, Progress)', tool: 'Claude Design' },
-  { id: 't0-design-handoff', phase_id: '0', phase_name: 'Setup', label: 'Handoff Claude Design to Claude Code', tool: 'Claude Design → Claude Code' },
-  // Phase 1 — Core Loop
-  { id: 'p1-01', phase_id: '1', phase_name: 'Core Loop', label: 'Design questions table schema', tool: 'Turso' },
-  { id: 'p1-02', phase_id: '1', phase_name: 'Core Loop', label: 'Seed English Verbal questions', tool: 'Claude Code' },
-  { id: 'p1-03', phase_id: '1', phase_name: 'Core Loop', label: 'Seed Math Quantitative questions', tool: 'Claude Code' },
-  { id: 'p1-04', phase_id: '1', phase_name: 'Core Loop', label: 'Seed Analytical Reasoning questions', tool: 'Claude Code' },
-  { id: 'p1-05', phase_id: '1', phase_name: 'Core Loop', label: 'Build QuestionCard component', tool: 'React' },
-  { id: 'p1-06', phase_id: '1', phase_name: 'Core Loop', label: 'Build AnswerOptions component', tool: 'React' },
-  { id: 'p1-07', phase_id: '1', phase_name: 'Core Loop', label: 'Build scoring and results logic', tool: 'React' },
-  { id: 'p1-08', phase_id: '1', phase_name: 'Core Loop', label: 'Build practice session page', tool: 'React' },
-  // Phase 2 — Intelligence
-  { id: 'p2-01', phase_id: '2', phase_name: 'Intelligence', label: 'Integrate Claude Sonnet 4.6 API', tool: 'Claude API' },
-  { id: 'p2-02', phase_id: '2', phase_name: 'Intelligence', label: 'Build explanation agent in src/agents', tool: 'Claude API' },
-  { id: 'p2-03', phase_id: '2', phase_name: 'Intelligence', label: 'Wire explanations to answer reveals', tool: 'React' },
-  { id: 'p2-04', phase_id: '2', phase_name: 'Intelligence', label: 'Cache explanations in Turso', tool: 'Turso' },
-  // Phase 3 — Personalisation
-  { id: 'p3-01', phase_id: '3', phase_name: 'Personalisation', label: 'Track per-question attempt history', tool: 'Turso' },
-  { id: 'p3-02', phase_id: '3', phase_name: 'Personalisation', label: 'Compute and store weak area scores', tool: 'React' },
-  { id: 'p3-03', phase_id: '3', phase_name: 'Personalisation', label: 'Build weak area dashboard', tool: 'React' },
-  { id: 'p3-04', phase_id: '3', phase_name: 'Personalisation', label: 'Implement adaptive practice mode', tool: 'React' },
-  // Phase 4 — Governance
-  { id: 'p4-01', phase_id: '4', phase_name: 'Governance', label: 'CT-AI v2.0 audit logging', tool: 'Turso' },
-  { id: 'p4-02', phase_id: '4', phase_name: 'Governance', label: 'AI usage rate limiting', tool: 'React' },
-  { id: 'p4-03', phase_id: '4', phase_name: 'Governance', label: 'Input/output content filtering', tool: 'Claude API' },
-  { id: 'p4-04', phase_id: '4', phase_name: 'Governance', label: 'ISO 42001 management layer', tool: 'Claude Code' },
+  // Phase 0 — Foundation & Governance
+  { id: 'p0-01', phase_id: '0', phase_name: 'Foundation & Governance', label: 'Initialize React + Vite + Tailwind', tool: 'Vite' },
+  { id: 'p0-02', phase_id: '0', phase_name: 'Foundation & Governance', label: 'Scaffold src folder structure', tool: 'Claude Code' },
+  { id: 'p0-03', phase_id: '0', phase_name: 'Foundation & Governance', label: 'Configure .env.local and .claudeignore', tool: 'Claude Code' },
+  { id: 'p0-04', phase_id: '0', phase_name: 'Foundation & Governance', label: 'Set up Turso DB client', tool: 'Turso' },
+  { id: 'p0-05', phase_id: '0', phase_name: 'Foundation & Governance', label: 'Build Admin panel', tool: 'React' },
+  { id: 'p0-06', phase_id: '0', phase_name: 'Foundation & Governance', label: 'Initialise git and push to GitHub', tool: 'Git' },
+  { id: 'p0-07', phase_id: '0', phase_name: 'Foundation & Governance', label: 'Deploy to Vercel', tool: 'Vercel' },
+  { id: 't0-claude-design', phase_id: '0', phase_name: 'Foundation & Governance', label: 'Design core UI screens in Claude Design (Home, Question, Solution, Canvas, Progress)', tool: 'Claude Design' },
+  { id: 't0-design-handoff', phase_id: '0', phase_name: 'Foundation & Governance', label: 'Handoff Claude Design to Claude Code', tool: 'Claude Design → Claude Code' },
+  // Phase 1 — Core Learning Engine
+  { id: 'p1-01', phase_id: '1', phase_name: 'Core Learning Engine', label: 'Finalise & verify all 11 screen UIs', tool: 'React' },
+  { id: 'p1-02', phase_id: '1', phase_name: 'Core Learning Engine', label: 'Create Turso database schema (questions, question_methods, question_flags, students)', tool: 'Turso' },
+  { id: 'p1-03', phase_id: '1', phase_name: 'Core Learning Engine', label: 'Build admin question entry form (/admin/questions/new)', tool: 'React' },
+  { id: 'p1-04', phase_id: '1', phase_name: 'Core Learning Engine', label: 'Seed verified question bank — Verbal 20 + Analytical 20 + Quantitative 20 + NAT-IE Subject 30', tool: 'Claude Code' },
+  { id: 'p1-05', phase_id: '1', phase_name: 'Core Learning Engine', label: 'Wire Practice Mode core loop (Topic → Sub-topic → Question → Answer → Solution)', tool: 'React' },
+  { id: 'p1-06', phase_id: '1', phase_name: 'Core Learning Engine', label: 'Deploy AI explanation serverless function (/api/explain · GOV-RULE-009)', tool: 'Claude API' },
+  { id: 'p1-07', phase_id: '1', phase_name: 'Core Learning Engine', label: 'Implement Canvas (Draw / Type / Upload with session persistence)', tool: 'React' },
+  { id: 'p1-08', phase_id: '1', phase_name: 'Core Learning Engine', label: 'Implement session score tracking', tool: 'React' },
+  { id: 'p1-09', phase_id: '1', phase_name: 'Core Learning Engine', label: 'Student onboarding live (writes to students table)', tool: 'React' },
+  { id: 'p1-10', phase_id: '1', phase_name: 'Core Learning Engine', label: 'Production deployment to taleemimarkaz.com', tool: 'Vercel' },
+  // Phase 2 — Mock Test + All Categories
+  { id: 'p2-01', phase_id: '2', phase_name: 'Mock Test + All Categories', label: 'Activate Mock Test Mode (90 MCQs · 120 min · 4 sections · auto-submit)', tool: 'React' },
+  { id: 'p2-02', phase_id: '2', phase_name: 'Mock Test + All Categories', label: 'Activate Medical (NAT-IM) — seed 30 verified subject questions', tool: 'Claude Code' },
+  { id: 'p2-03', phase_id: '2', phase_name: 'Mock Test + All Categories', label: 'Activate Computer Science (NAT-ICS) — seed 30 verified subject questions', tool: 'Claude Code' },
+  { id: 'p2-04', phase_id: '2', phase_name: 'Mock Test + All Categories', label: 'Activate Commerce (NAT-ICOM) — seed 30 verified subject questions', tool: 'Claude Code' },
+  { id: 'p2-05', phase_id: '2', phase_name: 'Mock Test + All Categories', label: 'Activate General Sciences (NAT-IGS) — seed 30 verified subject questions', tool: 'Claude Code' },
+  { id: 'p2-06', phase_id: '2', phase_name: 'Mock Test + All Categories', label: 'Activate Arts (NAT-IA) — seed 30 verified subject questions', tool: 'Claude Code' },
+  { id: 'p2-07', phase_id: '2', phase_name: 'Mock Test + All Categories', label: 'Attempt history & tracking (attempts table · Powers Progress screen)', tool: 'Turso' },
+  // Phase 3 — Analytics & Personalisation
+  { id: 'p3-01', phase_id: '3', phase_name: 'Analytics & Personalisation', label: 'Student performance dashboard (section-wise accuracy · weak area detection)', tool: 'React' },
+  { id: 'p3-02', phase_id: '3', phase_name: 'Analytics & Personalisation', label: 'Adaptive question weighting (AI classifies difficulty · serves weak sections more)', tool: 'Claude API' },
+  { id: 'p3-03', phase_id: '3', phase_name: 'Analytics & Personalisation', label: 'Question flag & review system (student flags · admin resolves · closed loop)', tool: 'React' },
+  { id: 'p3-04', phase_id: '3', phase_name: 'Analytics & Personalisation', label: 'Admin analytics dashboard (attempts per question · flag queue · category breakdown)', tool: 'React' },
+  // Phase 4 — Governance & Compliance
+  { id: 'p4-01', phase_id: '4', phase_name: 'Governance & Compliance', label: 'CT-AI v2.0 audit logging (model · version · timestamp · confidence per explanation)', tool: 'Turso' },
+  { id: 'p4-02', phase_id: '4', phase_name: 'Governance & Compliance', label: 'Low-confidence explanation review queue (GOV-RULE-006)', tool: 'React' },
+  { id: 'p4-03', phase_id: '4', phase_name: 'Governance & Compliance', label: 'Input/output content filtering', tool: 'Claude API' },
+  { id: 'p4-04', phase_id: '4', phase_name: 'Governance & Compliance', label: 'ISO 42001 management layer · NTS-GOV-001 finalised', tool: 'Claude Code' },
 ]
 
+// Governance colour system — aligned with workflow documents
 const COLORS = {
-  '0': { bg: 'bg-blue-50', border: 'border-blue-200', bar: 'bg-blue-500', badge: 'bg-blue-100 text-blue-700', heading: 'text-blue-700', check: 'bg-blue-500' },
-  '1': { bg: 'bg-emerald-50', border: 'border-emerald-200', bar: 'bg-emerald-500', badge: 'bg-emerald-100 text-emerald-700', heading: 'text-emerald-700', check: 'bg-emerald-500' },
-  '2': { bg: 'bg-violet-50', border: 'border-violet-200', bar: 'bg-violet-500', badge: 'bg-violet-100 text-violet-700', heading: 'text-violet-700', check: 'bg-violet-500' },
-  '3': { bg: 'bg-amber-50', border: 'border-amber-200', bar: 'bg-amber-500', badge: 'bg-amber-100 text-amber-700', heading: 'text-amber-700', check: 'bg-amber-500' },
-  '4': { bg: 'bg-rose-50', border: 'border-rose-200', bar: 'bg-rose-500', badge: 'bg-rose-100 text-rose-700', heading: 'text-rose-700', check: 'bg-rose-500' },
+  '0': { bg: 'bg-slate-50', border: 'border-slate-300', bar: 'bg-slate-700', badge: 'bg-slate-200 text-slate-800', heading: 'text-slate-800', check: 'bg-slate-700' },
+  '1': { bg: 'bg-teal-50', border: 'border-teal-200', bar: 'bg-teal-600', badge: 'bg-teal-100 text-teal-800', heading: 'text-teal-800', check: 'bg-teal-600' },
+  '2': { bg: 'bg-violet-50', border: 'border-violet-200', bar: 'bg-violet-600', badge: 'bg-violet-100 text-violet-800', heading: 'text-violet-800', check: 'bg-violet-600' },
+  '3': { bg: 'bg-amber-50', border: 'border-amber-200', bar: 'bg-amber-500', badge: 'bg-amber-100 text-amber-800', heading: 'text-amber-800', check: 'bg-amber-500' },
+  '4': { bg: 'bg-sky-50', border: 'border-sky-200', bar: 'bg-sky-600', badge: 'bg-sky-100 text-sky-800', heading: 'text-sky-800', check: 'bg-sky-600' },
 }
 
 function Checkmark() {
@@ -73,6 +93,34 @@ function ProgressBar({ pct, barClass }) {
   )
 }
 
+function WorkflowEmbed({ src, title }) {
+  const [open, setOpen] = useState(false)
+  return (
+    <div className="border-t border-gray-100">
+      <button
+        onClick={() => setOpen(o => !o)}
+        className="w-full flex items-center justify-between px-5 py-2.5 bg-gray-50 hover:bg-gray-100 transition-colors text-left"
+      >
+        <span className="text-xs font-semibold text-gray-500 tracking-wide uppercase">
+          📋 {title}
+        </span>
+        <span className={`text-gray-400 text-xs transition-transform duration-200 ${open ? 'rotate-180' : ''}`}>▾</span>
+      </button>
+      {open && (
+        <div className="border-t border-gray-100">
+          <iframe
+            src={src}
+            title={title}
+            className="w-full border-0"
+            style={{ height: '520px' }}
+            loading="lazy"
+          />
+        </div>
+      )}
+    </div>
+  )
+}
+
 export default function Admin() {
   const [authenticated, setAuthenticated] = useState(
     () => sessionStorage.getItem('nts_admin') === '1'
@@ -84,6 +132,7 @@ export default function Admin() {
   const [dbError, setDbError] = useState('')
   const [expanded, setExpanded] = useState({ '0': true, '1': true, '2': true, '3': true, '4': true })
   const [toggling, setToggling] = useState(null)
+  const [masterWorkflowOpen, setMasterWorkflowOpen] = useState(false)
 
   useEffect(() => {
     if (authenticated) initAndLoad()
@@ -182,7 +231,7 @@ export default function Admin() {
                 type="password"
                 value={password}
                 onChange={e => { setPassword(e.target.value); setAuthError('') }}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500"
                 placeholder="Enter admin password"
                 autoFocus
               />
@@ -190,7 +239,7 @@ export default function Admin() {
             {authError && <p className="text-red-500 text-sm">{authError}</p>}
             <button
               type="submit"
-              className="w-full bg-blue-600 text-white rounded-lg py-2 text-sm font-semibold hover:bg-blue-700 transition-colors"
+              className="w-full bg-teal-600 text-white rounded-lg py-2 text-sm font-semibold hover:bg-teal-700 transition-colors"
             >
               Sign in
             </button>
@@ -205,7 +254,7 @@ export default function Admin() {
       <header className="bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between sticky top-0 z-10">
         <div>
           <h1 className="text-lg font-bold text-gray-900">NTS Prep — Admin</h1>
-          <p className="text-xs text-gray-400">Project tracker</p>
+          <p className="text-xs text-gray-400">Project tracker · NTS-GOV-001 v1.1</p>
         </div>
         <button
           onClick={handleLogout}
@@ -215,12 +264,37 @@ export default function Admin() {
         </button>
       </header>
 
-      <div className="max-w-2xl mx-auto px-4 py-8 space-y-5">
+      <div className="max-w-5xl mx-auto px-4 py-8 space-y-5">
         {dbError && (
           <div className="bg-red-50 border border-red-200 text-red-700 rounded-lg px-4 py-3 text-sm">
             {dbError}
           </div>
         )}
+
+        {/* Master workflow diagram */}
+        <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
+          <button
+            onClick={() => setMasterWorkflowOpen(o => !o)}
+            className="w-full flex items-center justify-between px-5 py-4 hover:bg-gray-50 transition-colors"
+          >
+            <div>
+              <p className="text-sm font-bold text-gray-900 text-left">Master Project Workflow</p>
+              <p className="text-xs text-gray-400 text-left mt-0.5">All phases · All actors · End-to-end delivery map</p>
+            </div>
+            <span className={`text-gray-400 text-xs transition-transform duration-200 ${masterWorkflowOpen ? 'rotate-180' : ''}`}>▾</span>
+          </button>
+          {masterWorkflowOpen && (
+            <div className="border-t border-gray-100">
+              <iframe
+                src={WORKFLOW_DOCS.master}
+                title="Master Project Workflow"
+                className="w-full border-0"
+                style={{ height: '600px' }}
+                loading="lazy"
+              />
+            </div>
+          )}
+        </div>
 
         {/* Global progress card */}
         <div className="bg-white rounded-2xl border border-gray-200 p-5">
@@ -245,6 +319,7 @@ export default function Admin() {
 
             return (
               <div key={phase.id} className={`bg-white rounded-2xl border ${c.border} overflow-hidden`}>
+                {/* Phase header */}
                 <button
                   onClick={() => setExpanded(prev => ({ ...prev, [phase.id]: !prev[phase.id] }))}
                   className={`w-full ${c.bg} px-5 py-4 flex items-center justify-between hover:opacity-90 transition-opacity`}
@@ -270,31 +345,42 @@ export default function Admin() {
                 </button>
 
                 {isOpen && (
-                  <ul className="divide-y divide-gray-100">
-                    {phase.tasks.map(task => (
-                      <li key={task.id}>
-                        <button
-                          onClick={() => toggleTask(task)}
-                          disabled={toggling === task.id}
-                          className="w-full flex items-center gap-3 px-5 py-3 hover:bg-gray-50 transition-colors text-left group disabled:opacity-50"
-                        >
-                          <div className={`w-5 h-5 rounded border-2 flex items-center justify-center flex-shrink-0 transition-all ${
-                            task.done
-                              ? `${c.check} border-transparent`
-                              : 'border-gray-300 group-hover:border-gray-400'
-                          }`}>
-                            {task.done && <Checkmark />}
-                          </div>
-                          <span className={`flex-1 text-sm ${task.done ? 'line-through text-gray-400' : 'text-gray-700'}`}>
-                            {task.label}
-                          </span>
-                          <span className="text-xs text-gray-400 bg-gray-100 px-2 py-0.5 rounded-full shrink-0">
-                            {task.tool}
-                          </span>
-                        </button>
-                      </li>
-                    ))}
-                  </ul>
+                  <>
+                    {/* Phase workflow diagram — collapsible */}
+                    {WORKFLOW_DOCS[phase.id] && (
+                      <WorkflowEmbed
+                        src={WORKFLOW_DOCS[phase.id]}
+                        title={`Phase ${phase.id} Workflow`}
+                      />
+                    )}
+
+                    {/* Task list */}
+                    <ul className="divide-y divide-gray-100">
+                      {phase.tasks.map(task => (
+                        <li key={task.id}>
+                          <button
+                            onClick={() => toggleTask(task)}
+                            disabled={toggling === task.id}
+                            className="w-full flex items-center gap-3 px-5 py-3 hover:bg-gray-50 transition-colors text-left group disabled:opacity-50"
+                          >
+                            <div className={`w-5 h-5 rounded border-2 flex items-center justify-center flex-shrink-0 transition-all ${
+                              task.done
+                                ? `${c.check} border-transparent`
+                                : 'border-gray-300 group-hover:border-gray-400'
+                            }`}>
+                              {task.done && <Checkmark />}
+                            </div>
+                            <span className={`flex-1 text-sm ${task.done ? 'line-through text-gray-400' : 'text-gray-700'}`}>
+                              {task.label}
+                            </span>
+                            <span className="text-xs text-gray-400 bg-gray-100 px-2 py-0.5 rounded-full shrink-0">
+                              {task.tool}
+                            </span>
+                          </button>
+                        </li>
+                      ))}
+                    </ul>
+                  </>
                 )}
               </div>
             )
