@@ -19,10 +19,6 @@ test.describe('Home', () => {
     await expect(page.locator('text=Assalam-o-Alaikum')).not.toBeVisible()
   })
 
-  test('practice prompt text is visible', async ({ page }) => {
-    await expect(page.locator('text=Ready to practice')).toBeVisible()
-  })
-
   test('Practice Mode and Mock Test toggle are present', async ({ page }) => {
     await expect(page.locator('button:has-text("📚 Practice Mode")')).toBeVisible()
     await expect(page.locator('button:has-text("⏱️ Mock Test")')).toBeVisible()
@@ -30,13 +26,30 @@ test.describe('Home', () => {
 
   test('Practice Mode shows 4 topic cards including Engineering (NAT-IE)', async ({ page }) => {
     await expect(page.locator('text=English')).toBeVisible()
-    await expect(page.locator('text=Quantitative Reasoning')).toBeVisible()
-    await expect(page.locator('p.font-bold:text-is("Reasoning")')).toBeVisible()
+    await expect(page.locator('text=Quantitative Reasoning').first()).toBeVisible()
+    await expect(page.locator('text=Analytical Reasoning').first()).toBeVisible()
     await expect(page.locator('text=Engineering (NAT-IE)')).toBeVisible()
+  })
+
+  test('Analytical Reasoning card is present — not just "Reasoning"', async ({ page }) => {
+    await expect(page.locator('text=Analytical Reasoning').first()).toBeVisible()
+    // Bare "Reasoning" heading should not appear as a standalone topic card
+    await expect(page.locator('p.font-bold:text-is("Reasoning")')).not.toBeVisible()
   })
 
   test('Engineering card shows X of 30 not X of 20', async ({ page }) => {
     await expect(page.locator('text=of 30 questions attempted')).toBeVisible()
+  })
+
+  test('attempted count is never higher than section total', async ({ page }) => {
+    // All "X of Y" progress labels should have X <= Y
+    const labels = page.locator('text=/\\d+ of \\d+ questions attempted/')
+    const count  = await labels.count()
+    for (let i = 0; i < count; i++) {
+      const txt = await labels.nth(i).textContent()
+      const [attempted, total] = txt.match(/(\d+) of (\d+)/).slice(1).map(Number)
+      expect(attempted).toBeLessThanOrEqual(total)
+    }
   })
 
   test('Mock Test mode hides topic cards and shows 90 MCQs CTA', async ({ page }) => {

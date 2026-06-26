@@ -8,13 +8,14 @@ export const NAT_CATEGORIES = [
 ]
 
 // Subject subtopics with demo progress percentages for static UI
+// Verified against official NTS documentation (SC-03, SC-04)
 export const SUBJECT_SUBTOPICS = {
-  'NAT-IE':   [{ name:'Physics',pct:55 },{ name:'Chemistry',pct:42 },{ name:'Mathematics',pct:70 },{ name:'English',pct:65 }],
-  'NAT-IM':   [{ name:'Biology',pct:60 },{ name:'Chemistry',pct:48 },{ name:'Physics',pct:35 },{ name:'English',pct:72 }],
-  'NAT-ICS':  [{ name:'Mathematics',pct:75 },{ name:'Computer Science',pct:62 },{ name:'Physics',pct:50 },{ name:'English',pct:68 }],
-  'NAT-ICOM': [{ name:'Accounting',pct:58 },{ name:'Economics',pct:44 },{ name:'Mathematics',pct:65 },{ name:'English',pct:70 }],
-  'NAT-IGS':  [{ name:'Biology',pct:55 },{ name:'Chemistry',pct:60 },{ name:'Physics',pct:48 },{ name:'Mathematics',pct:72 }],
-  'NAT-IA':   [{ name:'Urdu',pct:75 },{ name:'Islamic Studies',pct:68 },{ name:'Pakistan Studies',pct:62 },{ name:'English',pct:80 }],
+  'NAT-IE':   [{ name:'Physics',pct:55 },{ name:'Chemistry',pct:42 },{ name:'FSc Mathematics',pct:70 }],
+  'NAT-IM':   [{ name:'Physics',pct:55 },{ name:'Chemistry',pct:48 },{ name:'Biology',pct:60 }],
+  'NAT-ICS':  [{ name:'Physics',pct:50 },{ name:'FSc Mathematics',pct:75 },{ name:'Computer Science',pct:62 }],
+  'NAT-ICOM': [{ name:'Accounting',pct:58 },{ name:'Commerce',pct:65 },{ name:'Economics',pct:44 }],
+  'NAT-IGS':  [{ name:'Mathematics',pct:72 },{ name:'Statistics',pct:60 },{ name:'Economics',pct:48 }],
+  'NAT-IA':   [{ name:'Islamiyat / Ethics',pct:68 },{ name:'Pakistan Studies',pct:62 },{ name:'General Knowledge',pct:55 }],
 }
 
 export function getNatCategory() {

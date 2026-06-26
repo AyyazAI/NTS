@@ -21,18 +21,38 @@ test.describe('Practice Question Screen', () => {
   })
 
   test('back arrow is hidden on Question 1', async ({ page }) => {
-    // Static page is now Q1 — back arrow should not be visible
     const backBtn = page.locator('button:has-text("‹")')
     await expect(backBtn).not.toBeVisible()
   })
 
-  test('canvas tabs Draw, Type and Upload are all present', async ({ page }) => {
+  test('canvas Draw and Type tabs are present (Phase 1)', async ({ page }) => {
     await expect(page.locator('button:has-text("✏️ Draw")')).toBeVisible()
     await expect(page.locator('button:has-text("⌨️ Type")')).toBeVisible()
-    await expect(page.locator('button:has-text("📷 Upload")')).toBeVisible()
+  })
+
+  test('Upload tab is NOT present in Phase 1', async ({ page }) => {
+    await expect(page.locator('button:has-text("📷 Upload")')).not.toBeVisible()
+  })
+
+  test('canvas draw area is a real HTML5 canvas element', async ({ page }) => {
+    await expect(page.locator('canvas')).toBeVisible()
   })
 
   test('flag icon is present on the question card', async ({ page }) => {
     await expect(page.locator('button[title="Flag this question"]')).toBeVisible()
+  })
+
+  test('correct answer routes to solution/correct screen', async ({ page }) => {
+    // Option A is the correct answer in static data
+    await page.locator('button:has-text("21")').click()
+    await page.locator('button:has-text("Submit Answer")').click()
+    await expect(page).toHaveURL(/\/solution\/correct/)
+  })
+
+  test('wrong answer routes to solution/wrong screen', async ({ page }) => {
+    // Option B is wrong
+    await page.locator('button:has-text("35")').click()
+    await page.locator('button:has-text("Submit Answer")').click()
+    await expect(page).toHaveURL(/\/solution\/wrong/)
   })
 })

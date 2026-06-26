@@ -11,10 +11,8 @@ test.describe('Solution — Wrong Answer', () => {
     const btn = page.locator('button:has-text("Try a similar question")')
     await expect(btn).toBeVisible()
 
-    // Verify the button container uses position:fixed (stays in viewport on scroll)
     const container = btn.locator('..')
     const position = await container.evaluate(el => {
-      // Walk up to find the fixed-position ancestor
       let node = el
       while (node && node !== document.body) {
         if (getComputedStyle(node).position === 'fixed') return 'fixed'
@@ -23,6 +21,13 @@ test.describe('Solution — Wrong Answer', () => {
       return 'not-fixed'
     })
     expect(position).toBe('fixed')
+  })
+
+  test('YOUR WORKING section is hidden when canvas was not used', async ({ page }) => {
+    // No canvas_last_tab in localStorage — YOUR WORKING should not appear
+    await page.evaluate(() => localStorage.removeItem('canvas_last_tab'))
+    await page.reload()
+    await expect(page.locator('text=YOUR WORKING')).not.toBeVisible()
   })
 })
 

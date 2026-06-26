@@ -1,9 +1,8 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect, useCallback } from 'react'
 
 const TABS = [
-  { id: 'draw',   label: '✏️ Draw'   },
-  { id: 'type',   label: '⌨️ Type'   },
-  { id: 'upload', label: '📷 Upload' },
+  { id: 'draw', label: '✏️ Draw' },
+  { id: 'type', label: '⌨️ Type' },
 ]
 
 const DRAW_TOOLS = [
@@ -14,57 +13,114 @@ const DRAW_TOOLS = [
   { id: 'clear',  icon: '✕',  title: 'Clear'     },
 ]
 
-const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'application/pdf']
-const MAX_SIZE_MB = 5
-
 export default function Canvas() {
-  const [tab, setTab] = useState('draw')
+  const [tab, setTab]             = useState('draw')
   const [activeTool, setActiveTool] = useState('thick')
-  const [uploadFile, setUploadFile] = useState(null)
-  const [uploadError, setUploadError] = useState('')
-  const [previewUrl, setPreviewUrl] = useState(null)
-  const fileInputRef = useRef(null)
+  const canvasRef   = useRef(null)
+  const isDrawing   = useRef(false)
+  const history     = useRef([])   // ImageData snapshots for undo
+  const textRef     = useRef(null)
 
   function switchTab(id) {
     setTab(id)
     try { localStorage.setItem('canvas_last_tab', id) } catch {}
   }
 
-  function handleFileChange(e) {
-    const file = e.target.files?.[0]
-    if (!file) return
+  // Restore saved tab on mount
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem('canvas_last_tab')
+      if (saved === 'draw' || saved === 'type') setTab(saved)
+    } catch {}
+  }, [])
 
-    if (!ALLOWED_TYPES.includes(file.type)) {
-      setUploadError('Only JPG, PNG or PDF files are allowed')
-      setUploadFile(null)
-      setPreviewUrl(null)
-      e.target.value = ''
-      return
+  // Push current canvas state to undo history
+  function saveSnapshot() {
+    const canvas = canvasRef.current
+    if (!canvas) return
+    const ctx = canvas.getContext('2d')
+    history.current.push(ctx.getImageData(0, 0, canvas.width, canvas.height))
+    if (history.current.length > 30) history.current.shift()
+  }
+
+  function undo() {
+    const canvas = canvasRef.current
+    if (!canvas || history.current.length === 0) return
+    const ctx = canvas.getContext('2d')
+    const snapshot = history.current.pop()
+    ctx.putImageData(snapshot, 0, 0)
+  }
+
+  function clear() {
+    const canvas = canvasRef.current
+    if (!canvas) return
+    saveSnapshot()
+    const ctx = canvas.getContext('2d')
+    ctx.clearRect(0, 0, canvas.width, canvas.height)
+  }
+
+  function getPos(e, canvas) {
+    const rect = canvas.getBoundingClientRect()
+    const scaleX = canvas.width  / rect.width
+    const scaleY = canvas.height / rect.height
+    if (e.touches) {
+      return {
+        x: (e.touches[0].clientX - rect.left) * scaleX,
+        y: (e.touches[0].clientY - rect.top)  * scaleY,
+      }
     }
-
-    if (file.size > MAX_SIZE_MB * 1024 * 1024) {
-      setUploadError('File must be under 5MB')
-      setUploadFile(null)
-      setPreviewUrl(null)
-      e.target.value = ''
-      return
-    }
-
-    setUploadError('')
-    setUploadFile(file)
-
-    if (file.type !== 'application/pdf') {
-      const url = URL.createObjectURL(file)
-      setPreviewUrl(url)
-    } else {
-      setPreviewUrl(null)
+    return {
+      x: (e.clientX - rect.left) * scaleX,
+      y: (e.clientY - rect.top)  * scaleY,
     }
   }
 
-  function formatSize(bytes) {
-    return bytes < 1024 * 1024
-      ? `${(bytes / 1024).toFixed(0)} KB`
-      : `${(bytes / (1024 * 1024)).toFixed(1)} MB`
+  function applyToolSettings(ctx, tool) {
+    if (tool === 'eraser') {
+      ctx.globalCompositeOperation = 'destination-out'
+      ctx.lineWidth = 16
+    } else {
+      ctx.globalCompositeOperation = 'source-over'
+      ctx.strokeStyle = '#1f2937'
+      ctx.lineWidth   = tool === 'thick' ? 4 : 2
+    }
+    ctx.lineCap  = 'round'
+    ctx.lineJoin = 'round'
+  }
+
+  const startDraw = useCallback((e) => {
+    if (activeTool === 'undo' || activeTool === 'clear') return
+    e.preventDefault()
+    const canvas = canvasRef.current
+    if (!canvas) return
+    saveSnapshot()
+    isDrawing.current = true
+    const ctx = canvas.getContext('2d')
+    applyToolSettings(ctx, activeTool)
+    const { x, y } = getPos(e, canvas)
+    ctx.beginPath()
+    ctx.moveTo(x, y)
+  }, [activeTool])
+
+  const draw = useCallback((e) => {
+    if (!isDrawing.current) return
+    e.preventDefault()
+    const canvas = canvasRef.current
+    if (!canvas) return
+    const ctx = canvas.getContext('2d')
+    const { x, y } = getPos(e, canvas)
+    ctx.lineTo(x, y)
+    ctx.stroke()
+  }, [])
+
+  const stopDraw = useCallback(() => {
+    isDrawing.current = false
+  }, [])
+
+  function handleToolClick(toolId) {
+    if (toolId === 'undo')  { undo();  return }
+    if (toolId === 'clear') { clear(); return }
+    setActiveTool(toolId)
   }
 
   return (
@@ -96,10 +152,10 @@ export default function Canvas() {
             {DRAW_TOOLS.map(tool => (
               <button
                 key={tool.id}
-                onClick={() => setActiveTool(tool.id)}
+                onClick={() => handleToolClick(tool.id)}
                 title={tool.title}
                 className={`w-9 h-9 text-sm rounded-lg border flex items-center justify-center transition-all ${
-                  activeTool === tool.id
+                  activeTool === tool.id && tool.id !== 'undo' && tool.id !== 'clear'
                     ? 'border-teal-500 bg-teal-50 text-teal-600'
                     : 'border-gray-200 text-gray-600 hover:border-gray-300'
                 }`}
@@ -108,9 +164,20 @@ export default function Canvas() {
               </button>
             ))}
           </div>
-          <div className="h-28 bg-gray-50 rounded-lg border-2 border-dashed border-gray-200 flex items-center justify-center select-none">
-            <span className="text-xs text-gray-600">Draw your working here</span>
-          </div>
+          <canvas
+            ref={canvasRef}
+            width={320}
+            height={112}
+            className="w-full rounded-lg border-2 border-dashed border-gray-200 bg-gray-50 touch-none cursor-crosshair"
+            style={{ height: 112 }}
+            onMouseDown={startDraw}
+            onMouseMove={draw}
+            onMouseUp={stopDraw}
+            onMouseLeave={stopDraw}
+            onTouchStart={startDraw}
+            onTouchMove={draw}
+            onTouchEnd={stopDraw}
+          />
         </div>
       )}
 
@@ -118,56 +185,11 @@ export default function Canvas() {
       {tab === 'type' && (
         <div className="bg-white p-3">
           <textarea
+            ref={textRef}
             rows={4}
             placeholder="Type your working here..."
             className="w-full text-sm text-gray-700 bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 resize-none focus:outline-none focus:ring-2 focus:ring-teal-500"
           />
-        </div>
-      )}
-
-      {/* Upload */}
-      {tab === 'upload' && (
-        <div className="bg-white p-3">
-          {!uploadFile ? (
-            <label className="block border-2 border-dashed border-gray-300 rounded-xl p-6 text-center cursor-pointer hover:border-teal-400 transition-colors">
-              <p className="text-3xl mb-1">📷</p>
-              <p className="text-sm font-semibold text-gray-700">Upload photo of your working</p>
-              <p className="text-xs text-gray-600 mt-1">JPG / PNG / PDF · max 5MB</p>
-              <span className="inline-block mt-3 text-xs font-bold text-teal-600 border border-teal-600 rounded-lg px-4 py-1.5">
-                Choose file
-              </span>
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept=".jpg,.jpeg,.png,.pdf"
-                className="hidden"
-                onChange={handleFileChange}
-              />
-            </label>
-          ) : (
-            <div className="border border-gray-200 rounded-xl p-3">
-              {previewUrl ? (
-                <img src={previewUrl} alt="Uploaded working" className="w-full max-h-40 object-contain rounded-lg mb-2" />
-              ) : (
-                <div className="flex items-center gap-2 mb-2 bg-gray-50 rounded-lg p-3">
-                  <span className="text-2xl">📄</span>
-                  <span className="text-sm font-bold text-gray-700">{uploadFile.name}</span>
-                </div>
-              )}
-              <div className="flex items-center justify-between">
-                <p className="text-xs text-gray-600">{uploadFile.name} · {formatSize(uploadFile.size)}</p>
-                <button
-                  onClick={() => { setUploadFile(null); setPreviewUrl(null); if (fileInputRef.current) fileInputRef.current.value = '' }}
-                  className="text-xs font-bold text-red-500 hover:text-red-700"
-                >
-                  Remove
-                </button>
-              </div>
-            </div>
-          )}
-          {uploadError && (
-            <p className="text-xs text-red-600 font-bold mt-2">{uploadError}</p>
-          )}
         </div>
       )}
 

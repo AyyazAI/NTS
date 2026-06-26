@@ -4,14 +4,14 @@ import Header from '../components/Header'
 import BottomNav from '../components/BottomNav'
 import { getNatCategory, getCategoryName, SUBJECT_SUBTOPICS } from '../utils/natCategory'
 
-// Chart with axis labels, pass mark line, data point values
+// Chart with axis labels, pass mark line, data point values on ALL points
 function LineChart({ points, labels = null, colour = '#0D9488' }) {
-  const w = 300, h = 110, padL = 34, padR = 16, padT = 18, padB = 22
+  const w = 300, h = 130, padL = 36, padR = 22, padT = 22, padB = 24
   const innerW = w - padL - padR
   const innerH = h - padT - padB
   const yMin = 0, yMax = 100
 
-  const xs = points.map((_, i) => padL + (i / (points.length - 1)) * innerW)
+  const xs = points.map((_, i) => padL + (i / Math.max(points.length - 1, 1)) * innerW)
   const toY = v => padT + ((yMax - v) / (yMax - yMin)) * innerH
 
   const path = xs.map((x, i) => `${i === 0 ? 'M' : 'L'}${x.toFixed(1)},${toY(points[i]).toFixed(1)}`).join(' ')
@@ -21,20 +21,20 @@ function LineChart({ points, labels = null, colour = '#0D9488' }) {
   const yTicks = [100, 75, 50]
 
   return (
-    <svg viewBox={`0 0 ${w} ${h}`} className="w-full" style={{ height: 110 }}>
+    <svg viewBox={`0 0 ${w} ${h}`} className="w-full" style={{ height: 130 }}>
       {yTicks.map(pct => {
         const y = toY(pct)
         return (
           <g key={pct}>
             <line x1={padL} y1={y} x2={w - padR} y2={y} stroke="#e5e7eb" strokeWidth="0.5" />
-            <text x={padL - 3} y={y + 3.5} fontSize="7" fill="#6b7280" textAnchor="end" fontWeight="600">{pct}</text>
+            <text x={padL - 4} y={y + 4} fontSize="9" fill="#4b5563" textAnchor="end" fontWeight="600">{pct}</text>
           </g>
         )
       })}
 
       <line x1={padL} y1={passY} x2={w - padR} y2={passY}
         stroke="#DC2626" strokeWidth="1" strokeDasharray="3,2" />
-      <text x={w - padR + 2} y={passY + 3.5} fontSize="6.5" fill="#DC2626" fontWeight="700">Pass</text>
+      <text x={w - padR + 2} y={passY + 4} fontSize="8" fill="#DC2626" fontWeight="700">Pass</text>
 
       <path d={fill} fill={colour} fillOpacity="0.08" />
       <path d={path} stroke={colour} strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
@@ -44,24 +44,22 @@ function LineChart({ points, labels = null, colour = '#0D9488' }) {
         const isLast = i === xs.length - 1
         return (
           <g key={i}>
-            <circle cx={x} cy={y} r={isLast ? 4 : 2.5} fill={colour} />
-            {isLast && (
-              <text x={x} y={y - 6} fontSize="8" fill={colour} textAnchor="middle" fontWeight="800">
-                {points[i]}%
-              </text>
-            )}
+            <circle cx={x} cy={y} r={isLast ? 4 : 3} fill={colour} />
+            <text x={x} y={y - 7} fontSize="9" fill={colour} textAnchor="middle" fontWeight="800">
+              {points[i]}%
+            </text>
           </g>
         )
       })}
 
       <text
-        x={8} y={padT + innerH / 2}
-        fontSize="7" fill="#6b7280" textAnchor="middle" fontWeight="600"
-        transform={`rotate(-90, 8, ${padT + innerH / 2})`}
+        x={9} y={padT + innerH / 2}
+        fontSize="8" fill="#6b7280" textAnchor="middle" fontWeight="600"
+        transform={`rotate(-90, 9, ${padT + innerH / 2})`}
       >Score %</text>
 
       {labels && labels.map((label, i) => (
-        <text key={i} x={xs[i]} y={h - 2} fontSize="6.5" fill="#6b7280" textAnchor="middle" fontWeight="600">
+        <text key={i} x={xs[i]} y={h - 2} fontSize="8" fill="#4b5563" textAnchor="middle" fontWeight="600">
           {label}
         </text>
       ))}
@@ -96,7 +94,7 @@ const COMMON_TOPICS = [
   },
   {
     id: 'reasoning',
-    name: 'Reasoning', overall: 72,
+    name: 'Analytical Reasoning', overall: 72,
     subs: [
       { name: 'Selection',       pct: 85 },
       { name: 'Sequencing',      pct: 78 },
@@ -188,13 +186,15 @@ function Accordion({ topic }) {
   )
 }
 
+const PRACTICE_EMPTY = false  // set true to preview empty state
+
 function PracticeTab({ natCategory }) {
   const [range, setRange] = useState('Week')
 
   const chartData = {
-    Week:  { data: [42, 48, 45, 60, 65, 63, 74], labels: ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'] },
-    Month: { data: [35, 40, 45, 52, 55, 58, 62, 65, 68, 70, 67, 74], labels: null },
-    All:   { data: [28, 35, 42, 50, 55, 60, 65, 70, 74], labels: null },
+    Week:  { data: [42, 48, 45, 60, 65, 63, 74], labels: ['Mon 23','Tue 24','Wed 25','Thu 26','Fri 27','Sat 28','Sun 29'] },
+    Month: { data: [38, 52, 62, 74],              labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'] },
+    All:   { data: [28, 38, 48, 55, 63, 74],      labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'] },
   }
 
   const subjectSubs  = SUBJECT_SUBTOPICS[natCategory] ?? SUBJECT_SUBTOPICS['NAT-IE']
@@ -205,6 +205,23 @@ function PracticeTab({ natCategory }) {
     subs:    subjectSubs,
   }
   const allTopics = [...COMMON_TOPICS, subjectTopic]
+
+  if (PRACTICE_EMPTY) {
+    return (
+      <div className="flex flex-col items-center justify-center py-16 text-center">
+        <span className="text-5xl mb-4">📊</span>
+        <p className="text-lg font-black text-gray-900 mb-2">No practice data yet</p>
+        <p className="text-sm text-gray-700 mb-6 max-w-xs">
+          Complete your first practice session to see your score trend and sub-topic breakdown here.
+        </p>
+        <Link to="/practice">
+          <button className="px-8 py-3.5 rounded-xl bg-teal-600 text-white font-bold text-sm hover:bg-teal-700 transition-colors">
+            Start Practicing →
+          </button>
+        </Link>
+      </div>
+    )
+  }
 
   return (
     <div>
@@ -240,9 +257,9 @@ function PracticeTab({ natCategory }) {
 function MockTab() {
   const [range, setRange] = useState('Week')
   const chartData = {
-    Week:  { data: [52, 61, 67], labels: ['Test 1', 'Test 2', 'Test 3'] },
-    Month: { data: [45, 50, 52, 58, 61, 67], labels: null },
-    All:   { data: [42, 45, 50, 52, 58, 61, 67], labels: null },
+    Week:  { data: [52, 61, 67],          labels: ['Test 1', 'Test 2', 'Test 3'] },
+    Month: { data: [45, 52, 61, 67],      labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'] },
+    All:   { data: [42, 48, 52, 58, 67],  labels: ['Feb', 'Mar', 'Apr', 'May', 'Jun'] },
   }
   return (
     <div>
@@ -274,7 +291,7 @@ function MockTab() {
           { label: 'Tests Completed',  value: '3'             },
           { label: 'Best Score',       value: '67/90'         },
           { label: 'Average Score',    value: '60/90'         },
-          { label: 'Highest Section',  value: 'Reasoning 85%' },
+          { label: 'Highest Section',  value: 'Analytical 85%' },
         ].map(s => (
           <div key={s.label} className="bg-gray-50 border border-gray-100 rounded-xl p-3">
             <p className="text-xl font-black text-gray-900">{s.value}</p>

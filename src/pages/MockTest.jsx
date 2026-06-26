@@ -206,19 +206,21 @@ export default function MockTest() {
         </div>
 
         <Canvas />
+
+        {/* Submit Test — in scrollable area, not persistent bar */}
+        <button
+          onClick={() => setShowConfirm(true)}
+          className="w-full mt-4 py-3.5 rounded-xl border-2 border-teal-600 text-sm font-bold text-teal-600 hover:bg-teal-50 transition-colors"
+        >
+          Submit Test
+        </button>
       </main>
 
-      {/* Action bar */}
+      {/* Action bar — [‹] [Submit Answer] [›] only; Submit Test is NOT in the persistent bar */}
       <div className="fixed bottom-20 left-1/2 -translate-x-1/2 w-full max-w-sm bg-white border-t border-gray-100 px-4 py-3 z-20">
         <div className="flex items-center gap-2">
           <button className="w-10 h-12 flex items-center justify-center rounded-xl border-2 border-gray-200 text-gray-500 hover:border-gray-300 flex-shrink-0">
             ‹
-          </button>
-          <button
-            onClick={() => setShowConfirm(true)}
-            className="flex-1 h-12 rounded-xl border-2 border-teal-600 text-sm font-bold text-teal-600 hover:bg-teal-50 transition-colors"
-          >
-            Submit Test
           </button>
           <button
             disabled={!selected}

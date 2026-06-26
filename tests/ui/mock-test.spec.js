@@ -25,17 +25,25 @@ test.describe('Mock Test Question Screen', () => {
     await expect(page.locator('text=Section')).toBeVisible()
   })
 
-  test('score display is visible', async ({ page }) => {
-    await expect(page.locator('text=Score')).toBeVisible()
+  test('score display shows whole number — no decimals', async ({ page }) => {
+    // Score label should be an integer score like "18 / 90" not "18.5 / 90"
+    const scoreText = await page.locator('text=Score').locator('..').textContent()
+    expect(scoreText).toMatch(/\d+ \/ \d+/)
+    expect(scoreText).not.toMatch(/\d+\.\d+/)
   })
 
   test('no negative marking indicator — NAT-I has no negative marking', async ({ page }) => {
     await expect(page.locator('text=NEG')).not.toBeVisible()
+    await expect(page.locator('text=-0.25')).not.toBeVisible()
   })
 
   test('Submit Test button is NOT in the persistent bottom bar', async ({ page }) => {
     const actionBar = page.locator('.fixed.bottom-20')
     await expect(actionBar.locator('button:has-text("Submit Test")')).not.toBeVisible()
+  })
+
+  test('Upload tab is NOT present in Phase 1', async ({ page }) => {
+    await expect(page.locator('button:has-text("📷 Upload")')).not.toBeVisible()
   })
 
   test('flag icon is present on question card', async ({ page }) => {
@@ -46,7 +54,6 @@ test.describe('Mock Test Question Screen', () => {
   test('flag icon changes to amber when tapped', async ({ page }) => {
     const flagBtn = page.locator('button[title="Flag this question"]')
     await flagBtn.click()
-    // After flagging, button should have amber styling
     await expect(flagBtn).toHaveClass(/text-amber-500/)
   })
 })

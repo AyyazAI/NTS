@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import Header from '../components/Header'
 import BottomNav from '../components/BottomNav'
 import ModeIndicator from '../components/ModeIndicator'
@@ -8,8 +8,9 @@ import Canvas from '../components/Canvas'
 const QUESTION = {
   number: 1,
   total: 20,
-  topic: 'Reasoning',
+  topic: 'Analytical Reasoning',
   subtopic: 'Combinations',
+  correct_option: 'A',
   text: 'A committee of 5 people is to be formed from a group of 7 people. How many different committees can be formed?',
   options: [
     { id: 'A', text: '21' },
@@ -20,10 +21,20 @@ const QUESTION = {
 }
 
 export default function QuestionPractice() {
+  const navigate   = useNavigate()
   const [selected, setSelected] = useState(null)
-  const [flagged, setFlagged] = useState(false)
+  const [flagged,  setFlagged]  = useState(false)
 
   const isFirst = QUESTION.number === 1
+
+  function handleSubmit() {
+    if (!selected) return
+    if (selected === QUESTION.correct_option) {
+      navigate('/solution/correct')
+    } else {
+      navigate('/solution/wrong')
+    }
+  }
 
   return (
     <div className="min-h-screen bg-white flex flex-col max-w-sm mx-auto">
@@ -43,7 +54,6 @@ export default function QuestionPractice() {
 
         {/* Question card */}
         <div className="bg-gray-50 border border-gray-100 rounded-2xl p-4 mb-4 relative">
-          {/* Flag */}
           <button
             onClick={() => setFlagged(f => !f)}
             title="Flag this question"
@@ -112,21 +122,20 @@ export default function QuestionPractice() {
             </button>
           </Link>
 
-          {/* Submit */}
-          <Link to="/solution/wrong" className="flex-1">
-            <button
-              disabled={!selected}
-              className={`w-full h-12 rounded-xl text-sm font-bold transition-all ${
-                selected
-                  ? 'bg-teal-600 text-white hover:bg-teal-700'
-                  : 'bg-gray-100 text-gray-400 cursor-not-allowed'
-              }`}
-            >
-              Submit Answer
-            </button>
-          </Link>
+          {/* Submit Answer — routes based on correct/wrong */}
+          <button
+            onClick={handleSubmit}
+            disabled={!selected}
+            className={`flex-1 h-12 rounded-xl text-sm font-bold transition-all ${
+              selected
+                ? 'bg-teal-600 text-white hover:bg-teal-700'
+                : 'bg-gray-100 text-gray-400 cursor-not-allowed'
+            }`}
+          >
+            Submit Answer
+          </button>
 
-          {/* Forward arrow — always visible */}
+          {/* Forward arrow */}
           <Link to="/practice/question">
             <button className="w-10 h-12 flex items-center justify-center rounded-xl border-2 border-gray-200 text-gray-500 hover:border-gray-300 flex-shrink-0">
               ›

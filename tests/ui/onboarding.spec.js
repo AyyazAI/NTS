@@ -42,6 +42,13 @@ test.describe('Onboarding — Step 1', () => {
     await expect(page.locator('button:has-text("Email")')).toBeVisible()
   })
 
+  test('contact field is mandatory — cannot continue without mobile or email', async ({ page }) => {
+    await page.fill('input[placeholder="Name"]', 'Hamza Ahmed')
+    await page.click('button:has-text("Continue →")')
+    await expect(page.locator('text=Mobile number is required')).toBeVisible()
+    await expect(page.locator('text=Welcome to TaleemiMarkaz')).toBeVisible()
+  })
+
   test('invalid mobile format shows inline error', async ({ page }) => {
     await page.fill('input[placeholder="Name"]', 'Hamza Ahmed')
     await page.fill('input[placeholder="03XX-XXXXXXX"]', '0123456')
@@ -49,8 +56,9 @@ test.describe('Onboarding — Step 1', () => {
     await expect(page.locator('text=Enter a valid Pakistani mobile number')).toBeVisible()
   })
 
-  test('valid name with no mobile proceeds to step 2', async ({ page }) => {
+  test('valid name with valid mobile proceeds to step 2', async ({ page }) => {
     await page.fill('input[placeholder="Name"]', 'Hamza Ahmed')
+    await page.fill('input[placeholder="03XX-XXXXXXX"]', '03123456789')
     await page.click('button:has-text("Continue →")')
     await expect(page.locator('text=Welcome aboard, Hamza Ahmed!')).toBeVisible()
   })
@@ -77,10 +85,15 @@ test.describe('Onboarding — Step 2', () => {
   })
 
   test('NTS preset test dates are shown as radio options (not a date picker)', async ({ page }) => {
-    await expect(page.locator('text=15 Aug 2026')).toBeVisible()
-    await expect(page.locator('text=12 Sep 2026')).toBeVisible()
-    await expect(page.locator('text=10 Oct 2026')).toBeVisible()
-    await expect(page.locator('text=14 Nov 2026')).toBeVisible()
+    await expect(page.locator('text=July 12, 2026')).toBeVisible()
+    await expect(page.locator('text=August 16, 2026')).toBeVisible()
+    await expect(page.locator('text=September 6, 2026')).toBeVisible()
+    await expect(page.locator('text=October 4, 2026')).toBeVisible()
+    await expect(page.locator('text=November 1, 2026')).toBeVisible()
+  })
+
+  test('"I\'ll decide later" option is present', async ({ page }) => {
+    await expect(page.locator('text=decide later')).toBeVisible()
   })
 
   test('no free text date picker input on step 2', async ({ page }) => {

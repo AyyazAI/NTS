@@ -9,14 +9,14 @@ import { getNatCategory, getCategoryLabel } from '../utils/natCategory'
 function getSectionLabel(qNum, subjectLabel) {
   if (qNum <= 20) return 'Section 1: Verbal'
   if (qNum <= 40) return 'Section 2: Analytical Reasoning'
-  if (qNum <= 60) return 'Section 3: Quantitative'
+  if (qNum <= 60) return 'Section 3: Quantitative Reasoning'
   return `Section 4: ${subjectLabel}`
 }
 
 const QUESTION = {
   number: 4,
   total: 90,
-  topic: 'Reasoning',
+  topic: 'Analytical Reasoning',
   subtopic: 'Combinations',
   text: 'A committee of 5 people is to be formed from a group of 7 people. How many different committees can be formed?',
   options: [

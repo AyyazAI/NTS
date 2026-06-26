@@ -3,10 +3,11 @@ import { useNavigate } from 'react-router-dom'
 import { NAT_CATEGORIES, setNatCategory as saveCategory } from '../utils/natCategory'
 
 const NTS_DATES = [
-  { label: '15 Aug 2026', value: '2026-08-15' },
-  { label: '12 Sep 2026', value: '2026-09-12' },
-  { label: '10 Oct 2026', value: '2026-10-10' },
-  { label: '14 Nov 2026', value: '2026-11-14' },
+  { label: 'July 12, 2026',     value: '2026-07-12' },
+  { label: 'August 16, 2026',   value: '2026-08-16' },
+  { label: 'September 6, 2026', value: '2026-09-06' },
+  { label: 'October 4, 2026',   value: '2026-10-04' },
+  { label: 'November 1, 2026',  value: '2026-11-01' },
 ]
 
 function validateName(val) {
@@ -59,6 +60,11 @@ export default function Onboarding() {
     if (nameErr) {
       setNameError(nameErr)
       setNameTouched(true)
+      return
+    }
+    const contactVal = contactType === 'mobile' ? mobile : email
+    if (!contactVal.trim()) {
+      setContactError(contactType === 'mobile' ? 'Mobile number is required' : 'Email address is required')
       return
     }
     const contactErr = contactType === 'mobile' ? validateMobile(mobile) : validateEmail(email)
@@ -131,7 +137,8 @@ export default function Onboarding() {
             {/* Contact type toggle */}
             <div>
               <label className="block text-sm font-bold text-gray-700 mb-2">
-                How can we reach you? <span className="font-normal text-gray-600">(optional)</span>
+                How can we reach you?
+                <span className="text-xs font-normal text-gray-600 ml-1">Used to log back in from any device</span>
               </label>
               <div className="flex gap-1 bg-gray-100 rounded-lg p-0.5 mb-3">
                 {[
