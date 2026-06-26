@@ -185,6 +185,21 @@ Each incident records:
 
 ---
 
+## INC-012
+**Date:** 2026-06-26
+**Severity:** Medium
+**Type:** GOV-RULE-001 Violation
+**Description:** Readiness Score card in Mock Tests tab (Progress.jsx) contains hardcoded AI-sounding recommendation text — "Focus on Algebra and Combinations to push your score above 75" — with no connection to real student data. The score (67), gauge fill, and subject names are all static constants.
+**Root Cause:** Static demo content was not flagged or labelled during implementation. The phrasing implies live AI analysis of student performance when it is purely placeholder text.
+**Impact:** Misleading — a student reading this sees a specific, personalised-sounding recommendation ("Algebra and Combinations") that has no relationship to their actual attempt history. Violates GOV-RULE-001 (AI must reference verified data, not fabricated context).
+**Resolution:** Replace hardcoded text with an honest placeholder (e.g. "Complete more mock tests to see your personalised focus areas") in Round 4. Dynamic version with real attempt data and actual weak-zone detection deferred to Phase 2 (PD-004 — Readiness Score metric).
+**Rule Triggered:** GOV-RULE-001
+**Status:** Open — pending Round 4 fix
+**Resolved By:** Pending
+**Resolved Date:** Pending
+
+---
+
 ## Summary Table
 
 | ID | Date | Severity | Type | Status |
@@ -200,3 +215,4 @@ Each incident records:
 | INC-009 | Jun 26 2026 | High | Implementation Failure | Open |
 | INC-010 | Jun 26 2026 | Critical | Logic Bug | Open |
 | INC-011 | Jun 26 2026 | High | Spec Drift | Resolved |
+| INC-012 | Jun 26 2026 | Medium | GOV-RULE-001 Violation | Open |
