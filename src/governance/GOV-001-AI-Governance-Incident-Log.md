@@ -140,6 +140,51 @@ Each incident records:
 
 ---
 
+## INC-009
+**Date:** 2026-06-26
+**Severity:** High
+**Type:** Implementation Failure
+**Description:** Multiple Round 1 fixes confirmed by commit 961095d did not actually land in the codebase — greeting still "Assalam-o-Alaikum", XP badge still present, skip link still present, negative marking still displayed, "Math" not renamed, profile stats blocks still present — all observed in Round 2 testing.
+**Root Cause:** Commit may have had a merge conflict or files were overwritten by subsequent commits. Claude Code confirmed changes were made but the running code showed otherwise.
+**Impact:** Students see factually wrong information (negative marking displayed for a test that has none), out-of-spec features (XP badge), and broken onboarding flow (skip link that bypasses mandatory onboarding).
+**Resolution:** Re-apply all Round 1 fixes explicitly in Round 2 fix prompt.
+**Rule Triggered:** GOV-RULE-003, GOV-RULE-008
+**Status:** Open
+**Resolved By:** Pending Round 2 fix commit
+**Resolved Date:** Pending
+
+---
+
+## INC-010
+**Date:** 2026-06-26
+**Severity:** Critical
+**Type:** Logic Bug
+**Description:** Selecting the correct answer on Practice Question screen routes student to the wrong answer / solution screen instead of the correct answer screen.
+**Root Cause:** Answer validation logic not correctly comparing selected option against correct_option — routing decision uses wrong conditional.
+**Impact:** Students who answer correctly are told they are wrong — destroys student confidence and trust in the platform. Core learning loop is broken.
+**Resolution:** Pending Round 2 fix.
+**Rule Triggered:** GOV-RULE-001 (human-verified ground truth not correctly applied in routing logic)
+**Status:** Open
+**Resolved By:** Pending
+**Resolved Date:** Pending
+
+---
+
+## INC-011
+**Date:** 2026-06-26
+**Severity:** High
+**Type:** Spec Drift
+**Description:** CLAUDE.md contained factually incorrect specification — negative marking listed as a feature, skip link listed as present, "Full name" field label wrong, date picker referenced instead of NTS preset selector.
+**Root Cause:** CLAUDE.md was not fully updated when product decisions were made during testing sessions. The spec and the code/decisions diverged.
+**Impact:** Future Claude Code sessions reading CLAUDE.md would reintroduce removed features and implement incorrect behaviour — a self-reinforcing error loop.
+**Resolution:** CLAUDE.md corrected in this documentation update (Round 2 doc commit). All 10 targeted corrections applied.
+**Rule Triggered:** GOV-RULE-008 (plan changes must propagate to CLAUDE.md before next session)
+**Status:** Resolved
+**Resolved By:** This documentation commit
+**Resolved Date:** 2026-06-26
+
+---
+
 ## Summary Table
 
 | ID | Date | Severity | Type | Status |
@@ -152,3 +197,6 @@ Each incident records:
 | INC-006 | Jun 25 2026 | Medium | Review Failure | Resolved |
 | INC-007 | Jun 25 2026 | Medium | Scope Creep | Resolved |
 | INC-008 | Jun 25 2026 | Low | Review Failure | Resolved |
+| INC-009 | Jun 26 2026 | High | Implementation Failure | Open |
+| INC-010 | Jun 26 2026 | Critical | Logic Bug | Open |
+| INC-011 | Jun 26 2026 | High | Spec Drift | Resolved |

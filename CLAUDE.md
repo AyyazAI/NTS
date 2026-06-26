@@ -197,6 +197,8 @@ Every AI-generated explanation must follow these rules:
 - When timer runs out → test auto-submits immediately
 - Full solution review only AFTER test submitted
 - If browser closed mid-test → test resumes on return
+- Score display: whole numbers only (correct count out of 90)
+- Coverage warning shown on Mock Test Results if < 60 questions attempted
 
 ### Practice Mode vs Mock Test Mode — Definitive Comparison
 
@@ -255,6 +257,8 @@ Every AI-generated explanation must follow these rules:
 - Flag 🚩 at TOP RIGHT of question card — not in bottom bar
 - Canvas working persists when navigating between questions
 - Unsaved profile changes → warning dialog before navigating away
+- Profile edit mode: Cancel button → confirmation dialog "Discard changes?" before discarding
+- Profile edit mode: Save → inline validation errors only, auto-scroll to first invalid field
 - File upload: JPG, PNG, PDF only. Max 5MB. Inline error for invalid.
 
 ---
@@ -276,10 +280,10 @@ Step 2 — Mixed (category mandatory, goals optional):
     General Sciences (NAT-IGS), Arts (NAT-IA)
   - Selected state: teal background + white text
   - "Let's go! →" disabled until category selected
-- Test date: 4 NTS preset date radio options — no free-text date picker (UX-004)
+- Test date: NTS preset date selector — July 12, August 16, September 6, October 4, November 1, 2026 + "I'll decide later" (no free-text date picker — UX-004)
 - Target score: defaults to Yes, slider min=50, max=90, step=5, default=60 (UX-003)
   - Helper text: "NAT-I passing mark is 50/90"
-- No university field in onboarding (Profile only)
+- No university field in onboarding or profile — target university feature dropped entirely (PD-008)
 - "Let's go! →" button
 
 ### Screen 2 — Home (Returning user)
@@ -300,7 +304,7 @@ Step 2 — Mixed (category mandatory, goals optional):
 - "Choose what to practice" + topic name
 - Sub-topic rows — multi-selectable (teal border + "✓ Selected" badge when selected)
 - Sub-topic list with progress bars, "⚠️ Focus here" on weakest
-- For NAT-IE subject section: Physics, Chemistry, FSc Mathematics
+- For NAT-IE subject section: Physics (10), Chemistry (10), FSc Mathematics (10) — English is NOT a subject in the NAT-IE subject section
 - Difficulty: [Easy] [Medium] [Hard] [Mixed]
 - "Start Practice — Mixed →" (no selection) or "Practice N topic(s) →" (with selection)
 
@@ -309,9 +313,9 @@ Step 2 — Mixed (category mandatory, goals optional):
 - Topic + sub-topic tag, question number
 - Flag 🚩 top right of question card
 - 4 answer options — two-step selection
-- Canvas: [✏️ Draw] [⌨️ Type] [📷 Upload] tabs
+- Canvas: [✏️ Draw] [⌨️ Type] tabs — Upload tab removed from Phase 1 (PD-009)
   - Draw: toolbar (thick pen, thin pen, eraser, undo, clear)
-  - Upload: JPG/PNG/PDF max 5MB, inline error, thumbnail preview
+  - Upload tab returns in Phase 2 with Claude Vision integration
   - Canvas persists across navigation, tab tracked in localStorage (canvas_last_tab)
 - Bottom bar Q1: [Show Solution] [Submit Answer] [›]
 - Bottom bar Q2+: [‹] [Show Solution] [Submit Answer] [›]
@@ -330,7 +334,7 @@ Step 2 — Mixed (category mandatory, goals optional):
 - Flag 🚩 top right of question card
 - NO Show Solution button
 - Bottom bar: [‹] [Submit Answer] [›] only — no Submit Test in persistent bar
-- Canvas available (Draw/Type/Upload)
+- Canvas available (Draw/Type only — Upload returns Phase 2)
 
 ### Screen 6 — Solution Screen Variant A (Wrong Answer)
 - "Not quite — let's see why 🤔" — neutral/amber, never red
@@ -388,7 +392,7 @@ Mock Tests tab:
 - 10-question navigator grid per section (30-question grid for subject section)
   - ● Teal = Answered, ◻ Teal border = Current, ◐ Amber = Flagged, ○ Grey = Unseen
 - Question + 4 options below
-- Canvas (Draw/Type/Upload)
+- Canvas (Draw/Type only — Upload returns Phase 2)
 - Bottom bar: [‹] [Submit Answer] [›]
 - Before submit: "You have X flagged questions" → [Review Flagged] [Submit Anyway]
 - Timeout: auto-submit → Results screen
@@ -726,6 +730,21 @@ Rules:
 - NEVER available in Mock Test — architecturally absent, not hidden
 Phase: 2
 
+### PD-007 — Home Progress Bars (Coverage vs Accuracy)
+Home progress bars show coverage (questions attempted / total) until 10+ questions have been attempted per section. Once 10+ attempted, switches to accuracy display.
+Rationale: A student who attempted 2/20 questions at 100% accuracy does not have a meaningful accuracy score. Coverage is the honest metric early on.
+Phase: 1
+
+### PD-008 — Target University Feature Dropped
+Target university field removed from onboarding, profile, and all screens.
+Rationale: Most top universities (NUST, UET, GIKI, LUMS) conduct their own entry tests and do not accept NAT-I scores. Showing university targets based on NAT-I score would mislead students into thinking NAT-I is the path to those institutions.
+Phase: Dropped (see PD-002 for University Finder in Phase 5 — NAT-I accepting universities only)
+
+### PD-009 — Canvas Upload Tab Deferred to Phase 2
+Upload tab removed from the Canvas component in Phase 1.
+Rationale: Upload is only useful when Claude Vision is active to analyse the uploaded working. Without AI analysis, upload is a dead feature. Returns in Phase 2 with full Claude Vision integration.
+Phase: 2
+
 ---
 
 ## UX Decisions Log
@@ -951,6 +970,9 @@ Every Claude Code session:
 | INC-006 | Jun 25 2026 | AI review missed XP/speed bonus card on Solution Correct — focused on required elements present, not unrequired elements absent | Resolved — 961095d |
 | INC-007 | Jun 25 2026 | SolutionCorrect.jsx contained XP earned badge and speed bonus feature never approved in spec — scope creep by AI during implementation | Resolved — 961095d |
 | INC-008 | Jun 25 2026 | AI review missed wave emoji on separate line on Onboarding and Home — screenshot review missed single-line vs two-line rendering difference | Resolved — 961095d |
+| INC-009 | Jun 26 2026 | Round 1 fixes didn't land — greeting, XP badge, negative marking, Math rename, profile stats all still present in Round 2 testing | Open — pending Round 2 fix |
+| INC-010 | Jun 26 2026 | Critical logic bug — correct answer routes to wrong answer screen, core learning loop broken | Open — pending Round 2 fix |
+| INC-011 | Jun 26 2026 | CLAUDE.md spec drift — negative marking, skip link, Full name, date picker all wrong in spec | Resolved — this commit |
 
 Full details: src/governance/GOV-001-AI-Governance-Incident-Log.md
 

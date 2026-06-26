@@ -243,3 +243,126 @@
 
 **Round 8 — Automation** ✅
 - All Category K new test cases (57/57 passing)
+
+---
+
+## ROUND 2 FINDINGS — June 26, 2026
+### Sources: Owner exploratory testing + AI logic review
+
+---
+
+### CATEGORY R — ROUND 1 FIXES NOT LANDED
+
+| ID | Screen | Issue | Severity |
+|---|---|---|---|
+| R2-NL-01 | Home | Greeting still "Assalam-o-Alaikum" — not changed to "Welcome, [name]! 👋" | 🔴 |
+| R2-NL-02 | Solution Correct | XP/speed bonus card still present — not removed | 🟠 |
+| R2-NL-03 | Onboarding | Skip link still present | 🟠 |
+| R2-NL-04 | Onboarding | "Full name" placeholder not changed to "Name" | 🟡 |
+| R2-NL-05 | Onboarding | Wave emoji still on separate line | 🟡 |
+| R2-NL-06 | Mock Test | Negative marking "NEG: –0.25/wrong" still in score card | 🔴 |
+| R2-NL-07 | Mock Test Results | "NEGATIVE MARKING –5.25 marks lost" section still present | 🔴 |
+| R2-NL-08 | Progress | "Math" not renamed to "Quantitative Reasoning" | 🟠 |
+| R2-NL-09 | Profile | Practice stats block still present | 🟠 |
+| R2-NL-10 | Profile | Mock Test Stats block still present | 🟠 |
+| R2-NL-11 | Canvas | "Canvas working submitted" error text still hardcoded | 🟠 |
+
+---
+
+### CATEGORY O — OWNER FINDINGS (Round 2)
+
+| ID | Screen | Issue | Severity |
+|---|---|---|---|
+| R2-O-01 | Onboarding Step 1 | Wave emoji wraps to new line when name is long | 🟡 |
+| R2-O-02 | Onboarding Step 1 | Contact field shows as optional — should be mandatory Mobile OR Email | 🟠 |
+| R2-O-03 | Sub-topic Selection | "Focus here" only on single weakest — should flag ALL below 50% | 🟠 |
+| R2-O-04 | Sub-topic Selection | Question difficulty tagging unclear — how are Easy/Medium/Hard questions selected? | 🟠 |
+| R2-O-05 | Canvas | Drawing still not functional — critical Phase 1 feature | 🔴 |
+| R2-O-06 | Solution Wrong | Grid method still shows leave-out logic — needs positive committee table | 🟠 |
+| R2-O-07 | Practice Question | Selecting correct answer still routes to wrong answer page | 🔴 |
+| R2-O-08 | Progress Chart | Graph text very small | 🟡 |
+| R2-O-09 | Progress Chart | Weekly view shows day names only — need dates alongside (Mon 23 Jun) | 🟡 |
+| R2-O-10 | Progress Chart | Month view — no x-axis labels at all | 🟠 |
+| R2-O-11 | Progress Chart | "All" view — no x-axis labels | 🟠 |
+| R2-O-12 | Progress Chart | Same chart issues exist on Mock Tests tab | 🟠 |
+| R2-O-13 | Progress Today's Focus | Shows sub-topic only — should show "Math · Algebra" | 🟡 |
+| R2-O-14 | Progress Chart (Mock) | Only Test 3 shows % label — all test points need % shown | 🟡 |
+| R2-O-15 | Profile | Target score bar missing 50/90 edge labels and pass mark note | 🟡 |
+| R2-O-16 | Profile | "Full Name" field label — should be "Your Name" | 🟡 |
+| R2-O-17 | Profile | Onboarding vs Profile fields not in sync — full audit needed | 🟠 |
+| R2-O-18 | Profile | Target date shows date picker not NTS preset dates | 🟠 |
+| R2-O-19 | Profile | Target university field present — feature dropped | 🟠 |
+| R2-O-20 | Profile | Errors shown at top of page not inline | 🟠 |
+| R2-O-21 | Profile | Mobile/email structure different from onboarding | 🟠 |
+| R2-O-22 | Profile | Changing NAT category could corrupt all progress data | 🔴 |
+| R2-O-23 | Profile | No unsaved changes warning on navigation | 🟠 |
+| R2-O-24 | Profile | Cancel button has no confirmation dialog | 🟠 |
+| R2-O-25 | Onboarding Step 2 | Name field accepts special characters and very long strings | 🟠 |
+| R2-O-26 | Onboarding Step 2 | Hardcoded test dates not matching real NTS 2026 schedule | 🟠 |
+
+---
+
+### CATEGORY AI — AI LOGIC REVIEW FINDINGS (Round 2)
+
+| ID | Screen | Issue | Severity |
+|---|---|---|---|
+| R2-AI-01 | Home | "21 of 20 questions attempted" — impossible count, data integrity bug | 🔴 |
+| R2-AI-02 | Home | Daily goal "20 questions" hardcoded — should be dynamic based on days to test | 🟡 |
+| R2-AI-03 | Home | Progress % is accuracy not readiness — misleads students on exam preparedness | 🟠 |
+| R2-AI-04 | All screens | Section naming inconsistent across 4 screens — needs standardisation | 🟠 |
+| R2-AI-05 | Mock Test | Score shows fractional "+18.25" — NAT-I scores are whole numbers | 🟠 |
+| R2-AI-06 | Mock Test Results | 28/90 questions attempted — no coverage warning shown to student | 🟠 |
+| R2-AI-07 | Mock Test Results | "↑ 5 points from last test" — doesn't specify mock or practice test | 🟡 |
+| R2-AI-08 | Mock Test Results | No recommendation shown — app knows weakest section, should suggest next action | 🟡 |
+| R2-AI-09 | Profile | "18 days to NAT-I" — should specify iteration: "18 days to NAT-VII (Jul 12)" | 🟡 |
+| R2-AI-10 | Profile | Streak definition not visible — what counts as a streak day? | 🟡 |
+| R2-AI-11 | Profile | Goal tracker shows current vs target but no trend direction | 🟡 |
+| R2-AI-12 | All screens | Empty state handling undefined — new user with 0 attempts sees broken UI | 🟠 |
+| R2-AI-13 | CLAUDE.md | Spec contains wrong information — negative marking, skip link, Full name | 🔴 |
+| R2-AI-14 | Mock Test | Only C and D options visible in navigator view — scrolling required | 🟡 |
+
+---
+
+### CATEGORY D — DECISIONS MADE (Round 2)
+
+| ID | Decision | Outcome |
+|---|---|---|
+| D-01 | Home progress bars | Keep — show coverage until 10+ attempts, then accuracy |
+| D-02 | Canvas Upload tab | Remove from Phase 1 — returns Phase 2 with Claude Vision |
+| D-03 | NAT category on Profile | Readonly — cannot be changed in Phase 1 |
+| D-04 | Target university feature | Dropped entirely — misleading as top unis use own tests |
+| D-05 | Mobile OR Email | Both can be provided — login choice given at Phase 2 |
+
+---
+
+### PRIORITY ORDER FOR ROUND 2 FIXES
+
+**Critical (must fix before any testing):**
+- R2-O-07: Correct answer routing bug
+- R2-O-05: Canvas drawing not functional
+- R2-AI-01: 21/20 impossible count
+- R2-NL-06, R2-NL-07: Negative marking still showing
+- R2-O-22: NAT category change data risk
+- R2-AI-13: CLAUDE.md spec drift (resolved in this doc update)
+
+**High:**
+- All R2-NL items (Round 1 fixes that didn't land)
+- R2-O-02: Contact field mandatory
+- R2-AI-04: Section naming inconsistency
+- R2-AI-05: Fractional score display
+- R2-AI-06: Coverage warning missing
+- R2-O-03: Focus here logic
+- R2-O-18, R2-O-19: Profile field sync
+
+**Medium:**
+- R2-O-08 through R2-O-14: Chart improvements
+- R2-O-17, R2-O-20, R2-O-21, R2-O-23, R2-O-24: Profile sync and validation
+- R2-O-25, R2-O-26: Onboarding validation
+- R2-AI-12: Empty state handling
+
+**Low / Phase 2:**
+- R2-AI-02: Dynamic daily goal
+- R2-AI-08: Results recommendation
+- R2-AI-10: Streak definition
+- R2-O-06: Grid visual redesign
+- R2-AI-09: Countdown label specificity
