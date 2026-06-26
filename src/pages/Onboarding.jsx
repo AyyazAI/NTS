@@ -105,7 +105,7 @@ export default function Onboarding() {
 
       {step === 1 ? (
         <div className="w-full flex-1 flex flex-col">
-          <h1 className="text-2xl font-black text-gray-900 mb-1">Welcome to TaleemiMarkaz 👋</h1>
+          <h1 className="text-2xl font-black text-gray-900 mb-1">{'Welcome to TaleemiMarkaz 👋'}</h1>
           <p className="text-sm text-gray-600 mb-8">Let's get you started in 2 quick steps</p>
 
           <div className="space-y-5">

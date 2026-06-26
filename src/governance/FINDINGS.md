@@ -366,3 +366,76 @@
 - R2-AI-10: Streak definition
 - R2-O-06: Grid visual redesign
 - R2-AI-09: Countdown label specificity
+
+---
+
+## Round 3 — Testing Session (June 27, 2026)
+
+### Session Overview
+- Tester: Ayyaz
+- Build: commit 47c5d57 (Round 2 fixes + 93/93 Playwright)
+- Scope: All 11 screens, visual + spec compliance
+- Total issues: 20 (6 High, 8 Medium, 5 Low, 1 Confirmed Fixed)
+
+---
+
+### Confirmed Fixed in Round 2
+| ID | Finding | Status |
+|---|---|---|
+| R2-O-04 | Negative marking (-0.25) on Mock Test | ✅ Resolved |
+| R2-AI-03 | Math renamed to Quantitative Reasoning | ✅ Resolved |
+| R2-O-01 | XP/speed bonus cards removed from Solution Correct | ✅ Resolved |
+| R2-O-03 | Difficulty selector present on SubTopicSelection | ✅ Resolved |
+
+---
+
+### Round 3 Findings
+
+| ID | Severity | Screen | Finding |
+|---|---|---|---|
+| R3-02 | Low | Home | Daily goal reverted to plain text — should be teal card |
+| R3-04 | High | Onboarding | Wave emoji 👋 on separate line — third round — text wrap issue |
+| R3-05 | High | SubTopicSelection | Focus here logic flags only single weakest — should flag ALL <50% |
+| R3-06 | Confirmed | SubTopicSelection | Difficulty selector present — no action needed |
+| R3-08 | High | Practice Question | Canvas "Your work is saved" text hidden below bottom nav |
+| R3-09 | Low | Practice/Mock Question | Flag icon nearly invisible at opacity-30 when unset |
+| R3-10 | Low | Practice Question | No helper text when Submit Answer disabled |
+| R3-11 | Medium | Mock Test (Screen 9) | Section tab labels overflow on mobile |
+| R3-12 | Medium | Mock Question (Screen 5) | Q counter shows only global total, not section position |
+| R3-15 | High | Mock Test Question | Canvas saved text outside viewport |
+| R3-16 | High | Mock Test Question | Canvas footer should warn about timer, not navigation |
+| R3-17 | High | Mock Test Question | Submit Test button scroll area issue |
+| R3-18 | Medium | Mock Test Results | CTA button spacing needs verification |
+| R3-19 | Medium | Mock Test Results | YOUR PROGRESS section behind bottom nav |
+| R3-20 | Medium | Solution Wrong | Bottom padding missing for fixed "Try a similar question" bar |
+| R3-21 | Medium | Solution Correct | Insufficient gap between Explore/Next buttons |
+| R3-22 | Medium | Solution Correct | No motivational message below buttons |
+| R3-23 | Medium | Progress | Engineering subject accordion shows "Engineering" not "Engineering (NAT-IE)" |
+| R3-24 | Medium | Progress | Start here button missing inside accordions (weakest sub-topic) |
+| R3-26 | Medium | Profile | Countdown says "days to NAT-I" — should say "days to your NAT test" |
+| R3-28 | Medium | Profile | Goal bar fills to current/target ratio, not current/90 — misleading |
+| R3-30 | High | All screens | Global scroll padding not enforced — some screens clip content behind nav |
+
+---
+
+### Resolution Log
+
+| ID | Fix | Commit |
+|---|---|---|
+| R3-02 | Home.jsx: goal restored as teal card | pending |
+| R3-04 | Onboarding.jsx: non-breaking space prevents emoji wrap | pending |
+| R3-05 | SubTopicSelection.jsx: threshold-based focus logic (<50 = Focus here, 50-65 = Needs work) | pending |
+| R3-08/15/30 | Global pb-28/pb-48 enforcement + Canvas footerText prop | pending |
+| R3-09 | QuestionPractice.jsx + MockTest.jsx: ⚑ flag with solid teal/amber colours | pending |
+| R3-10 | QuestionPractice.jsx: "Select an answer above to submit" helper text | pending |
+| R3-11 | MockTest.jsx: shorter tab labels + overflow-x-auto | pending |
+| R3-12 | QuestionMockTest.jsx: Q counter shows section position + global total | pending |
+| R3-16 | Canvas.jsx: footerText prop; QuestionMockTest passes timer warning | pending |
+| R3-18 | MockTestResults.jsx: space-y-4 on CTA buttons (already present) | pending |
+| R3-19 | MockTestResults.jsx: pb-28 on main (already present) | pending |
+| R3-20 | SolutionWrong.jsx: pb-48 on main (already present from R2) | pending |
+| R3-21/22 | SolutionCorrect.jsx: space-y-4 + motivational text | pending |
+| R3-23 | Progress.jsx: getCategoryLabel for subject topic name | pending |
+| R3-24 | Progress.jsx: Start here button (already implemented in R2 Accordion) | pending |
+| R3-26 | Profile.jsx: "days to your NAT test (Jul 12)" | pending |
+| R3-28 | Profile.jsx: goal bar fill = current/90 + tick mark at target/90 | pending |

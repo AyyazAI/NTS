@@ -53,7 +53,7 @@ function ViewMode({ natCategory, onEdit }) {
       {/* Countdown — includes iteration + date */}
       <div className="bg-teal-50 border border-teal-200 rounded-2xl p-4 text-center">
         <p className="text-3xl font-black text-teal-700">18</p>
-        <p className="text-sm font-bold text-teal-600">days to NAT-I (Jul 12)</p>
+        <p className="text-sm font-bold text-teal-600">days to your NAT test (Jul 12)</p>
         <p className="text-xs text-gray-500 mt-1">Test date: July 12, 2026</p>
       </div>
 
@@ -64,12 +64,18 @@ function ViewMode({ natCategory, onEdit }) {
           <span className="text-sm text-gray-600">Target score</span>
           <span className="font-black text-gray-900">75/90</span>
         </div>
-        <div className="h-3 bg-gray-200 rounded-full overflow-hidden mb-1">
-          <div className="h-full bg-teal-500 rounded-full" style={{ width: '74%' }} />
+        <div className="relative h-3 mb-1">
+          <div className="absolute inset-0 bg-gray-200 rounded-full overflow-hidden">
+            <div className="h-full bg-teal-500" style={{ width: '74%' }} />
+          </div>
+          <div className="absolute top-0 bottom-0 w-0.5 bg-amber-500 rounded-full z-10" style={{ left: '83.3%' }} />
         </div>
         <div className="flex justify-between text-xs text-gray-600">
           <span>Current avg: 67</span>
-          <span>Target: 75</span>
+          <span className="flex items-center gap-1">
+            <span className="w-1.5 h-1.5 rounded-full bg-amber-500 inline-block" />
+            Target: 75
+          </span>
         </div>
       </div>
 

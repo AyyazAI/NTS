@@ -50,4 +50,17 @@ test.describe('Solution — Correct Answer', () => {
   test('"Next Question" button is present', async ({ page }) => {
     await expect(page.locator('button:has-text("Next Question")')).toBeVisible()
   })
+
+  test('buttons have adequate spacing between them (at least 12px)', async ({ page }) => {
+    const exploreBtn = page.locator('button:has-text("Explore other methods")')
+    const nextBtn    = page.locator('button:has-text("Next Question")')
+    const exploreBB  = await exploreBtn.boundingBox()
+    const nextBB     = await nextBtn.boundingBox()
+    const gap = nextBB.y - (exploreBB.y + exploreBB.height)
+    expect(gap).toBeGreaterThanOrEqual(12)
+  })
+
+  test('motivational message appears below action buttons', async ({ page }) => {
+    await expect(page.locator('text=every question makes you stronger')).toBeVisible()
+  })
 })

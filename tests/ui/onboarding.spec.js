@@ -19,6 +19,12 @@ test.describe('Onboarding — Step 1', () => {
     await expect(page.locator('text=Skip setup')).not.toBeVisible()
   })
 
+  test('wave emoji is in the same h1 as the heading — not on a separate line', async ({ page }) => {
+    const headingText = await page.locator('h1').first().textContent()
+    expect(headingText).toContain('TaleemiMarkaz')
+    expect(headingText).toContain('👋')
+  })
+
   test('name field is mandatory — cannot continue without it', async ({ page }) => {
     await page.click('button:has-text("Continue →")')
     await expect(page.locator('text=Please enter your name')).toBeVisible()

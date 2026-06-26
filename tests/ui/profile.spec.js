@@ -5,8 +5,8 @@ test.describe('Profile Screen — View Mode', () => {
     await page.goto('/profile')
   })
 
-  test('days to NAT-I countdown is visible', async ({ page }) => {
-    await expect(page.locator('text=days to NAT-I')).toBeVisible()
+  test('days to NAT test countdown is visible with correct wording', async ({ page }) => {
+    await expect(page.locator('text=days to your NAT test')).toBeVisible()
   })
 
   test('Edit Profile button is present', async ({ page }) => {

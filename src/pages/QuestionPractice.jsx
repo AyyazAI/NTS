@@ -57,11 +57,11 @@ export default function QuestionPractice() {
           <button
             onClick={() => setFlagged(f => !f)}
             title="Flag this question"
-            className={`absolute top-3 right-3 text-lg transition-transform hover:scale-110 ${
-              flagged ? 'opacity-100' : 'opacity-30 hover:opacity-60'
+            className={`absolute top-3 right-3 text-xl font-bold leading-none transition-all hover:scale-110 ${
+              flagged ? 'text-red-500' : 'text-teal-300 hover:text-teal-500'
             }`}
           >
-            🚩
+            ⚑
           </button>
 
           <p className="text-base font-semibold text-gray-900 leading-relaxed pr-8">
@@ -103,6 +103,9 @@ export default function QuestionPractice() {
 
       {/* Bottom action bar */}
       <div className="fixed bottom-20 left-1/2 -translate-x-1/2 w-full max-w-sm bg-white border-t border-gray-100 px-4 py-3 z-20">
+        {!selected && (
+          <p className="text-xs text-center text-gray-600 mb-1.5">Select an answer above to submit</p>
+        )}
         <div className="flex items-center gap-2">
           {/* Back arrow — hidden on Q1 */}
           {!isFirst ? (

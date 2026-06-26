@@ -42,6 +42,20 @@ test.describe('Practice Question Screen', () => {
     await expect(page.locator('button[title="Flag this question"]')).toBeVisible()
   })
 
+  test('flag icon has solid teal colour when unflagged — not near-invisible opacity', async ({ page }) => {
+    const flagBtn = page.locator('button[title="Flag this question"]')
+    await expect(flagBtn).toHaveClass(/text-teal-300/)
+  })
+
+  test('helper text "Select an answer above to submit" is visible when no answer selected', async ({ page }) => {
+    await expect(page.locator('text=Select an answer above to submit')).toBeVisible()
+  })
+
+  test('helper text disappears after selecting an answer', async ({ page }) => {
+    await page.locator('button:has-text("21")').click()
+    await expect(page.locator('text=Select an answer above to submit')).not.toBeVisible()
+  })
+
   test('correct answer routes to solution/correct screen', async ({ page }) => {
     // Option A is the correct answer in static data
     await page.locator('button:has-text("21")').click()

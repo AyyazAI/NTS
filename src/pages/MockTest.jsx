@@ -106,7 +106,10 @@ export default function MockTest() {
   const subjectShort = getCategoryShort(natCategory)
 
   function sectionDisplayLabel(key) {
-    return key === 'Subject' ? subjectShort : key
+    if (key === 'Verbal')       return 'English'
+    if (key === 'Analytical')   return 'Reasoning'
+    if (key === 'Quantitative') return 'Quant'
+    return subjectShort
   }
 
   function handleNavigate(i) {
@@ -172,11 +175,11 @@ export default function MockTest() {
           <button
             onClick={handleFlag}
             title="Flag this question"
-            className={`absolute top-3 right-3 text-lg transition-transform hover:scale-110 ${
-              isFlagged ? 'text-amber-500 opacity-100' : 'opacity-30 hover:opacity-60'
+            className={`absolute top-3 right-3 text-xl font-bold leading-none transition-all hover:scale-110 ${
+              isFlagged ? 'text-amber-500' : 'text-teal-300 hover:text-teal-500'
             }`}
           >
-            🚩
+            ⚑
           </button>
           <p className="text-base font-semibold text-gray-900 leading-relaxed pr-8">
             {QUESTION.text}

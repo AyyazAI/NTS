@@ -13,7 +13,7 @@ const DRAW_TOOLS = [
   { id: 'clear',  icon: '✕',  title: 'Clear'     },
 ]
 
-export default function Canvas() {
+export default function Canvas({ footerText = 'Your work is saved if you navigate away' }) {
   const [tab, setTab]             = useState('draw')
   const [activeTool, setActiveTool] = useState('thick')
   const canvasRef   = useRef(null)
@@ -194,7 +194,7 @@ export default function Canvas() {
       )}
 
       <div className="bg-gray-50 px-4 py-2 border-t border-gray-100">
-        <p className="text-xs text-gray-700">Your work is saved if you navigate away</p>
+        <p className="text-xs text-gray-700">{footerText}</p>
       </div>
     </div>
   )

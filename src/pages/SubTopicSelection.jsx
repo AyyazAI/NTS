@@ -65,7 +65,11 @@ export default function SubTopicSelection() {
     topicLabel = TOPIC_LABELS[topicId] ?? 'Quantitative Reasoning'
   }
 
-  const weakest = subtopics.reduce((min, s) => (s.pct < min.pct ? s : min), subtopics[0])
+  function focusBadge(pct) {
+    if (pct < 50) return { text: '⚠️ Focus here', cls: 'text-amber-700 bg-amber-100' }
+    if (pct < 65) return { text: '💡 Needs work',  cls: 'text-amber-600 bg-yellow-50' }
+    return null
+  }
 
   function toggleSubtopic(name) {
     setSelectedSubtopics(prev =>
@@ -100,28 +104,27 @@ export default function SubTopicSelection() {
         {/* Sub-topic cards — selectable */}
         <div className="space-y-2 mb-6">
           {subtopics.map(sub => {
-            const isWeakest  = sub.name === weakest.name
             const isSelected = selectedSubtopics.includes(sub.name)
+            const badge      = !isSelected ? focusBadge(sub.pct) : null
+            const cardCls    = isSelected
+              ? 'border-teal-600 bg-teal-50'
+              : sub.pct < 50
+              ? 'border-amber-200 bg-amber-50'
+              : 'border-gray-100 bg-gray-50 hover:border-gray-200'
             return (
               <button
                 key={sub.name}
                 onClick={() => toggleSubtopic(sub.name)}
-                className={`w-full text-left rounded-xl border-2 p-4 transition-all ${
-                  isSelected
-                    ? 'border-teal-600 bg-teal-50'
-                    : isWeakest
-                    ? 'border-amber-200 bg-amber-50'
-                    : 'border-gray-100 bg-gray-50 hover:border-gray-200'
-                }`}
+                className={`w-full text-left rounded-xl border-2 p-4 transition-all ${cardCls}`}
               >
                 <div className="flex items-center justify-between mb-2">
                   <div className="flex items-center gap-2 flex-wrap">
                     <p className={`text-sm font-bold ${isSelected ? 'text-teal-800' : 'text-gray-900'}`}>
                       {sub.name}
                     </p>
-                    {isWeakest && !isSelected && (
-                      <span className="text-xs font-bold text-amber-700 bg-amber-100 px-2 py-0.5 rounded-full">
-                        ⚠️ Focus here
+                    {badge && (
+                      <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${badge.cls}`}>
+                        {badge.text}
                       </span>
                     )}
                     {isSelected && (

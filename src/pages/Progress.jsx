@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import Header from '../components/Header'
 import BottomNav from '../components/BottomNav'
-import { getNatCategory, getCategoryName, SUBJECT_SUBTOPICS } from '../utils/natCategory'
+import { getNatCategory, getCategoryLabel, getCategoryName, SUBJECT_SUBTOPICS } from '../utils/natCategory'
 
 // Chart with axis labels, pass mark line, data point values on ALL points
 function LineChart({ points, labels = null, colour = '#0D9488' }) {
@@ -200,7 +200,7 @@ function PracticeTab({ natCategory }) {
   const subjectSubs  = SUBJECT_SUBTOPICS[natCategory] ?? SUBJECT_SUBTOPICS['NAT-IE']
   const subjectTopic = {
     id: 'subject',
-    name:    getCategoryName(natCategory),
+    name:    getCategoryLabel(natCategory),
     overall: Math.round(subjectSubs.reduce((acc, s) => acc + s.pct, 0) / subjectSubs.length),
     subs:    subjectSubs,
   }

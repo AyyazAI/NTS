@@ -10,11 +10,15 @@ test.describe('Progress Screen', () => {
     await expect(page.locator('button:has-text("⏱️ Mock Tests")')).toBeVisible()
   })
 
-  test('4 topic sections are present including Engineering', async ({ page }) => {
+  test('4 topic sections are present including Engineering (NAT-IE)', async ({ page }) => {
     await expect(page.locator('button').filter({ hasText: 'English' }).first()).toBeVisible()
     await expect(page.locator('button').filter({ hasText: 'Quantitative Reasoning' }).first()).toBeVisible()
     await expect(page.locator('button').filter({ hasText: 'Analytical Reasoning' }).first()).toBeVisible()
-    await expect(page.locator('button').filter({ hasText: 'Engineering' }).first()).toBeVisible()
+    await expect(page.locator('button').filter({ hasText: 'Engineering (NAT-IE)' }).first()).toBeVisible()
+  })
+
+  test('subject accordion shows full category label with ID — Engineering (NAT-IE)', async ({ page }) => {
+    await expect(page.locator('button').filter({ hasText: 'Engineering (NAT-IE)' }).first()).toBeVisible()
   })
 
   test('Analytical Reasoning accordion is labeled correctly — not just "Reasoning"', async ({ page }) => {

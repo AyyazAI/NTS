@@ -9,8 +9,11 @@ test.describe('Mock Test Question Screen', () => {
     await expect(page.locator('text=⏱️ NAT-I Mock Test')).toBeVisible()
   })
 
-  test('question counter shows X of 90 not X of 20', async ({ page }) => {
+  test('question counter shows section position and global total', async ({ page }) => {
     await expect(page.locator('text=of 90')).toBeVisible()
+    // Should show section-local Q number / section total format
+    const allText = await page.locator('body').textContent()
+    expect(allText).toMatch(/Q\d+ \/ \d+/)
   })
 
   test('timer starts at 120:00', async ({ page }) => {
@@ -55,5 +58,13 @@ test.describe('Mock Test Question Screen', () => {
     const flagBtn = page.locator('button[title="Flag this question"]')
     await flagBtn.click()
     await expect(flagBtn).toHaveClass(/text-amber-500/)
+  })
+
+  test('canvas footer shows timer warning in mock mode', async ({ page }) => {
+    await expect(page.locator('text=Timer keeps running')).toBeVisible()
+  })
+
+  test('canvas footer does not show navigation saved message in mock mode', async ({ page }) => {
+    await expect(page.locator('text=Your work is saved if you navigate away')).not.toBeVisible()
   })
 })

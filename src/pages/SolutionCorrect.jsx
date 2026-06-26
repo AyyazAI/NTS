@@ -32,18 +32,22 @@ export default function SolutionCorrect() {
 
         {/* Explore or continue */}
         <p className="text-sm font-black text-gray-700 mb-3">Want to go deeper?</p>
-        <div className="space-y-3">
-          <Link to="/solution/wrong">
+        <div className="flex flex-col gap-4">
+          <Link to="/solution/wrong" className="block">
             <button className="w-full py-4 rounded-xl border-2 border-teal-600 text-teal-700 font-bold text-sm hover:bg-teal-50 transition-colors">
               Explore other methods
             </button>
           </Link>
-          <Link to="/practice/question">
+          <Link to="/practice/question" className="block">
             <button className="w-full py-4 rounded-xl bg-teal-600 text-white font-bold text-sm hover:bg-teal-700 transition-colors">
               Next Question →
             </button>
           </Link>
         </div>
+
+        <p className="text-center text-sm text-gray-600 mt-5">
+          Keep going — every question makes you stronger 💪
+        </p>
 
       </main>
 

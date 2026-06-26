@@ -35,4 +35,16 @@ test.describe('Section Naming Consistency', () => {
     const allText = await page.locator('body').textContent()
     expect(allText).not.toMatch(/^Quantitative$/m)
   })
+
+  test('Mock Test navigator screen: section tabs use short labels — English, Reasoning, Quant', async ({ page }) => {
+    await page.goto('/mock-test')
+    await expect(page.locator('button:has-text("English")').first()).toBeVisible()
+    await expect(page.locator('button:has-text("Reasoning")').first()).toBeVisible()
+    await expect(page.locator('button:has-text("Quant")').first()).toBeVisible()
+  })
+
+  test('Progress: subject accordion shows full category label Engineering (NAT-IE)', async ({ page }) => {
+    await page.goto('/progress')
+    await expect(page.locator('button').filter({ hasText: 'Engineering (NAT-IE)' }).first()).toBeVisible()
+  })
 })

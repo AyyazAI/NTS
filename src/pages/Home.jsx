@@ -108,7 +108,9 @@ export default function Home() {
 
       <main className="flex-1 px-4 pt-4 pb-28">
         <h1 className="text-2xl font-black text-gray-900 mb-1">{greeting}</h1>
-        <p className="text-sm text-gray-700 mb-5">{goal}</p>
+        <div className="bg-teal-50 border border-teal-100 rounded-xl px-4 py-3 mb-5">
+          <p className="text-sm font-bold text-teal-800">{goal}</p>
+        </div>
 
         {/* Mode selector */}
         <div className="flex gap-2 mb-5">

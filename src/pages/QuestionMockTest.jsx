@@ -13,6 +13,13 @@ function getSectionLabel(qNum, subjectLabel) {
   return `Section 4: ${subjectLabel}`
 }
 
+function getSectionInfo(qNum) {
+  if (qNum <= 20) return { local: qNum,        sectionTotal: 20 }
+  if (qNum <= 40) return { local: qNum - 20,   sectionTotal: 20 }
+  if (qNum <= 60) return { local: qNum - 40,   sectionTotal: 20 }
+  return { local: qNum - 60, sectionTotal: 30 }
+}
+
 const QUESTION = {
   number: 4,
   total: 90,
@@ -49,6 +56,7 @@ export default function QuestionMockTest() {
 
   const subjectLabel  = getCategoryLabel(natCategory)
   const sectionLabel  = getSectionLabel(QUESTION.number, subjectLabel)
+  const sectionInfo   = getSectionInfo(QUESTION.number)
 
   return (
     <div className="min-h-screen bg-white flex flex-col max-w-sm mx-auto">
@@ -74,7 +82,7 @@ export default function QuestionMockTest() {
             {sectionLabel}
           </span>
           <span className="text-xs font-bold text-gray-700">
-            Q{QUESTION.number} of {QUESTION.total}
+            Q{sectionInfo.local} / {sectionInfo.sectionTotal} · {QUESTION.number} of 90
           </span>
         </div>
 
@@ -83,11 +91,11 @@ export default function QuestionMockTest() {
           <button
             onClick={() => setFlagged(f => !f)}
             title="Flag this question"
-            className={`absolute top-3 right-3 text-lg transition-transform hover:scale-110 ${
-              flagged ? 'text-amber-500 opacity-100' : 'opacity-30 hover:opacity-60'
+            className={`absolute top-3 right-3 text-xl font-bold leading-none transition-all hover:scale-110 ${
+              flagged ? 'text-amber-500' : 'text-teal-300 hover:text-teal-500'
             }`}
           >
-            🚩
+            ⚑
           </button>
           <p className="text-base font-semibold text-gray-900 leading-relaxed pr-8">
             {QUESTION.text}
@@ -123,7 +131,7 @@ export default function QuestionMockTest() {
         </div>
 
         {/* Canvas */}
-        <Canvas />
+        <Canvas footerText="⚠️ Timer keeps running if you leave this page" />
       </main>
 
       {/* Bottom action bar — [‹] [Submit Answer] [›] only, no Submit Test */}
