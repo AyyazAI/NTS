@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import Header from '../components/Header'
 import BottomNav from '../components/BottomNav'
 import ModeIndicator from '../components/ModeIndicator'
-import Canvas from '../components/Canvas'
+import RoughWork from '../components/RoughWork'
 import { getNatCategory, getCategoryLabel } from '../utils/natCategory'
 
 function getSectionLabel(qNum, subjectLabel) {
@@ -36,12 +36,12 @@ const QUESTION = {
 
 function Timer({ time = '120:00', state = 'normal' }) {
   const colour =
-    state === 'urgent' ? 'text-red-600' :
+    state === 'urgent'  ? 'text-red-600'   :
     state === 'warning' ? 'text-amber-600' :
     'text-teal-600'
   const size =
-    state === 'urgent' ? 'text-2xl' :
-    state === 'warning' ? 'text-xl' :
+    state === 'urgent'  ? 'text-2xl' :
+    state === 'warning' ? 'text-xl'  :
     'text-lg'
   return (
     <span className={`font-black tabular-nums ${colour} ${size}`}>{time}</span>
@@ -49,15 +49,14 @@ function Timer({ time = '120:00', state = 'normal' }) {
 }
 
 export default function QuestionMockTest() {
-  const [selected,     setSelected]     = useState(null)
-  const [flagged,      setFlagged]      = useState(false)
-  const [showConfirm,  setShowConfirm]  = useState(false)
-  const [padOpen,      setPadOpen]      = useState(false)
-  const [natCategory]  = useState(() => getNatCategory() || 'NAT-IE')
+  const [selected,    setSelected]    = useState(null)
+  const [flagged,     setFlagged]     = useState(false)
+  const [showConfirm, setShowConfirm] = useState(false)
+  const [natCategory] = useState(() => getNatCategory() || 'NAT-IE')
 
-  const subjectLabel  = getCategoryLabel(natCategory)
-  const sectionLabel  = getSectionLabel(QUESTION.number, subjectLabel)
-  const sectionInfo   = getSectionInfo(QUESTION.number)
+  const subjectLabel = getCategoryLabel(natCategory)
+  const sectionLabel = getSectionLabel(QUESTION.number, subjectLabel)
+  const sectionInfo  = getSectionInfo(QUESTION.number)
 
   return (
     <div className="min-h-screen bg-white flex flex-col max-w-sm mx-auto">
@@ -91,19 +90,19 @@ export default function QuestionMockTest() {
         <div className="bg-gray-50 border border-gray-100 rounded-2xl p-4 mb-4 relative">
           <button
             onClick={() => setFlagged(f => !f)}
-            title="Flag this question"
+            title={flagged ? 'Flagged' : 'Flag for later'}
             className={`absolute top-3 right-3 text-xl font-bold leading-none transition-all hover:scale-110 ${
-              flagged ? 'text-amber-500' : 'text-teal-300 hover:text-teal-500'
+              flagged ? 'text-orange-500' : 'text-gray-400 hover:text-gray-600'
             }`}
           >
-            ⚑
+            {flagged ? '⚑' : '⚐'}
           </button>
           <p className="text-base font-semibold text-gray-900 leading-relaxed pr-8">
             {QUESTION.text}
           </p>
         </div>
 
-        {/* Answer options — no Show Solution */}
+        {/* Answer options — no Show Solution in mock mode */}
         <div className="space-y-2.5 mb-4">
           {QUESTION.options.map(opt => (
             <button
@@ -131,13 +130,8 @@ export default function QuestionMockTest() {
           ))}
         </div>
 
-        {/* Scratch pad trigger */}
-        <button
-          onClick={() => setPadOpen(true)}
-          className="w-full py-3 rounded-xl border-2 border-gray-200 text-sm font-bold text-gray-700 hover:border-gray-300 flex items-center justify-center gap-2 transition-colors"
-        >
-          ✏️ Open scratch pad
-        </button>
+        {/* Rough work area */}
+        <RoughWork isMock={true} />
       </main>
 
       {/* Bottom action bar — [‹] [Submit Answer] [›] only, no Submit Test */}
@@ -198,22 +192,6 @@ export default function QuestionMockTest() {
           </div>
         </div>
       )}
-
-      {/* Scratch pad overlay — always mounted to preserve drawing */}
-      <div className={`fixed inset-0 bg-white z-50 flex flex-col max-w-sm mx-auto${padOpen ? '' : ' hidden'}`}>
-        <div className="flex items-center justify-between px-4 py-4 border-b border-gray-100 flex-shrink-0">
-          <span className="text-sm font-bold text-gray-700">Q{QUESTION.number}</span>
-          <button
-            onClick={() => setPadOpen(false)}
-            className="text-sm font-bold text-teal-600 hover:text-teal-700 px-2 py-1"
-          >
-            Done ✓
-          </button>
-        </div>
-        <div className="flex-1 overflow-y-auto px-4 pb-4 pt-2">
-          <Canvas footerText="⚠️ Timer keeps running if you leave this page" />
-        </div>
-      </div>
     </div>
   )
 }

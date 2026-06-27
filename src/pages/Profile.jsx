@@ -46,7 +46,7 @@ function ViewMode({ natCategory, onEdit }) {
         </div>
         <div>
           <p className="text-xl font-black text-gray-900">Hamza Ahmed</p>
-          <p className="text-sm text-gray-500 mt-0.5">0312-3456789</p>
+          <p className="text-sm text-gray-700 mt-0.5">0312-3456789</p>
         </div>
       </div>
 
@@ -112,14 +112,14 @@ function EditMode({ initialCategory, onCancel, onSave }) {
   const [contactType, setContactType] = useState('mobile')
   const [mobile,      setMobile]      = useState('0312-3456789')
   const [email,       setEmail]       = useState('')
-  const [testDate,    setTestDate]    = useState('2026-07-12')
+  const [testDate,    setTestDate]    = useState(() => {
+    try { return localStorage.getItem('student_test_date') || '2026-07-12' } catch { return '2026-07-12' }
+  })
   const [targetScore, setTargetScore] = useState(75)
   const [reminders,   setReminders]   = useState(true)
   const [dirty,       setDirty]       = useState(false)
   const [showCancel,  setShowCancel]  = useState(false)
   const [errors,      setErrors]      = useState({})
-
-  const mobileValid = !mobile || /^03\d{9}$/.test(mobile.replace(/-/g, ''))
 
   function mark() { setDirty(true) }
 
@@ -127,7 +127,13 @@ function EditMode({ initialCategory, onCancel, onSave }) {
     const errs = {}
     if (!name.trim() || name.trim().length < 2) errs.name = 'Name must be at least 2 characters'
     if (!/^[a-zA-Z\s'\-]+$/.test(name.trim())) errs.name = 'Name should only contain letters'
-    if (mobile && !mobileValid) errs.mobile = 'Use format: 03XXXXXXXXX'
+    if (contactType === 'mobile' && mobile) {
+      const mobileStripped = mobile.replace(/-/g, '')
+      if (!/^03\d{9}$/.test(mobileStripped)) errs.mobile = 'Use format: 03XXXXXXXXX (11 digits)'
+    }
+    if (contactType === 'email' && email) {
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) errs.email = 'Enter a valid email address'
+    }
     if (targetScore < 50 || targetScore > 90) errs.score = 'Score must be between 50 and 90'
     return errs
   }
@@ -216,13 +222,16 @@ function EditMode({ initialCategory, onCancel, onSave }) {
           ) : (
             <input
               value={email}
-              onChange={e => { setEmail(e.target.value); mark() }}
+              onChange={e => { setEmail(e.target.value); mark(); setErrors(prev => ({ ...prev, email: '' })) }}
               placeholder="you@example.com"
               type="email"
-              className="w-full border-2 border-gray-200 focus:border-teal-600 rounded-xl px-4 py-3 text-sm font-semibold text-gray-900 outline-none transition-colors"
+              className={`w-full border-2 rounded-xl px-4 py-3 text-sm font-semibold text-gray-900 outline-none transition-colors ${
+                errors.email ? 'border-red-400 bg-red-50' : 'border-gray-200 focus:border-teal-600'
+              }`}
             />
           )}
           {errors.mobile && <p className="text-xs text-red-500 mt-1 font-bold">{errors.mobile}</p>}
+          {errors.email  && <p className="text-xs text-red-500 mt-1 font-bold">{errors.email}</p>}
         </div>
 
         {/* Test Date — NTS preset dates */}
@@ -266,7 +275,7 @@ function EditMode({ initialCategory, onCancel, onSave }) {
         {/* Target Score */}
         <div>
           <label className="text-xs font-black text-gray-500 uppercase tracking-wider block mb-1.5">
-            Target Score: I want to score {targetScore}/90
+            Target Score: <span className="text-teal-600 normal-case">{targetScore}/90</span>
           </label>
           <input
             value={targetScore}
@@ -318,7 +327,7 @@ function EditMode({ initialCategory, onCancel, onSave }) {
         <div className="fixed inset-0 bg-black bg-opacity-40 flex items-end justify-center z-50 max-w-sm mx-auto">
           <div className="w-full bg-white rounded-t-3xl px-6 pt-6 pb-10">
             <h3 className="text-lg font-black text-gray-900 mb-1">Discard changes?</h3>
-            <p className="text-sm text-gray-500 mb-6">Your unsaved changes will be lost.</p>
+            <p className="text-sm text-gray-700 mb-6">Your unsaved changes will be lost.</p>
             <div className="space-y-3">
               <button
                 onClick={() => setShowCancel(false)}

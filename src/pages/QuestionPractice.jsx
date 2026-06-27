@@ -1,9 +1,11 @@
-import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import Header from '../components/Header'
 import BottomNav from '../components/BottomNav'
 import ModeIndicator from '../components/ModeIndicator'
-import Canvas from '../components/Canvas'
+import MethodTabs from '../components/MethodTabs'
+import RoughWork from '../components/RoughWork'
+import { Method1, Method2, VisualMethod } from './SolutionWrong'
 
 const QUESTION = {
   number: 1,
@@ -21,12 +23,20 @@ const QUESTION = {
 }
 
 export default function QuestionPractice() {
-  const navigate   = useNavigate()
-  const [selected, setSelected] = useState(null)
-  const [flagged,  setFlagged]  = useState(false)
-  const [padOpen,  setPadOpen]  = useState(false)
+  const navigate        = useNavigate()
+  const [selected,      setSelected]      = useState(null)
+  const [flagged,       setFlagged]       = useState(false)
+  const [showSolution,  setShowSolution]  = useState(false)
+  const [showLeave,     setShowLeave]     = useState(false)
 
   const isFirst = QUESTION.number === 1
+
+  // Warn on browser back / tab close during active session
+  useEffect(() => {
+    const handler = (e) => { e.preventDefault(); e.returnValue = '' }
+    window.addEventListener('beforeunload', handler)
+    return () => window.removeEventListener('beforeunload', handler)
+  }, [])
 
   function handleSubmit() {
     if (!selected) return
@@ -35,6 +45,11 @@ export default function QuestionPractice() {
     } else {
       navigate('/solution/wrong')
     }
+  }
+
+  function handleBack(e) {
+    e.preventDefault()
+    setShowLeave(true)
   }
 
   return (
@@ -54,15 +69,15 @@ export default function QuestionPractice() {
         </div>
 
         {/* Question card */}
-        <div className="bg-gray-50 border border-gray-100 rounded-2xl p-4 mb-4 relative">
+        <div className="bg-gray-50 border border-gray-200 rounded-2xl p-4 mb-4 relative">
           <button
             onClick={() => setFlagged(f => !f)}
-            title="Flag this question"
+            title={flagged ? 'Flagged' : 'Flag for later'}
             className={`absolute top-3 right-3 text-xl font-bold leading-none transition-all hover:scale-110 ${
-              flagged ? 'text-red-500' : 'text-teal-300 hover:text-teal-500'
+              flagged ? 'text-orange-500' : 'text-gray-400 hover:text-gray-600'
             }`}
           >
-            ⚑
+            {flagged ? '⚑' : '⚐'}
           </button>
 
           <p className="text-base font-semibold text-gray-900 leading-relaxed pr-8">
@@ -98,40 +113,62 @@ export default function QuestionPractice() {
           ))}
         </div>
 
-        {/* Scratch pad trigger */}
-        <button
-          onClick={() => setPadOpen(true)}
-          className="w-full py-3 rounded-xl border-2 border-gray-200 text-sm font-bold text-gray-700 hover:border-gray-300 flex items-center justify-center gap-2 transition-colors"
-        >
-          ✏️ Open scratch pad
-        </button>
+        {/* Inline solution panel — neutral learning view, no wrong/correct framing */}
+        {showSolution && (
+          <div className="mb-4 border-2 border-teal-200 rounded-2xl overflow-hidden">
+            <div className="bg-teal-600 px-4 py-3">
+              <p className="text-sm font-black text-white">Solution — three methods</p>
+              <p className="text-xs text-teal-100 mt-0.5">All steps shown. Pick the method that makes most sense to you.</p>
+            </div>
+            <div className="p-4">
+              <MethodTabs defaultMethod="count">
+                {(active) => (
+                  <div>
+                    {active === 'count'   && <Method1 />}
+                    {active === 'formula' && <Method2 />}
+                    {active === 'visual'  && <VisualMethod />}
+                  </div>
+                )}
+              </MethodTabs>
+            </div>
+          </div>
+        )}
+
+        {/* Rough work area */}
+        <RoughWork isMock={false} />
       </main>
 
       {/* Bottom action bar */}
       <div className="fixed bottom-20 left-1/2 -translate-x-1/2 w-full max-w-sm bg-white border-t border-gray-100 px-4 py-3 z-20">
-        {!selected && (
+        {!selected && !showSolution && (
           <p className="text-xs text-center text-gray-600 mb-1.5">Select an answer above to submit</p>
         )}
         <div className="flex items-center gap-2">
           {/* Back arrow — hidden on Q1 */}
           {!isFirst ? (
-            <Link to="/practice">
-              <button className="w-10 h-12 flex items-center justify-center rounded-xl border-2 border-gray-200 text-gray-500 hover:border-gray-300 flex-shrink-0">
-                ‹
-              </button>
-            </Link>
+            <button
+              onClick={handleBack}
+              className="w-10 h-12 flex items-center justify-center rounded-xl border-2 border-gray-200 text-gray-500 hover:border-gray-300 flex-shrink-0"
+            >
+              ‹
+            </button>
           ) : (
             <div className="w-10 flex-shrink-0" />
           )}
 
-          {/* Show Solution */}
-          <Link to="/solution/wrong" className="flex-1">
-            <button className="w-full h-12 rounded-xl border-2 border-gray-200 text-sm font-bold text-gray-600 hover:border-gray-300 transition-colors">
-              Show Solution
-            </button>
-          </Link>
+          {/* Show / Hide Solution */}
+          <button
+            onClick={() => setShowSolution(s => !s)}
+            className={`flex-1 h-12 rounded-xl border-2 text-sm font-bold transition-colors ${
+              showSolution
+                ? 'border-teal-600 bg-teal-50 text-teal-700'
+                : 'border-gray-200 text-gray-600 hover:border-gray-300'
+            }`}
+          >
+            {showSolution ? 'Hide Solution' : 'Show Solution'}
+          </button>
 
-          {/* Submit Answer — routes based on correct/wrong */}
+          {/* Submit Answer */}
           <button
             onClick={handleSubmit}
             disabled={!selected}
@@ -145,31 +182,40 @@ export default function QuestionPractice() {
           </button>
 
           {/* Forward arrow */}
-          <Link to="/practice/question">
-            <button className="w-10 h-12 flex items-center justify-center rounded-xl border-2 border-gray-200 text-gray-500 hover:border-gray-300 flex-shrink-0">
-              ›
-            </button>
-          </Link>
+          <button
+            onClick={() => navigate('/practice/question')}
+            className="w-10 h-12 flex items-center justify-center rounded-xl border-2 border-gray-200 text-gray-500 hover:border-gray-300 flex-shrink-0"
+          >
+            ›
+          </button>
         </div>
       </div>
 
       <BottomNav />
 
-      {/* Scratch pad overlay — always mounted to preserve drawing */}
-      <div className={`fixed inset-0 bg-white z-50 flex flex-col max-w-sm mx-auto${padOpen ? '' : ' hidden'}`}>
-        <div className="flex items-center justify-between px-4 py-4 border-b border-gray-100 flex-shrink-0">
-          <span className="text-sm font-bold text-gray-700">Q{QUESTION.number}</span>
-          <button
-            onClick={() => setPadOpen(false)}
-            className="text-sm font-bold text-teal-600 hover:text-teal-700 px-2 py-1"
-          >
-            Done ✓
-          </button>
+      {/* Leave Practice confirmation */}
+      {showLeave && (
+        <div className="fixed inset-0 bg-black bg-opacity-40 flex items-end justify-center z-50 max-w-sm mx-auto">
+          <div className="w-full bg-white rounded-t-3xl px-6 pt-6 pb-10">
+            <h3 className="text-lg font-black text-gray-900 mb-1">Leave practice?</h3>
+            <p className="text-sm text-gray-700 mb-6">Your session progress will be lost.</p>
+            <div className="flex flex-col gap-3">
+              <button
+                onClick={() => setShowLeave(false)}
+                className="w-full py-4 rounded-xl bg-teal-600 text-white text-sm font-bold hover:bg-teal-700"
+              >
+                Stay
+              </button>
+              <button
+                onClick={() => navigate('/practice')}
+                className="w-full py-4 rounded-xl border-2 border-gray-200 text-sm font-bold text-gray-700 hover:bg-gray-50"
+              >
+                Leave
+              </button>
+            </div>
+          </div>
         </div>
-        <div className="flex-1 overflow-y-auto px-4 pb-4 pt-2">
-          <Canvas />
-        </div>
-      </div>
+      )}
     </div>
   )
 }

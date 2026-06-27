@@ -18,7 +18,7 @@ function LineChart({ points, labels = null, colour = '#0D9488' }) {
   const fill = `${path} L${xs[xs.length - 1].toFixed(1)},${(padT + innerH).toFixed(1)} L${xs[0].toFixed(1)},${(padT + innerH).toFixed(1)} Z`
 
   const passY = toY(50)
-  const yTicks = [100, 75, 50]
+  const yTicks = [100, 75]
 
   return (
     <svg viewBox={`0 0 ${w} ${h}`} className="w-full" style={{ height: 130 }}>
@@ -27,14 +27,14 @@ function LineChart({ points, labels = null, colour = '#0D9488' }) {
         return (
           <g key={pct}>
             <line x1={padL} y1={y} x2={w - padR} y2={y} stroke="#e5e7eb" strokeWidth="0.5" />
-            <text x={padL - 4} y={y + 4} fontSize="9" fill="#4b5563" textAnchor="end" fontWeight="600">{pct}</text>
+            <text x={padL - 4} y={y + 4} fontSize="9" fill="#374151" textAnchor="end" fontWeight="600">{pct}</text>
           </g>
         )
       })}
 
       <line x1={padL} y1={passY} x2={w - padR} y2={passY}
         stroke="#DC2626" strokeWidth="1" strokeDasharray="3,2" />
-      <text x={w - padR + 2} y={passY + 4} fontSize="8" fill="#DC2626" fontWeight="700">Pass</text>
+      <text x={padL - 4} y={passY + 4} fontSize="9" fill="#DC2626" textAnchor="end" fontWeight="700">Pass</text>
 
       <path d={fill} fill={colour} fillOpacity="0.08" />
       <path d={path} stroke={colour} strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
@@ -72,36 +72,36 @@ const COMMON_TOPICS = [
     id: 'english',
     name: 'English', overall: 68,
     subs: [
-      { name: 'Synonyms',            pct: 82 },
-      { name: 'Antonyms',            pct: 74 },
-      { name: 'Grammar',             pct: 61 },
-      { name: 'Sentence Completion', pct: 55 },
-      { name: 'Comprehension',       pct: 48 },
-      { name: 'Analogies',           pct: 70 },
+      { name: 'Synonyms',            pct: 82, attempted: 5, total: 6 },
+      { name: 'Antonyms',            pct: 74, attempted: 5, total: 6 },
+      { name: 'Grammar',             pct: 61, attempted: 4, total: 6 },
+      { name: 'Sentence Completion', pct: 55, attempted: 3, total: 5 },
+      { name: 'Comprehension',       pct: 48, attempted: 2, total: 5 },
+      { name: 'Analogies',           pct: 70, attempted: 4, total: 6 },
     ],
   },
   {
     id: 'math',
     name: 'Quantitative Reasoning', overall: 54,
     subs: [
-      { name: 'Arithmetic',  pct: 80 },
-      { name: 'Percentages', pct: 66 },
-      { name: 'Ratios',      pct: 58 },
-      { name: 'Algebra',     pct: 38 },
-      { name: 'Averages',    pct: 62 },
-      { name: 'Geometry',    pct: 44 },
+      { name: 'Arithmetic',  pct: 80, attempted: 4, total: 5 },
+      { name: 'Percentages', pct: 66, attempted: 4, total: 6 },
+      { name: 'Ratios',      pct: 58, attempted: 3, total: 5 },
+      { name: 'Algebra',     pct: 38, attempted: 2, total: 5 },
+      { name: 'Averages',    pct: 62, attempted: 4, total: 6 },
+      { name: 'Geometry',    pct: 44, attempted: 2, total: 5 },
     ],
   },
   {
     id: 'reasoning',
     name: 'Analytical Reasoning', overall: 72,
     subs: [
-      { name: 'Selection',       pct: 85 },
-      { name: 'Sequencing',      pct: 78 },
-      { name: 'Blood Relations', pct: 70 },
-      { name: 'Directions',      pct: 65 },
-      { name: 'Syllogisms',      pct: 55 },
-      { name: 'Combinations',    pct: 42 },
+      { name: 'Selection',       pct: 85, attempted: 5, total: 6 },
+      { name: 'Sequencing',      pct: 78, attempted: 5, total: 6 },
+      { name: 'Blood Relations', pct: 70, attempted: 4, total: 6 },
+      { name: 'Directions',      pct: 65, attempted: 3, total: 5 },
+      { name: 'Syllogisms',      pct: 55, attempted: 3, total: 5 },
+      { name: 'Combinations',    pct: 42, attempted: 2, total: 5 },
     ],
   },
 ]
@@ -164,13 +164,18 @@ function Accordion({ topic }) {
                     )}
                   </div>
                   <div className="flex items-center gap-2 flex-shrink-0 ml-2">
-                    {isWeakest && (
-                      <Link to={`/practice?topic=${topic.id}`}>
-                        <button className="text-[10px] font-black text-teal-700 bg-teal-50 border border-teal-200 rounded-full px-2 py-0.5 hover:bg-teal-100 transition-colors">
-                          Start here →
-                        </button>
-                      </Link>
-                    )}
+                    <span className="text-[10px] font-bold text-gray-500">
+                      {s.attempted}/{s.total} tried
+                    </span>
+                    <Link to={`/practice?topic=${topic.id}`}>
+                      <button className={`text-[10px] font-black rounded-full px-2 py-0.5 transition-colors ${
+                        isWeakest
+                          ? 'text-teal-700 bg-teal-50 border border-teal-200 hover:bg-teal-100'
+                          : 'text-gray-600 bg-gray-50 border border-gray-200 hover:bg-gray-100'
+                      }`}>
+                        {isWeakest ? 'Start here →' : 'Practice →'}
+                      </button>
+                    </Link>
                     <span className="text-xs font-black text-gray-600">{s.pct}%</span>
                   </div>
                 </div>

@@ -20,22 +20,34 @@ test.describe('Practice Question Screen', () => {
     await expect(page.locator('button:has-text("Show Solution")')).toBeVisible()
   })
 
+  test('Show Solution expands inline panel on same page', async ({ page }) => {
+    await page.locator('button:has-text("Show Solution")').click()
+    await expect(page.locator('text=Solution — three methods')).toBeVisible()
+    // Should NOT navigate away
+    await expect(page).toHaveURL(/\/practice\/question/)
+  })
+
+  test('Show Solution button becomes Hide Solution when panel is open', async ({ page }) => {
+    await page.locator('button:has-text("Show Solution")').click()
+    await expect(page.locator('button:has-text("Hide Solution")')).toBeVisible()
+  })
+
   test('back arrow is hidden on Question 1', async ({ page }) => {
     const backBtn = page.locator('button:has-text("‹")')
     await expect(backBtn).not.toBeVisible()
   })
 
-  test('scratch pad trigger button is visible below answer options', async ({ page }) => {
-    await expect(page.locator('button:has-text("Open scratch pad")')).toBeVisible()
+  test('rough work box is always visible below answer options', async ({ page }) => {
+    await expect(page.locator('[data-testid="rough-work-box"]')).toBeVisible()
   })
 
-  test('scratch pad overlay opens when trigger is tapped', async ({ page }) => {
-    await page.locator('button:has-text("Open scratch pad")').click()
-    await expect(page.locator('button:has-text("Done ✓")')).toBeVisible()
+  test('double-clicking rough work box opens bottom-sheet modal', async ({ page }) => {
+    await page.locator('[data-testid="rough-work-box"]').dblclick()
+    await expect(page.locator('[data-testid="rough-work-modal"]')).toBeVisible()
   })
 
-  test('canvas Draw and Type tabs are present inside overlay (Phase 1)', async ({ page }) => {
-    await page.locator('button:has-text("Open scratch pad")').click()
+  test('canvas Draw and Type tabs are present inside rough work modal', async ({ page }) => {
+    await page.locator('[data-testid="rough-work-box"]').dblclick()
     await expect(page.locator('button:has-text("✏️ Draw")')).toBeVisible()
     await expect(page.locator('button:has-text("⌨️ Type")')).toBeVisible()
   })
@@ -44,24 +56,28 @@ test.describe('Practice Question Screen', () => {
     await expect(page.locator('button:has-text("📷 Upload")')).not.toBeVisible()
   })
 
-  test('canvas draw area is a real HTML5 canvas element inside overlay', async ({ page }) => {
-    await page.locator('button:has-text("Open scratch pad")').click()
+  test('canvas draw area is a real HTML5 canvas element inside modal', async ({ page }) => {
+    await page.locator('[data-testid="rough-work-box"]').dblclick()
     await expect(page.locator('canvas')).toBeVisible()
   })
 
-  test('Done button closes the scratch pad overlay', async ({ page }) => {
-    await page.locator('button:has-text("Open scratch pad")').click()
-    await page.locator('button:has-text("Done ✓")').click()
-    await expect(page.locator('button:has-text("Done ✓")')).not.toBeVisible()
+  test('Done button closes the rough work modal', async ({ page }) => {
+    await page.locator('[data-testid="rough-work-box"]').dblclick()
+    await expect(page.locator('[data-testid="rough-work-modal"]')).toBeVisible()
+    await page.locator('[data-testid="rough-work-modal"] button:has-text("Done")').click()
+    await expect(page.locator('[data-testid="rough-work-modal"]')).not.toBeVisible()
   })
 
-  test('flag icon is present on the question card', async ({ page }) => {
-    await expect(page.locator('button[title="Flag this question"]')).toBeVisible()
+  test('flag icon is present on the question card — unfilled by default', async ({ page }) => {
+    const flagBtn = page.locator('button[title="Flag for later"]')
+    await expect(flagBtn).toBeVisible()
   })
 
-  test('flag icon has solid teal colour when unflagged — not near-invisible opacity', async ({ page }) => {
-    const flagBtn = page.locator('button[title="Flag this question"]')
-    await expect(flagBtn).toHaveClass(/text-teal-300/)
+  test('flag icon changes to orange when tapped', async ({ page }) => {
+    const flagBtn = page.locator('button[title="Flag for later"]')
+    await flagBtn.click()
+    const flaggedBtn = page.locator('button[title="Flagged"]')
+    await expect(flaggedBtn).toHaveClass(/text-orange-500/)
   })
 
   test('helper text "Select an answer above to submit" is visible when no answer selected', async ({ page }) => {

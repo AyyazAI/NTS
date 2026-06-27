@@ -45,42 +45,41 @@ test.describe('Mock Test Question Screen', () => {
     await expect(actionBar.locator('button:has-text("Submit Test")')).not.toBeVisible()
   })
 
-  test('scratch pad trigger button is visible below answer options', async ({ page }) => {
-    await expect(page.locator('button:has-text("Open scratch pad")')).toBeVisible()
+  test('rough work box is visible below answer options', async ({ page }) => {
+    await expect(page.locator('[data-testid="rough-work-box"]')).toBeVisible()
   })
 
-  test('scratch pad overlay opens when trigger is tapped', async ({ page }) => {
-    await page.locator('button:has-text("Open scratch pad")').click()
-    await expect(page.locator('button:has-text("Done ✓")')).toBeVisible()
+  test('double-clicking rough work box opens bottom-sheet modal', async ({ page }) => {
+    await page.locator('[data-testid="rough-work-box"]').dblclick()
+    await expect(page.locator('[data-testid="rough-work-modal"]')).toBeVisible()
   })
 
-  test('Done button closes the scratch pad overlay', async ({ page }) => {
-    await page.locator('button:has-text("Open scratch pad")').click()
-    await page.locator('button:has-text("Done ✓")').click()
-    await expect(page.locator('button:has-text("Done ✓")')).not.toBeVisible()
+  test('Done button closes the rough work modal', async ({ page }) => {
+    await page.locator('[data-testid="rough-work-box"]').dblclick()
+    await expect(page.locator('[data-testid="rough-work-modal"]')).toBeVisible()
+    await page.locator('[data-testid="rough-work-modal"] button:has-text("Done")').click()
+    await expect(page.locator('[data-testid="rough-work-modal"]')).not.toBeVisible()
   })
 
   test('Upload tab is NOT present in Phase 1', async ({ page }) => {
     await expect(page.locator('button:has-text("📷 Upload")')).not.toBeVisible()
   })
 
-  test('flag icon is present on question card', async ({ page }) => {
-    const flagBtn = page.locator('button[title="Flag this question"]')
+  test('flag icon is present on question card — unfilled by default', async ({ page }) => {
+    const flagBtn = page.locator('button[title="Flag for later"]')
     await expect(flagBtn).toBeVisible()
   })
 
-  test('flag icon changes to amber when tapped', async ({ page }) => {
-    const flagBtn = page.locator('button[title="Flag this question"]')
+  test('flag icon changes to orange when tapped', async ({ page }) => {
+    const flagBtn = page.locator('button[title="Flag for later"]')
     await flagBtn.click()
-    await expect(flagBtn).toHaveClass(/text-amber-500/)
+    const flaggedBtn = page.locator('button[title="Flagged"]')
+    await expect(flaggedBtn).toHaveClass(/text-orange-500/)
   })
 
-  test('canvas footer shows timer warning in mock mode', async ({ page }) => {
-    await page.locator('button:has-text("Open scratch pad")').click()
+  test('timer warning visible inside rough work modal in mock mode', async ({ page }) => {
+    await page.locator('[data-testid="rough-work-box"]').dblclick()
+    await expect(page.locator('[data-testid="rough-work-modal"]')).toBeVisible()
     await expect(page.locator('text=Timer keeps running')).toBeVisible()
-  })
-
-  test('canvas footer does not show navigation saved message in mock mode', async ({ page }) => {
-    await expect(page.locator('text=Your work is saved if you navigate away')).not.toBeVisible()
   })
 })

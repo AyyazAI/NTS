@@ -463,3 +463,29 @@
 | R4-17 | 🟢 Low | Multiple | Stat card secondary labels lighter than text-gray-700 — GOV-RULE-012 | ✅ Fixed — all labels upgraded to text-gray-700 |
 | R4-18 | 🟢 Low | Progress Mock tab | Content below readiness card hidden — scroll padding missing | ✅ Fixed — pb-6 on amber focus card |
 | R4-19 | 🟡 Medium | CLAUDE.md | PD-001 missing Phase 2 gauge spec + UX-008 canvas overlay not documented | ✅ Fixed — CLAUDE.md updated |
+
+---
+
+## Round 5 — Testing Session (June 27, 2026)
+
+### Source: Owner screenshot review + AI spec compliance
+
+| ID | Severity | Screen | Finding | Resolution |
+|---|---|---|---|---|
+| R5-01 | 🟠 High | Practice/Mock | Full-screen canvas overlay covers question — student can't see what they're solving | ✅ Fixed — replaced with RoughWork bottom-sheet (62vh max, question stays visible) |
+| R5-02 | 🟠 High | Practice Question | Show Solution navigates away — breaks learning flow, loses question context | ✅ Fixed — inline solution panel expands below answer options on same screen |
+| R5-03 | 🟡 Medium | All screens | Mode pill (Practice/Mock) white background — hard to distinguish at a glance | ✅ Fixed — solid teal (practice) / amber (mock) background with white text |
+| R5-04 | 🟡 Medium | Practice/Mock Question | Flag icon ⚑ always filled — no visual difference between flagged and unflagged | ✅ Fixed — ⚐ (unfilled) default, ⚑ orange when flagged |
+| R5-05 | 🟢 Low | Progress | Sub-topic breakdown missing attempt counts | ✅ Fixed — "X/Y tried" count shown beside each sub-topic |
+| R5-06 | 🟡 Medium | Progress | Only weakest sub-topic has "Start here →" — all sub-topics should be navigable | ✅ Fixed — all sub-topics have "Practice →" (weakest keeps "Start here →" styling) |
+| R5-07 | 🟢 Low | Progress Chart | Duplicate "50" and "Pass" labels at 50% mark — confusing | ✅ Fixed — y-axis shows 100/75 only; "Pass" label on dashed line replaces "50" tick |
+| R5-08 | 🟡 Medium | Profile | Test date reads hardcoded '2026-07-12' — should persist from onboarding | ✅ Fixed — reads from localStorage student_test_date |
+| R5-08 | 🟡 Medium | Profile | Email format not validated — invalid emails accepted | ✅ Fixed — email regex validation added |
+| R5-08 | 🟢 Low | Profile | Target Score label wordy — "I want to score X/90" | ✅ Fixed — simplified to "Target Score: X/90" |
+| R5-08 | 🟢 Low | Profile | Contact display text-gray-500 on white — GOV-RULE-012 | ✅ Fixed — text-gray-700 |
+| R5-08 | 🟢 Low | Profile | Cancel dialog body text text-gray-500 — GOV-RULE-012 | ✅ Fixed — text-gray-700 |
+| R5-09 | 🟡 Medium | Onboarding Step 2 | "Welcome aboard, [LongName]!" heading wraps awkwardly on mobile | ✅ Fixed — adaptive font size (text-xl when name > 16 chars) |
+| R5-10 | 🟠 High | CLAUDE.md | GOV-RULE-013 (scope control) not documented | ✅ Fixed — GOV-RULE-013 added |
+| R5-10 | 🟡 Medium | CLAUDE.md | UX-008 documented old full-screen overlay — updated for bottom-sheet pattern | ✅ Fixed — UX-008 updated |
+| R5-11 | 🟡 Medium | BottomNav | Nav accessible during active mock test — student can exit without submitting | ✅ Fixed — nav locked during mock test routes; toast "Complete or submit your test first" |
+| R5-12 | 🟡 Medium | Practice Question | Back arrow navigates away without warning — session progress lost silently | ✅ Fixed — "Leave practice?" confirmation dialog; beforeunload handler added |

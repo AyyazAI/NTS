@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import Header from '../components/Header'
 import BottomNav from '../components/BottomNav'
 import ModeIndicator from '../components/ModeIndicator'
-import Canvas from '../components/Canvas'
+import RoughWork from '../components/RoughWork'
 import { getNatCategory, getCategoryLabel, getCategoryShort } from '../utils/natCategory'
 
 // Section keys — Subject key is fixed; display label is dynamic
@@ -36,10 +36,10 @@ function Timer({ time = '67:15', state = 'normal' }) {
 
 function NavigatorGrid({ sectionData, onNavigate }) {
   const { current, answered, flagged, total } = sectionData
-  const cols = total > 20 ? 10 : 10
+  const cols = 10
   return (
     <div>
-      <div className={`grid gap-1 mb-2`} style={{ gridTemplateColumns: `repeat(${cols}, 1fr)` }}>
+      <div className="grid gap-1 mb-2" style={{ gridTemplateColumns: `repeat(${cols}, 1fr)` }}>
         {Array.from({ length: total }, (_, i) => {
           const isAnswered = answered.includes(i)
           const isFlagged  = flagged.includes(i)
@@ -74,19 +74,18 @@ function NavigatorGrid({ sectionData, onNavigate }) {
 }
 
 export default function MockTest() {
-  const [natCategory]    = useState(() => getNatCategory() || 'NAT-IE')
-  const [activeSection,  setActiveSection]  = useState('Verbal')
-  const [sectionState,   setSectionState]   = useState(INITIAL_STATE)
-  const [selected,       setSelected]       = useState(null)
-  const [showConfirm,    setShowConfirm]    = useState(false)
-  const [padOpen,        setPadOpen]        = useState(false)
+  const [natCategory]   = useState(() => getNatCategory() || 'NAT-IE')
+  const [activeSection, setActiveSection] = useState('Verbal')
+  const [sectionState,  setSectionState]  = useState(INITIAL_STATE)
+  const [selected,      setSelected]      = useState(null)
+  const [showConfirm,   setShowConfirm]   = useState(false)
 
-  const currentIdx   = sectionState[activeSection].current
-  const isFlagged    = sectionState[activeSection].flagged.includes(currentIdx)
+  const currentIdx = sectionState[activeSection].current
+  const isFlagged  = sectionState[activeSection].flagged.includes(currentIdx)
 
   function handleFlag() {
     setSectionState(s => {
-      const sec = s[activeSection]
+      const sec       = s[activeSection]
       const wasFlagged = sec.flagged.includes(currentIdx)
       return {
         ...s,
@@ -100,9 +99,7 @@ export default function MockTest() {
     })
   }
 
-  const current = sectionState[activeSection]
-
-  // Display label for Subject tab and section header
+  const current      = sectionState[activeSection]
   const subjectLabel = getCategoryLabel(natCategory)
   const subjectShort = getCategoryShort(natCategory)
 
@@ -139,7 +136,7 @@ export default function MockTest() {
           </div>
         </div>
 
-        {/* Section tabs — 4 sections, scrollable if needed */}
+        {/* Section tabs */}
         <div className="flex gap-1.5 mb-3 overflow-x-auto pb-1">
           {SECTION_KEYS.map(s => (
             <button
@@ -175,12 +172,12 @@ export default function MockTest() {
         <div className="bg-gray-50 border border-gray-100 rounded-2xl p-4 mb-4 relative">
           <button
             onClick={handleFlag}
-            title="Flag this question"
+            title={isFlagged ? 'Flagged' : 'Flag for later'}
             className={`absolute top-3 right-3 text-xl font-bold leading-none transition-all hover:scale-110 ${
-              isFlagged ? 'text-amber-500' : 'text-teal-300 hover:text-teal-500'
+              isFlagged ? 'text-orange-500' : 'text-gray-400 hover:text-gray-600'
             }`}
           >
-            ⚑
+            {isFlagged ? '⚑' : '⚐'}
           </button>
           <p className="text-base font-semibold text-gray-900 leading-relaxed pr-8">
             {QUESTION.text}
@@ -209,13 +206,10 @@ export default function MockTest() {
           ))}
         </div>
 
-        {/* Scratch pad trigger */}
-        <button
-          onClick={() => setPadOpen(true)}
-          className="w-full py-3 rounded-xl border-2 border-gray-200 text-sm font-bold text-gray-700 hover:border-gray-300 flex items-center justify-center gap-2 transition-colors mb-4"
-        >
-          ✏️ Open scratch pad
-        </button>
+        {/* Rough work area */}
+        <div className="mb-4">
+          <RoughWork isMock={true} />
+        </div>
 
         {/* Submit Test — in scrollable area, not persistent bar */}
         <button
@@ -278,22 +272,6 @@ export default function MockTest() {
           </div>
         </div>
       )}
-
-      {/* Scratch pad overlay — always mounted to preserve drawing */}
-      <div className={`fixed inset-0 bg-white z-50 flex flex-col max-w-sm mx-auto${padOpen ? '' : ' hidden'}`}>
-        <div className="flex items-center justify-between px-4 py-4 border-b border-gray-100 flex-shrink-0">
-          <span className="text-sm font-bold text-gray-700">Q{current.current + 1}</span>
-          <button
-            onClick={() => setPadOpen(false)}
-            className="text-sm font-bold text-teal-600 hover:text-teal-700 px-2 py-1"
-          >
-            Done ✓
-          </button>
-        </div>
-        <div className="flex-1 overflow-y-auto px-4 pb-4 pt-2">
-          <Canvas footerText="⚠️ Timer keeps running if you leave this page" />
-        </div>
-      </div>
     </div>
   )
 }

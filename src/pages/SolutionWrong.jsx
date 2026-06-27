@@ -6,7 +6,7 @@ import ModeIndicator from '../components/ModeIndicator'
 import MethodTabs from '../components/MethodTabs'
 
 // Individual solution step
-function Step({ number, title, explanation, working, tip }) {
+export function Step({ number, title, explanation, working, tip }) {
   const [tipOpen, setTipOpen] = useState(false)
   return (
     <div className="flex gap-3 mb-6">
@@ -42,7 +42,7 @@ function Step({ number, title, explanation, working, tip }) {
 }
 
 // Method 3 — Complete grid of all 21 rejected pairs
-function VisualMethod() {
+export function VisualMethod() {
   const rows = [
     { label: 'A paired with', pairs: ['A+B', 'A+C', 'A+D', 'A+E', 'A+F', 'A+G'], count: 6 },
     { label: 'B paired with', pairs: ['B+C', 'B+D', 'B+E', 'B+F', 'B+G'],         count: 5 },
@@ -97,7 +97,7 @@ function VisualMethod() {
 }
 
 // Bridge card shown after Method 1
-function BridgeCard() {
+export function BridgeCard() {
   return (
     <div className="border-2 border-teal-600 rounded-xl p-4 mt-2 mb-2">
       <p className="text-sm font-black text-teal-700 mb-1">🎯 Challenge yourself</p>
@@ -109,7 +109,7 @@ function BridgeCard() {
   )
 }
 
-function Method1() {
+export function Method1() {
   return (
     <div>
       <Step
@@ -177,7 +177,7 @@ Total:                 21
   )
 }
 
-function Method2() {
+export function Method2() {
   return (
     <div>
       <p className="text-sm text-gray-600 italic mb-4 leading-relaxed">

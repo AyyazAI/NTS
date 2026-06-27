@@ -196,7 +196,9 @@ export default function Onboarding() {
         </div>
       ) : (
         <div className="w-full flex-1 flex flex-col">
-          <h1 className="text-2xl font-black text-gray-900 mb-1">Welcome aboard, {name.trim()}!</h1>
+          <h1 className={`font-black text-gray-900 mb-1 ${name.trim().length > 16 ? 'text-xl' : 'text-2xl'}`}>
+            Welcome aboard, {name.trim()}!
+          </h1>
           <p className="text-sm text-gray-600 mb-6">
             Let's personalise your prep so we show you the right content
           </p>

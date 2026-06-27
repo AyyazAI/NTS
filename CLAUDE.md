@@ -518,6 +518,7 @@ time_spent INTEGER DEFAULT 0
 | GOV-RULE-010 | AI must select appropriate visual type per question — not default to one format | Active |
 | GOV-RULE-011 | All UGC passes moderation before AI processing or permanent storage | Phase 2 |
 | GOV-RULE-012 | No light gray text on white/light backgrounds. Ever. No exceptions. | Active |
+| GOV-RULE-013 | Claude Code must only modify files and components explicitly listed in the prompt. Any change outside the stated scope must be flagged in the output report before committing. Undocumented changes are a governance violation. | Active |
 
 **Governance document:** src/governance/NTS-GOV-001-AI-Governance-Incident-Log.docx (v1.1)
 **Incident log (markdown):** src/governance/GOV-001-AI-Governance-Incident-Log.md
@@ -788,8 +789,8 @@ Home screen purpose: motivate and direct to action. NOT a dashboard — that's P
 Shows: greeting, daily prompt, 4 section cards, mode toggle.
 Removes: ambiguous progress bar (unclear if practice/mock/overall).
 
-### UX-008 — Canvas as Full-Screen Overlay
-Canvas is a full-screen fixed overlay (z-50), not embedded in the question screen. Triggered by "✏️ Open scratch pad" button below answer options. Top bar shows question number (left) and "Done ✓" (right). Done closes the overlay and returns to the question. Drawing persists per session — overlay stays mounted so canvas buffer is preserved. Applies to both Practice Mode and Mock Test.
+### UX-008 — Rough Work Area (Bottom-Sheet Pattern)
+Canvas is a compact always-visible "Rough work area" box below the answer options. Double-tap (desktop: dblclick, mobile: two taps &lt;300ms) opens a bottom-sheet modal that occupies 62vh max — leaving the question and answer options visible above. Header: "Cancel | Rough Work | Done". Draw tab has thick/thin/eraser/undo/clear toolbar + HTML5 canvas at 320×200. Type tab has textarea. Done captures a preview (canvas data URL or text), shown in the box. Drawing persists within the component mount. Applies to both Practice Mode and Mock Test. In mock mode, footer text reads "⚠️ Timer keeps running while this is open".
 
 ### UX-007 — Mock Test Redesign (Phase 2)
 Default mock test: subject-focused, 25 minutes, difficulty choice.
