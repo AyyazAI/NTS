@@ -88,22 +88,21 @@ export default function Home() {
 
         {/* Mode selector */}
         <div className="flex gap-2 mb-5">
-          {[
-            { id: 'practice', label: '📚 Practice Mode' },
-            { id: 'mock',     label: '⏱️ Mock Test'     },
-          ].map(m => (
-            <button
-              key={m.id}
-              onClick={() => setMode(m.id)}
-              className={`flex-1 py-3 rounded-xl text-sm font-bold border-2 transition-all ${
-                mode === m.id
-                  ? 'bg-[#006D5B] text-white border-[#006D5B]'
-                  : 'bg-gray-100 text-gray-700 border-gray-300 hover:border-gray-400'
-              }`}
-            >
-              {m.label}
+          <button
+            onClick={() => setMode('practice')}
+            className={`flex-1 py-3 rounded-xl text-sm font-bold border-2 transition-all ${
+              mode === 'practice'
+                ? 'bg-[#006D5B] text-white border-[#006D5B]'
+                : 'bg-gray-100 text-gray-700 border-gray-300 hover:border-gray-400'
+            }`}
+          >
+            📚 Practice Mode
+          </button>
+          <Link to="/mock-test" className="flex-1">
+            <button className="w-full py-3 rounded-xl text-sm font-bold border-2 transition-all bg-gray-100 text-gray-700 border-gray-300 hover:border-gray-400">
+              ⏱️ Mock Test
             </button>
-          ))}
+          </Link>
         </div>
 
         {/* Practice: topic cards */}
@@ -116,19 +115,6 @@ export default function Home() {
           </div>
         )}
 
-        {/* Mock test */}
-        {mode === 'mock' && (
-          <div className="pt-2 text-center">
-            <p className="text-sm text-gray-700 mb-4">
-              Last score: <span className="font-bold text-gray-700">67/90</span>
-            </p>
-            <Link to="/mock-test">
-              <button className="w-full bg-[#006D5B] text-white font-bold py-4 rounded-xl text-base hover:bg-[#005548] transition-colors">
-                Start Mock Test → 20 questions · 30 min
-              </button>
-            </Link>
-          </div>
-        )}
       </main>
 
       <BottomNav />

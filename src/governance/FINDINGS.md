@@ -729,3 +729,14 @@ R13-02 required modifying files beyond RoughWork.jsx (the explicitly listed file
 | R14-02 | 🟡 Medium | Progress.jsx LineChart | Data point percentage labels overlapped with pass dashed line and y-axis labels at low chart values; yMin=0 gave too much empty space below data | ✅ Fixed — yMin 0→30 (chart domain 30–100, ensures visual breathing room above pass line); data point label y offset y-7→y-12 (pushes labels further above dots); both Practice and Mock tabs affected via shared LineChart component |
 | R14-03 | 🟢 Low | Home.jsx | Suspected "Let's get to work" greeting regression on Home screen | ✅ Verified no regression — Home.jsx greeting reads `Welcome, ${studentName}! 👋` (line 70); no "Let's get to work" text present in file; "Let's get to work" correctly remains in Progress.jsx only; no code change required |
 
+---
+
+## Round 15 — Testing Session (June 28, 2026)
+
+### Source: Owner design review
+
+| ID | Severity | Screen/File | Finding | Resolution |
+|---|---|---|---|---|
+| R15-01 | 🟠 High | Home.jsx | "⏱️ Mock Test" toggle button showed inline "Last score" + "Start Mock Test" content below — behaved as a mode toggle, not a navigation action; inconsistent with BottomNav Mock tab which navigates directly to /mock-test | ✅ Fixed — mode-toggle .map() replaced with two separate elements: Practice Mode remains a state toggle (shows topic cards), Mock Test becomes `<Link to="/mock-test">` wrapping a button (direct navigation, no inline content); `{mode === 'mock' && ...}` block removed entirely |
+| R15-02 | 🟡 Medium | Progress.jsx LineChart | Chart plot area had no background — line and dots floated on white; lacked visual definition between axes | ✅ Fixed — `<rect x={padL} y={padT} width={innerW} height={innerH} fill="#f0faf4" />` added as first SVG child (renders behind all data); light green tint consistent with brand; applies to both Practice and Mock Tests tabs via shared LineChart component |
+

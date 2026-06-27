@@ -24,6 +24,8 @@ function LineChart({ points, labels = null, colour = '#006D5B' }) {
 
   return (
     <svg viewBox={`0 0 ${w} ${h}`} className="w-full" style={{ height: h }}>
+      {/* Chart plot area background */}
+      <rect x={padL} y={padT} width={innerW} height={innerH} fill="#f0faf4" />
       {/* Pass mark — rendered first so all data elements appear on top */}
       <line x1={padL} y1={passY} x2={w - padR} y2={passY}
         stroke="#DC2626" strokeWidth="1" strokeDasharray="3,2" />
