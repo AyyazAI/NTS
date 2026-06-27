@@ -1,4 +1,4 @@
-import { useState } from 'react'
+﻿import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import Header from '../components/Header'
 import BottomNav from '../components/BottomNav'
@@ -16,32 +16,12 @@ function getStudentName() {
   try { return localStorage.getItem('student_name') || '' } catch { return '' }
 }
 
-function getTestDate() {
-  try { return localStorage.getItem('student_test_date') || '' } catch { return '' }
-}
-
-function daysUntil(dateStr) {
-  if (!dateStr) return null
-  const target = new Date(dateStr)
-  const today  = new Date()
-  today.setHours(0, 0, 0, 0)
-  const diff = Math.ceil((target - today) / (1000 * 60 * 60 * 24))
-  return diff > 0 ? diff : null
-}
-
-function dynamicGoal(daysLeft) {
-  if (!daysLeft) return 'Practice 10 questions today'
-  const totalQ = 90
-  const qPerDay = Math.ceil(totalQ / daysLeft)
-  return `Practice ${qPerDay} questions today — ${daysLeft} days to your test`
-}
-
 function TopicCard({ topic, total }) {
   const attempted = Math.min(topic.attempted, total)
   const showAccuracy = attempted >= 10
 
   function barColor(pct) {
-    if (!showAccuracy) return 'bg-teal-500'
+    if (!showAccuracy) return 'bg-[#006D5B]'
     if (pct >= 70) return 'bg-green-500'
     if (pct >= 50) return 'bg-amber-500'
     return 'bg-red-500'
@@ -51,7 +31,7 @@ function TopicCard({ topic, total }) {
 
   return (
     <Link to={`/practice?topic=${topic.id}`}>
-      <div className="bg-gray-50 border border-gray-300 rounded-2xl p-4 flex items-center gap-4 hover:border-teal-400 hover:bg-teal-50 transition-all cursor-pointer">
+      <div className="bg-blue-100 border border-blue-300 rounded-2xl p-4 flex items-center gap-4 hover:border-blue-400 hover:bg-blue-200 transition-all cursor-pointer">
         <span className="text-3xl">{topic.icon}</span>
         <div className="flex-1 min-w-0">
           <div className="flex items-center justify-between mb-1.5">
@@ -76,7 +56,7 @@ function TopicCard({ topic, total }) {
             </p>
           )}
         </div>
-        <span className="text-gray-500 text-xl">›</span>
+        <span className="text-gray-700 text-xl">›</span>
       </div>
     </Link>
   )
@@ -87,9 +67,6 @@ export default function Home() {
   const [natCategory]             = useState(() => getNatCategory() || 'NAT-IE')
   const [studentName]             = useState(() => getStudentName())
 
-  const testDate = getTestDate()
-  const daysLeft = daysUntil(testDate)
-  const goal     = dynamicGoal(daysLeft)
   const greeting = studentName ? `Welcome, ${studentName}! 👋` : 'Welcome! 👋'
 
   const subjectTopic = {
@@ -107,10 +84,7 @@ export default function Home() {
       <Header />
 
       <main className="flex-1 px-4 pt-4 pb-28">
-        <h1 className="text-2xl font-black text-gray-900 mb-1">{greeting}</h1>
-        <div className="bg-teal-50 border border-teal-300 rounded-xl px-4 py-3 mb-5">
-          <p className="text-sm font-bold text-teal-800">{goal}</p>
-        </div>
+        <h1 className="text-2xl font-black text-gray-900 mb-5">{greeting}</h1>
 
         {/* Mode selector */}
         <div className="flex gap-2 mb-5">
@@ -123,7 +97,7 @@ export default function Home() {
               onClick={() => setMode(m.id)}
               className={`flex-1 py-3 rounded-xl text-sm font-bold border-2 transition-all ${
                 mode === m.id
-                  ? 'bg-teal-600 text-white border-teal-600'
+                  ? 'bg-[#006D5B] text-white border-[#006D5B]'
                   : 'bg-gray-100 text-gray-700 border-gray-300 hover:border-gray-400'
               }`}
             >
@@ -149,8 +123,8 @@ export default function Home() {
               Last score: <span className="font-bold text-gray-700">67/90</span>
             </p>
             <Link to="/mock-test">
-              <button className="w-full bg-teal-600 text-white font-bold py-4 rounded-xl text-base hover:bg-teal-700 transition-colors">
-                Start Mock Test → 90 MCQs · 120 min
+              <button className="w-full bg-[#006D5B] text-white font-bold py-4 rounded-xl text-base hover:bg-[#005548] transition-colors">
+                Start Mock Test → 20 questions · 30 min
               </button>
             </Link>
           </div>

@@ -619,3 +619,113 @@ The following files were modified beyond explicit prompt scope but were required
 - `src/components/MethodTabs.jsx` — required by R8-02 (GOV-RULE-014 on inactive tabs)
 - `src/pages/MockTest.jsx` — flag text label applied (R8-03 scope expanded to include navigator screen)
 - `tests/ui/solution.spec.js`, `tests/ui/practice-question.spec.js`, `tests/ui/mock-test.spec.js` — test updates required after route and display changes
+
+---
+
+## Round 9 — Testing Session (June 27, 2026)
+
+### Source: Owner design review
+
+| ID | Severity | Screen/File | Finding | Resolution |
+|---|---|---|---|---|
+| R9-01 | 🟡 Medium | QuestionPractice, MockTest, QuestionMockTest, MockTestQuestion | "Flag" label on Try Later button was ambiguous — students unfamiliar with "flag" UX pattern | ✅ Fixed — "Flag" text → "Try Later"; title attr → "Mark to revisit later"; test files updated |
+| R9-02 | 🟡 Medium | QuestionPractice.jsx | Topic/subtopic tag at text-[9px] was too small to read without squinting | ✅ Fixed — upgraded to text-xs tracking-wider; tracking-widest removed to prevent wrap at 375px |
+| R9-03 | 🟠 High | Solution.jsx + QuestionPractice.jsx | Solution page had no result framing — student couldn't tell if they were right or wrong at a glance | ✅ Fixed — QuestionPractice passes `{ correct: selected === QUESTION.correct_option }` state; Solution.jsx shows green "Correct! 🎉" or amber "Not quite 🤔 + correct answer" panel; panel absent when accessed via Show Solution (state.correct === undefined) |
+| R9-04 | 🔴 Critical | MockTest, QuestionMockTest, App.jsx, BottomNav.jsx | 90-question / 120-minute mock test was unusable — no student would complete it; timer static; navigator concept too complex for MVP | ✅ Fixed — full restructure into 3 pages: MockTestSetup (/mock-test), MockTestQuestion (/mock-test/question), MockTestOverview (/mock-test/overview); 20 questions · 30 minutes · single topic; real countdown timer; timer warnings at 5/4/3/2/1 min; 10-sec visible countdown; auto-submit at 0:00 |
+| R9-05 | 🟡 Medium | Progress.jsx | Progress cards/accordions used teal-50/teal-200 — wrong colour for content cards (GOV-RULE-014 teal reserved for interactive selected state) | ✅ Fixed — score trend charts: bg-blue-50/border-blue-200; accordion: bg-blue-100/border-blue-300; stats grid cards: bg-blue-100/border-blue-300; y-axis padL increased 36→42 for label clearance |
+| R9-06 | 🟡 Medium | Profile.jsx | "Test Details" card duplicated date and category info already in countdown — unnecessary screen real estate | ✅ Fixed — "Test Details" card removed; countdown card now shows `dateDisplay · getCategoryLabel(natCategory)` in one consolidated line; StatRow component removed (unused) |
+
+### Governance Note — Out-of-scope modifications (GOV-RULE-013)
+The following files were modified beyond explicit prompt scope but were required to implement the listed fixes:
+- `DECISIONS.md` — updated UX-007 (mock test restructure) and Solution Screen Navigation section per after-fix requirement
+- `src/components/BottomNav.jsx` — required by R9-04 to lock /mock-test/overview during active test
+- `src/pages/QuestionMockTest.jsx` — required by R9-01 (legacy file updated for consistency)
+- `tests/ui/practice-question.spec.js`, `tests/ui/mock-test.spec.js` — test flag title references updated per R9-01
+
+### Tests expected to fail after R9-04 (not yet updated)
+The mock-test.spec.js describe block "Mock Test — Navigator Screen" tests the old MockTest.jsx navigator (90 questions, section tabs, Submit Test dialog). After R9-04 `/mock-test` loads MockTestSetup.jsx — those tests will fail. Additionally "Mock Test — Question Screen" tests for `timer starts at 120:00`, `section label "Section 1: Verbal"`, and `score display` will fail against new MockTestQuestion.jsx. Test suite update deferred to next session.
+
+---
+
+## Round 10 — Testing Session (June 27, 2026)
+
+### Source: Owner design review
+
+| ID | Severity | Screen/File | Finding | Resolution |
+|---|---|---|---|---|
+| R10-01 | 🟡 Medium | CLAUDE.md | No rule preventing accidental full test suite runs — targeted test runs only should be the default | ✅ Fixed — Working Rule 5 added: "Run targeted tests only (e.g. npx playwright test tests/ui/progress.spec.js) unless full suite explicitly requested" |
+| R10-02 | 🟢 Low | App.jsx | Route typo reported: `/onbaording` | ✅ No-op — grep confirms the typo does not exist in codebase; App.jsx already has `/onboarding` correctly |
+| R10-03 | 🟡 Medium | QuestionPractice.jsx, MockTestQuestion.jsx | "Try Later" flag inside question card forced `pr-12/pr-16` padding on question text, reducing readable width | ✅ Fixed — flag moved outside the card, right-aligned on same row as "Question X of Y" counter; `relative` and `pr-*` removed from question card |
+| R10-04 | 🟡 Medium | MockTestResults.jsx | "Review All Questions" and "Practice Weak Areas" CTAs overlapping — space-y-4 not rendering gap reliably | ✅ Fixed — changed to `flex flex-col gap-4`; broken link `/solution/wrong` corrected to `/solution`; "Practice Weak Areas" styled GOV-RULE-014 (bg-blue-100/border-blue-300) |
+| R10-05 | 🟡 Medium | Progress.jsx | Y-axis labels (100, 75, Pass) too close to chart data — labels at x=36 with padL=42 gave only 6px clearance | ✅ Fixed — padL increased 42→50; label x position remains padL-6=44; chart now starts at x=50 with 6px clear gap |
+| R10-06 | 🟡 Medium | Progress.jsx accordion | Sub-topic bars cluttered with "Start here", "Needs work", "Focus here" badges — too many labels, inconsistent language | ✅ Fixed — removed `subFocusLabel()` and "Start here →" CTA; all subs show "Practice →"; only subs below 50% show a single "Focus" badge; `weakestName`/`weakestPct` vars removed |
+| R10-07 | 🟡 Medium | Progress.jsx MockTab | Readiness Score card used teal-50/teal-200 — inconsistent with blue-50/blue-200 used on other cards after R9-05 | ✅ Fixed — bg-blue-50 border-blue-200 |
+| R10-08 | 🟡 Medium | Profile.jsx | "Edit Profile" button styled with teal-600 outline — should use GOV-RULE-014 secondary style (bg-blue-100/border-blue-300) as it is a non-primary navigation action | ✅ Fixed — bg-blue-100/border-blue-300/text-gray-900/hover:bg-blue-200 |
+| R10-09 | 🟡 Medium | QuestionPractice.jsx + Solution.jsx | Solution page needed `correctAnswer` in navigate state for future extensibility | ✅ Fixed — QuestionPractice now passes `{ correct: bool, correctAnswer: QUESTION.correct_option }`; Solution.jsx already handles `correct` state correctly (green/amber panel) |
+
+---
+
+## Round 11 — Testing Session (June 27, 2026)
+
+### Source: Owner design review
+
+| ID | Severity | Screen/File | Finding | Resolution |
+|---|---|---|---|---|
+| R11-01 | 🟠 High | All src/ files (22 files) | Primary brand colour #0D9488 (Tailwind teal) — owner requested full switch to #006D5B (dark forest green) for stronger brand identity | ✅ Fixed — PowerShell replaced all teal-* classes and hex values: teal-600→[#006D5B], teal-700→[#005548], teal-500→[#006D5B], teal-50→[#F0FAF8], teal-100→[#CCE8E5], teal-200→[#99D4CE], teal-300→[#66BFB5], teal-800→[#004A3D], #0D9488→#006D5B, #CCFBF1→#CCE8E5. CLAUDE.md, DECISIONS.md updated. |
+| R11-02 | 🟢 Low | Progress.jsx | Progress screen lacked personalised greeting — felt generic compared to Home's warm welcome | ✅ Fixed — getStudentName() reads localStorage; "Let's get to work, [Name]! 💪" h1 shown at top of Progress main when name present |
+| R11-03 | 🟢 Low | Progress.jsx | Chart axis labels too small (y-axis fontSize=9, x-axis fontSize=7) and gray (#374151 / #6b7280) — hard to read; Score % label violated GOV-RULE-012 | ✅ Fixed — y-axis ticks: fontSize=12, fill=#000000; x-axis labels: fontSize=10, fill=#000000; Pass label: fontSize=10; Score % label: fill=#374151. NOTE: chart is custom SVG, not Recharts — Recharts YAxis prop not applicable |
+| R11-04 | 🟡 Medium | Progress.jsx MockTab | Mock test focus areas (Algebra, Combinations, Comprehension) showed scores only — no way to act on them from the list | ✅ Fixed — "Practice →" pill link per row, right-aligned (ml-auto); navigates to /practice?topic={topicId}; topicId added to static data |
+| R11-05 | 🟡 Medium | Profile.jsx | Save allowed when both mobile AND email empty — would create contact-less accounts, breaking Phase 2 login | ✅ Fixed — validate() adds errs.mobile or errs.email ("Add a mobile number or email address to save") when both fields empty; inline error on currently-visible contact field |
+| R11-06 | 🟡 Medium | Home.jsx | TopicCard subject cards used bg-gray-50/border-gray-300 (inconsistent with GOV-RULE-014); chevron text-gray-500 violated GOV-RULE-012 | ✅ Fixed — card: bg-blue-100/border-blue-300/hover:bg-blue-200/hover:border-blue-400; chevron: text-gray-700 |
+
+### Governance Note — Brand colour system change (R11-01)
+Brand colour changed from #0D9488 (Tailwind teal-600) to #006D5B (dark forest green). 22 src/ files updated via PowerShell bulk replace. CLAUDE.md Stack table updated. GOV-RULE-014 documentation updated in both CLAUDE.md and DECISIONS.md to reference bg-[#006D5B]. DECISIONS.md Chart Colours section updated.
+
+---
+
+## Round 12 — Testing Session (June 27, 2026)
+
+### Source: Owner design review
+
+| ID | Severity | Screen/File | Finding | Resolution |
+|---|---|---|---|---|
+| R12-01 | 🟠 High | MockTestResults.jsx | "Review All Questions →" linked to /solution (wrong — shows explanation for single Q, not all 20) — needed a dedicated readonly review screen | ✅ Fixed — created MockTestReview.jsx (/mock-test/review); shows all 20 questions with colour-coded answers: green=correct, red=student's wrong choice, blue-100=unselected; status banner per question; "Show Solution →" navigates to /solution; ‹ › navigation arrows; "← Back to Results" button. App.jsx and MockTestResults.jsx updated. |
+| R12-02 | 🟢 Low | Progress.jsx PracticeTab | Chart height 130px — y-axis label overlap; hard to read score trend | ✅ Fixed — LineChart h constant 130→260; SVG style={{ height: h }} (dynamic); innerH now 214px giving comfortable label spacing |
+| R12-03 | 🟡 Medium | Progress.jsx MockTab | Mock Tests chart used amber (#D97706) — amber is the active mock session signal (timer, pill), not data chart colour; creates confusing association | ✅ Fixed — colour="#006D5B" (matches Practice tab); chart height also increased to 260px (shared h constant); DECISIONS.md Chart Colours section updated |
+| R12-04 | 🟡 Medium | Progress.jsx MockTab | Readiness Score card reverted to bg-blue-50/blue-200 in R10-07 — loses visual distinction from stats cards; circular gauge is green but card is blue | ✅ Fixed — card background restored to brand-green palette: bg-[#F0FAF8]/border-[#99D4CE]; label text-[#006D5B]; gauge and score remain dark green |
+
+### Governance Note — Out-of-scope modifications (GOV-RULE-013)
+R12-01 required modifying files beyond MockTestReview.jsx (the explicitly listed file):
+- `src/App.jsx` — required to register /mock-test/review route and import MockTestReview
+- `src/pages/MockTestResults.jsx` — required to update "Review All Questions →" link target from /solution to /mock-test/review
+
+---
+
+## Round 13 — Testing Session (June 27, 2026)
+
+### Source: Owner design review
+
+| ID | Severity | Screen/File | Finding | Resolution |
+|---|---|---|---|---|
+| R13-01 | 🟡 Medium | Home.jsx | Goal/nudge card ("Practice X questions today — Y days to your test") clutters Home screen; belongs on Progress, not Home; Home's job is motivation + action entry, not countdown pressure | ✅ Fixed — removed nudge card div; removed dynamicGoal(), daysUntil(), getTestDate() functions and their derived consts (testDate, daysLeft, goal); h1 spacing updated mb-1→mb-5; greeting "Welcome, [Name]! 👋" unchanged |
+| R13-02 | 🟡 Medium | RoughWork.jsx + QuestionPractice.jsx + MockTestQuestion.jsx | Canvas state persisted across questions in MockTestQuestion — navigating between Qs showed previous question's drawing | ✅ Fixed — module-level drawingsStore Map added to RoughWork.jsx; questionKey prop added; useEffect saves current drawing under prevKey and restores stored state (canvas dataUrl + text) on key change; clears canvas + undo history on change; parents pass questionKey={QUESTION.number} (practice) and questionKey={currentIdx} (mock) |
+| R13-03 | 🟡 Medium | MockTestReview.jsx + Solution.jsx | "Show Solution →" from MockTestReview opened Solution with Practice Mode pill — misleading framing in a review context | ✅ Fixed — MockTestReview navigate state updated to { readonly: true, fromReview: true, correctAnswer: q.correct_option }; Solution.jsx reads fromReview from state; when fromReview: ModeIndicator hidden, "Solution" header shown, CTA switches to single full-width "← Back to Review" button (navigate(-1)) |
+| R13-04 | 🟡 Medium | Progress.jsx LineChart | Chart had shaded fill area, gridlines at 100/75, data labels in brand green at 9px, x-axis labels at 10px — visually noisy and hard to read | ✅ Fixed — removed shaded fill area (path + const); removed gridlines from yTicks (kept pass dashed line); removed if (pct===50) guard so 50 renders as black label alongside 100/75 (Pass text removed — dashed line is sufficient); removed "Pass" text label; data point labels fontSize 9→11, fill colour→#000000; dots r={4} uniform; x-axis labels fontSize 10→12; every-other label shown when > 4 data points (labels.length > 4 && i%2!==0 → null) |
+
+### Governance Note — Out-of-scope modifications (GOV-RULE-013)
+R13-02 required modifying files beyond RoughWork.jsx (the explicitly listed file for canvas keying):
+- `src/pages/QuestionPractice.jsx` — required to pass questionKey={QUESTION.number} to RoughWork
+- `src/pages/MockTestQuestion.jsx` — required to pass questionKey={currentIdx} to RoughWork
+
+---
+
+## Round 14 — Testing Session (June 28, 2026)
+
+### Source: Owner design review
+
+| ID | Severity | Screen/File | Finding | Resolution |
+|---|---|---|---|---|
+| R14-01 | 🟡 Medium | Home.jsx | Mock Test button text read "Start Mock Test → 90 MCQs · 120 min" — old spec (R9-04 redesigned to 20q/30min); route /mock-test was already correct (matches BottomNav Mock tab) | ✅ Fixed — button text updated to "Start Mock Test → 20 questions · 30 min"; route unchanged (already /mock-test → MockTestSetup) |
+| R14-02 | 🟡 Medium | Progress.jsx LineChart | Data point percentage labels overlapped with pass dashed line and y-axis labels at low chart values; yMin=0 gave too much empty space below data | ✅ Fixed — yMin 0→30 (chart domain 30–100, ensures visual breathing room above pass line); data point label y offset y-7→y-12 (pushes labels further above dots); both Practice and Mock tabs affected via shared LineChart component |
+| R14-03 | 🟢 Low | Home.jsx | Suspected "Let's get to work" greeting regression on Home screen | ✅ Verified no regression — Home.jsx greeting reads `Welcome, ${studentName}! 👋` (line 70); no "Let's get to work" text present in file; "Let's get to work" correctly remains in Progress.jsx only; no code change required |
+
