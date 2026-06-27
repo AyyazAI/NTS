@@ -92,7 +92,7 @@ export default function QuestionMockTest() {
             onClick={() => setFlagged(f => !f)}
             title={flagged ? 'Flagged' : 'Flag for later'}
             className={`absolute top-3 right-3 text-xl font-bold leading-none transition-all hover:scale-110 ${
-              flagged ? 'text-orange-500' : 'text-gray-400 hover:text-gray-600'
+              flagged ? 'text-orange-500' : 'text-gray-600 hover:text-gray-800'
             }`}
           >
             {flagged ? '⚑' : '⚐'}

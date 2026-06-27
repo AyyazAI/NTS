@@ -13,7 +13,7 @@ export default function SolutionCorrect() {
         {/* Success banner */}
         <div className="bg-teal-50 border border-teal-200 rounded-2xl p-5 mb-5 text-center">
           <p className="font-black text-teal-700 text-2xl mb-1">Correct — nice work! 🎉</p>
-          <p className="text-sm text-teal-600 font-semibold">You answered in 47 seconds</p>
+          <p className="text-sm text-teal-700 font-semibold">You answered in 47 seconds</p>
         </div>
 
         {/* Correct answer confirmation */}
@@ -23,7 +23,7 @@ export default function SolutionCorrect() {
           </div>
           <div>
             <p className="font-black text-gray-900">21 committees</p>
-            <p className="text-xs text-gray-500 mt-0.5">You selected A — that's correct ✅</p>
+            <p className="text-xs text-gray-700 mt-0.5">You selected A — that's correct ✅</p>
           </div>
         </div>
 
@@ -45,7 +45,7 @@ export default function SolutionCorrect() {
           </Link>
         </div>
 
-        <p className="text-center text-sm text-gray-600 mt-5">
+        <p className="text-center text-sm text-gray-700 mt-5">
           Keep going — every question makes you stronger 💪
         </p>
 

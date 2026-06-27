@@ -19,7 +19,7 @@ function SectionBar({ name, score, total, pct }) {
           {score}/{total} <span className="text-gray-700 font-bold">({pct}%)</span>
         </span>
       </div>
-      <div className="h-2.5 bg-gray-100 rounded-full overflow-hidden">
+      <div className="h-2.5 bg-gray-200 rounded-full overflow-hidden">
         <div className={`h-full rounded-full ${colour} transition-all`} style={{ width: `${pct}%` }} />
       </div>
     </div>
@@ -47,7 +47,7 @@ export default function MockTestResults() {
         <div className="text-center py-6">
           <p className="text-teal-600 font-black text-lg mb-1">Test Complete ✓</p>
           <p className="text-6xl font-black text-gray-900 leading-none">67</p>
-          <p className="text-xl font-bold text-gray-600">/90</p>
+          <p className="text-xl font-bold text-gray-700">/90</p>
           <p className="mt-2 text-sm font-bold text-teal-600">↑ 5 points from your last mock test</p>
         </div>
 
@@ -64,7 +64,7 @@ export default function MockTestResults() {
         )}
 
         {/* Section breakdown */}
-        <div className="bg-gray-50 border border-gray-100 rounded-2xl p-4 mb-4">
+        <div className="bg-gray-50 border border-gray-300 rounded-2xl p-4 mb-4">
           <p className="text-xs font-black text-gray-900 uppercase tracking-wider mb-3">Section Breakdown</p>
           {SECTIONS.map(s => <SectionBar key={s.name} {...s} />)}
         </div>
@@ -77,7 +77,7 @@ export default function MockTestResults() {
             { label: 'Unattempted',  value: String(UNATTEMPTED) },
             { label: 'Flagged',      value: '3'                 },
           ].map(s => (
-            <div key={s.label} className="bg-gray-50 border border-gray-100 rounded-xl p-3 text-center">
+            <div key={s.label} className="bg-gray-50 border border-gray-300 rounded-xl p-3 text-center">
               <p className="text-xl font-black text-gray-900">{s.value}</p>
               <p className="text-[11px] font-bold text-gray-700 mt-0.5">{s.label}</p>
             </div>
@@ -85,7 +85,7 @@ export default function MockTestResults() {
         </div>
 
         {/* Attempt history */}
-        <div className="bg-gray-50 border border-gray-100 rounded-2xl p-4 mb-4">
+        <div className="bg-gray-50 border border-gray-300 rounded-2xl p-4 mb-4">
           <p className="text-xs font-black text-gray-700 uppercase tracking-wider mb-2">Your Progress</p>
           <div className="flex items-center gap-2">
             {[
@@ -94,7 +94,7 @@ export default function MockTestResults() {
               { label: 'Test 3', score: 67, arrow: '↑', current: true },
             ].map((t, i) => (
               <div key={i} className="flex-1 text-center">
-                <div className={`rounded-xl py-2.5 ${t.current ? 'bg-teal-600' : 'bg-white border border-gray-200'}`}>
+                <div className={`rounded-xl py-2.5 ${t.current ? 'bg-teal-600' : 'bg-gray-100 border border-gray-300'}`}>
                   <p className={`text-lg font-black ${t.current ? 'text-white' : 'text-gray-700'}`}>
                     {t.score}
                     {t.arrow && <span className="text-sm text-teal-400 ml-0.5">{t.arrow}</span>}

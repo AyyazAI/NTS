@@ -19,7 +19,7 @@ export default function MethodTabs({ defaultMethod = 'count', children }) {
             className={`flex-1 min-w-0 px-2 py-2 rounded-lg text-xs font-bold border transition-all ${
               active === m.id
                 ? 'bg-teal-600 text-white border-teal-600'
-                : 'bg-white text-gray-600 border-gray-200 hover:border-gray-300'
+                : 'bg-gray-100 text-gray-700 border-gray-300 hover:border-gray-400'
             }`}
           >
             {m.label}

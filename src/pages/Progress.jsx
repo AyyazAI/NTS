@@ -129,7 +129,7 @@ function Accordion({ topic }) {
   const topicLabel  = topicHeaderLabel(topic.overall)
 
   return (
-    <div className="border border-gray-100 rounded-2xl overflow-hidden mb-3">
+    <div className="border border-gray-300 rounded-2xl overflow-hidden mb-3">
       <button
         onClick={() => setOpen(o => !o)}
         className="w-full flex items-center justify-between px-4 py-3.5 bg-white hover:bg-gray-50 transition-colors"
@@ -143,7 +143,7 @@ function Accordion({ topic }) {
             </span>
           )}
         </div>
-        <span className="text-gray-600 text-sm ml-2 flex-shrink-0">{open ? '▲' : '▼'}</span>
+        <span className="text-gray-700 text-sm ml-2 flex-shrink-0">{open ? '▲' : '▼'}</span>
       </button>
 
       {open && (
@@ -164,14 +164,14 @@ function Accordion({ topic }) {
                     )}
                   </div>
                   <div className="flex items-center gap-2 flex-shrink-0 ml-2">
-                    <span className="text-[10px] font-bold text-gray-500">
+                    <span className="text-[10px] font-bold text-gray-700">
                       {s.attempted}/{s.total} tried
                     </span>
                     <Link to={`/practice?topic=${topic.id}`}>
                       <button className={`text-[10px] font-black rounded-full px-2 py-0.5 transition-colors ${
                         isWeakest
                           ? 'text-teal-700 bg-teal-50 border border-teal-200 hover:bg-teal-100'
-                          : 'text-gray-600 bg-gray-50 border border-gray-200 hover:bg-gray-100'
+                          : 'text-gray-700 bg-gray-100 border border-gray-300 hover:bg-gray-200'
                       }`}>
                         {isWeakest ? 'Start here →' : 'Practice →'}
                       </button>
@@ -230,10 +230,10 @@ function PracticeTab({ natCategory }) {
 
   return (
     <div>
-      <div className="bg-gray-50 border border-gray-100 rounded-2xl p-4 mb-4">
+      <div className="bg-gray-50 border border-gray-300 rounded-2xl p-4 mb-4">
         <div className="flex items-center justify-between mb-2">
           <div>
-            <p className="text-xs font-black text-gray-600 uppercase tracking-wider">Score Trend</p>
+            <p className="text-xs font-black text-gray-700 uppercase tracking-wider">Score Trend</p>
             <p className="text-teal-600 font-black text-sm">+26% this week ↑</p>
           </div>
           <div className="flex gap-1">
@@ -242,7 +242,7 @@ function PracticeTab({ natCategory }) {
                 key={r}
                 onClick={() => setRange(r)}
                 className={`px-2.5 py-1 rounded-lg text-xs font-bold border transition-all ${
-                  range === r ? 'bg-teal-600 text-white border-teal-600' : 'border-gray-200 text-gray-600'
+                  range === r ? 'bg-teal-600 text-white border-teal-600' : 'border-gray-300 text-gray-700'
                 }`}
               >
                 {r}
@@ -253,7 +253,7 @@ function PracticeTab({ natCategory }) {
         <LineChart points={chartData[range].data} labels={chartData[range].labels} />
       </div>
 
-      <p className="text-xs font-black text-gray-600 uppercase tracking-wider mb-3">Topics & Sub-topics</p>
+      <p className="text-xs font-black text-gray-700 uppercase tracking-wider mb-3">Topics & Sub-topics</p>
       {allTopics.map(t => <Accordion key={t.name} topic={t} />)}
     </div>
   )
@@ -268,10 +268,10 @@ function MockTab() {
   }
   return (
     <div>
-      <div className="bg-gray-50 border border-gray-100 rounded-2xl p-4 mb-4">
+      <div className="bg-gray-50 border border-gray-300 rounded-2xl p-4 mb-4">
         <div className="flex items-center justify-between mb-2">
           <div>
-            <p className="text-xs font-black text-gray-600 uppercase tracking-wider">Score Trend</p>
+            <p className="text-xs font-black text-gray-700 uppercase tracking-wider">Score Trend</p>
             <p className="text-teal-600 font-black text-sm">↑ 15 points across 3 tests</p>
           </div>
           <div className="flex gap-1">
@@ -280,7 +280,7 @@ function MockTab() {
                 key={r}
                 onClick={() => setRange(r)}
                 className={`px-2.5 py-1 rounded-lg text-xs font-bold border transition-all ${
-                  range === r ? 'bg-teal-600 text-white border-teal-600' : 'border-gray-200 text-gray-600'
+                  range === r ? 'bg-teal-600 text-white border-teal-600' : 'border-gray-300 text-gray-700'
                 }`}
               >
                 {r}
@@ -298,7 +298,7 @@ function MockTab() {
           { label: 'Average Score',    value: '60/90'         },
           { label: 'Highest Section',  value: 'Analytical Reasoning 85%' },
         ].map(s => (
-          <div key={s.label} className="bg-gray-50 border border-gray-100 rounded-xl p-3">
+          <div key={s.label} className="bg-gray-50 border border-gray-300 rounded-xl p-3">
             <p className="text-xl font-black text-gray-900">{s.value}</p>
             <p className="text-xs font-bold text-gray-700 mt-0.5">{s.label}</p>
           </div>
@@ -368,7 +368,7 @@ export default function Progress() {
               className={`flex-1 py-2.5 rounded-xl text-sm font-black border-2 transition-all ${
                 activeTab === t.id
                   ? 'bg-teal-600 border-teal-600 text-white'
-                  : 'border-gray-200 text-gray-600 hover:border-gray-300'
+                  : 'border-gray-300 text-gray-700 hover:border-gray-400'
               }`}
             >
               {t.label}

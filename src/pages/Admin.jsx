@@ -304,7 +304,7 @@ export default function Admin() {
         <div className="bg-white rounded-2xl shadow-lg p-8 w-full max-w-sm">
           <div className="text-center mb-6">
             <p className="text-2xl font-bold text-gray-900">NTS Prep</p>
-            <p className="text-sm text-gray-400 mt-1">Admin Panel</p>
+            <p className="text-sm text-gray-700 mt-1">Admin Panel</p>
           </div>
           <form onSubmit={handleLogin} className="space-y-4">
             <div>
@@ -340,7 +340,7 @@ export default function Admin() {
         </div>
         <button
           onClick={handleLogout}
-          className="text-sm text-gray-400 hover:text-gray-600 transition-colors"
+          className="text-sm text-gray-600 hover:text-gray-800 transition-colors"
         >
           Sign out
         </button>
@@ -365,7 +365,7 @@ export default function Admin() {
 
         {/* Phase cards */}
         {loading ? (
-          <div className="text-center py-16 text-gray-400 text-sm">Connecting to database…</div>
+          <div className="text-center py-16 text-gray-700 text-sm">Connecting to database…</div>
         ) : (
           tasksByPhase.map(phase => {
             const done = phase.tasks.filter(t => t.done).length
@@ -430,7 +430,7 @@ export default function Admin() {
                             }`}>
                               {task.done && <Checkmark />}
                             </div>
-                            <span className={`flex-1 text-sm ${task.done ? 'line-through text-gray-500' : 'text-gray-900 font-medium'}`}>
+                            <span className={`flex-1 text-sm ${task.done ? 'line-through text-gray-600' : 'text-gray-900 font-medium'}`}>
                               {task.label}
                             </span>
                             <span className="text-xs text-white bg-gray-700 px-2.5 py-0.5 rounded-full shrink-0 font-medium">

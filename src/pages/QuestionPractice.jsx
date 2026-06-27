@@ -69,12 +69,12 @@ export default function QuestionPractice() {
         </div>
 
         {/* Question card */}
-        <div className="bg-gray-50 border border-gray-200 rounded-2xl p-4 mb-4 relative">
+        <div className="bg-gray-50 border border-gray-300 rounded-2xl p-4 mb-4 relative">
           <button
             onClick={() => setFlagged(f => !f)}
             title={flagged ? 'Flagged' : 'Flag for later'}
             className={`absolute top-3 right-3 text-xl font-bold leading-none transition-all hover:scale-110 ${
-              flagged ? 'text-orange-500' : 'text-gray-400 hover:text-gray-600'
+              flagged ? 'text-orange-500' : 'text-gray-600 hover:text-gray-800'
             }`}
           >
             {flagged ? '⚑' : '⚐'}
@@ -141,7 +141,7 @@ export default function QuestionPractice() {
       {/* Bottom action bar */}
       <div className="fixed bottom-20 left-1/2 -translate-x-1/2 w-full max-w-sm bg-white border-t border-gray-100 px-4 py-3 z-20">
         {!selected && !showSolution && (
-          <p className="text-xs text-center text-gray-600 mb-1.5">Select an answer above to submit</p>
+          <p className="text-xs text-center text-gray-700 mb-1.5">Select an answer above to submit</p>
         )}
         <div className="flex items-center gap-2">
           {/* Back arrow — hidden on Q1 */}
@@ -162,7 +162,7 @@ export default function QuestionPractice() {
             className={`flex-1 h-12 rounded-xl border-2 text-sm font-bold transition-colors ${
               showSolution
                 ? 'border-teal-600 bg-teal-50 text-teal-700'
-                : 'border-gray-200 text-gray-600 hover:border-gray-300'
+                : 'border-gray-300 text-gray-700 hover:border-gray-400'
             }`}
           >
             {showSolution ? 'Hide Solution' : 'Show Solution'}

@@ -106,7 +106,7 @@ export default function Onboarding() {
       {step === 1 ? (
         <div className="w-full flex-1 flex flex-col">
           <h1 className="text-2xl font-black text-gray-900 mb-1">{'Welcome to TaleemiMarkaz 👋'}</h1>
-          <p className="text-sm text-gray-600 mb-8">Let's get you started in 2 quick steps</p>
+          <p className="text-sm text-gray-700 mb-8">Let's get you started in 2 quick steps</p>
 
           <div className="space-y-5">
             {/* Name field */}
@@ -138,7 +138,7 @@ export default function Onboarding() {
             <div>
               <label className="block text-sm font-bold text-gray-700 mb-2">
                 How can we reach you?
-                <span className="text-xs font-normal text-gray-600 ml-1">Used to log back in from any device</span>
+                <span className="text-xs font-normal text-gray-700 ml-1">Used to log back in from any device</span>
               </label>
               <div className="flex gap-1 bg-gray-100 rounded-lg p-0.5 mb-3">
                 {[
@@ -149,7 +149,7 @@ export default function Onboarding() {
                     key={t.id}
                     onClick={() => { setContactType(t.id); setContactError('') }}
                     className={`flex-1 py-2 text-xs font-bold rounded-md transition-all ${
-                      contactType === t.id ? 'bg-white text-teal-600 shadow-sm' : 'text-gray-600'
+                      contactType === t.id ? 'bg-white text-teal-700 shadow-sm' : 'text-gray-700'
                     }`}
                   >
                     {t.label}
@@ -199,7 +199,7 @@ export default function Onboarding() {
           <h1 className={`font-black text-gray-900 mb-1 ${name.trim().length > 16 ? 'text-xl' : 'text-2xl'}`}>
             Welcome aboard, {name.trim()}!
           </h1>
-          <p className="text-sm text-gray-600 mb-6">
+          <p className="text-sm text-gray-700 mb-6">
             Let's personalise your prep so we show you the right content
           </p>
 
@@ -220,7 +220,7 @@ export default function Onboarding() {
                       className={`relative flex items-center gap-2 px-3 py-2.5 rounded-xl border-2 transition-all ${
                         selected
                           ? 'border-teal-600 bg-teal-600'
-                          : 'border-gray-200 bg-white hover:border-gray-300'
+                          : 'border-gray-300 bg-gray-50 hover:border-gray-400'
                       }`}
                     >
                       {selected && (
@@ -255,7 +255,7 @@ export default function Onboarding() {
                     className={`flex items-center gap-3 px-4 py-3 rounded-xl border-2 cursor-pointer transition-all ${
                       testDate === d.value
                         ? 'border-teal-600 bg-teal-50'
-                        : 'border-gray-200 bg-white hover:border-gray-300'
+                        : 'border-gray-300 bg-gray-50 hover:border-gray-400'
                     }`}
                   >
                     <input
@@ -304,7 +304,7 @@ export default function Onboarding() {
                       key={opt}
                       onClick={() => setHasTargetScore(opt === 'Yes')}
                       className={`flex-1 py-3 rounded-xl text-sm font-bold border-2 transition-all ${
-                        active ? 'bg-teal-600 text-white border-teal-600' : 'bg-white text-gray-600 border-gray-200'
+                        active ? 'bg-teal-600 text-white border-teal-600' : 'bg-gray-100 text-gray-700 border-gray-300'
                       }`}
                     >
                       {opt}
@@ -350,7 +350,7 @@ export default function Onboarding() {
             </button>
             <button
               onClick={() => setStep(1)}
-              className="w-full border-2 border-gray-200 text-gray-600 font-bold py-4 rounded-xl text-base hover:bg-gray-50 transition-colors"
+              className="w-full border-2 border-gray-300 text-gray-700 font-bold py-4 rounded-xl text-base hover:bg-gray-50 transition-colors"
             >
               ← Back
             </button>

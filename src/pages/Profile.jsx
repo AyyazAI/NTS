@@ -30,7 +30,7 @@ function StreakCalendar() {
 function StatRow({ label, value }) {
   return (
     <div className="flex justify-between items-center py-2 border-b border-gray-50 last:border-0">
-      <span className="text-sm text-gray-600">{label}</span>
+      <span className="text-sm text-gray-700">{label}</span>
       <span className="text-sm font-black text-gray-900">{value}</span>
     </div>
   )
@@ -40,7 +40,7 @@ function ViewMode({ natCategory, onEdit }) {
   return (
     <div className="space-y-4">
       {/* Avatar + name */}
-      <div className="flex items-center gap-4 pt-2 pb-4 border-b border-gray-100">
+      <div className="flex items-center gap-4 pt-2 pb-4 border-b border-gray-200">
         <div className="w-16 h-16 rounded-full bg-teal-600 flex items-center justify-center text-white text-2xl font-black flex-shrink-0">
           H
         </div>
@@ -54,14 +54,14 @@ function ViewMode({ natCategory, onEdit }) {
       <div className="bg-teal-50 border border-teal-200 rounded-2xl p-4 text-center">
         <p className="text-3xl font-black text-teal-700">18</p>
         <p className="text-sm font-bold text-teal-600">days to your NAT test (Jul 12)</p>
-        <p className="text-xs text-gray-500 mt-1">Test date: July 12, 2026</p>
+        <p className="text-xs text-gray-700 mt-1">Test date: July 12, 2026</p>
       </div>
 
       {/* Goal tracker */}
-      <div className="bg-gray-50 border border-gray-100 rounded-2xl p-4">
-        <p className="text-xs font-black text-gray-500 uppercase tracking-wider mb-3">Goal Tracker</p>
+      <div className="bg-gray-50 border border-gray-300 rounded-2xl p-4">
+        <p className="text-xs font-black text-gray-700 uppercase tracking-wider mb-3">Goal Tracker</p>
         <div className="flex justify-between items-baseline mb-2">
-          <span className="text-sm text-gray-600">Target score</span>
+          <span className="text-sm text-gray-700">Target score</span>
           <span className="font-black text-gray-900">75/90</span>
         </div>
         <div className="relative h-3 mb-1">
@@ -70,7 +70,7 @@ function ViewMode({ natCategory, onEdit }) {
           </div>
           <div className="absolute top-0 bottom-0 w-0.5 bg-amber-500 rounded-full z-10" style={{ left: '83.3%' }} />
         </div>
-        <div className="flex justify-between text-xs text-gray-600">
+        <div className="flex justify-between text-xs text-gray-700">
           <span>Current avg: 67</span>
           <span className="flex items-center gap-1">
             <span className="w-1.5 h-1.5 rounded-full bg-amber-500 inline-block" />
@@ -80,19 +80,19 @@ function ViewMode({ natCategory, onEdit }) {
       </div>
 
       {/* Streak */}
-      <div className="bg-gray-50 border border-gray-100 rounded-2xl p-4">
+      <div className="bg-gray-50 border border-gray-300 rounded-2xl p-4">
         <div className="flex items-center justify-between mb-1">
-          <p className="text-xs font-black text-gray-500 uppercase tracking-wider">Streak</p>
+          <p className="text-xs font-black text-gray-700 uppercase tracking-wider">Streak</p>
           <span className="font-black text-gray-800">🔥 7-day practice streak</span>
         </div>
-        <p className="text-xs text-gray-600 mb-3">Practice questions count toward your streak</p>
+        <p className="text-xs text-gray-700 mb-3">Practice questions count toward your streak</p>
         <StreakCalendar />
-        <p className="text-xs text-gray-600 mt-2">Last 30 days</p>
+        <p className="text-xs text-gray-700 mt-2">Last 30 days</p>
       </div>
 
       {/* Test details */}
-      <div className="bg-gray-50 border border-gray-100 rounded-2xl p-4">
-        <p className="text-xs font-black text-gray-500 uppercase tracking-wider mb-2">Test Details</p>
+      <div className="bg-gray-50 border border-gray-300 rounded-2xl p-4">
+        <p className="text-xs font-black text-gray-700 uppercase tracking-wider mb-2">Test Details</p>
         <StatRow label="Test date" value="July 12, 2026" />
         <StatRow label="Category"  value={getCategoryLabel(natCategory)} />
       </div>
@@ -178,13 +178,13 @@ function EditMode({ initialCategory, onCancel, onSave }) {
       <div className="space-y-3">
         {/* Your Name */}
         <div>
-          <label className="text-xs font-black text-gray-500 uppercase tracking-wider block mb-1.5">Your Name</label>
+          <label className="text-xs font-black text-gray-700 uppercase tracking-wider block mb-1.5">Your Name</label>
           <input
             value={name}
             maxLength={50}
             onChange={e => { setName(e.target.value); mark(); setErrors(prev => ({ ...prev, name: '' })) }}
             className={`w-full border-2 rounded-xl px-4 py-3 text-sm font-semibold text-gray-900 outline-none transition-colors ${
-              errors.name ? 'border-red-400 bg-red-50' : 'border-gray-200 focus:border-teal-600'
+              errors.name ? 'border-red-400 bg-red-50' : 'border-gray-300 focus:border-teal-600'
             }`}
           />
           {errors.name && <p className="text-xs text-red-500 mt-1 font-bold">{errors.name}</p>}
@@ -192,7 +192,7 @@ function EditMode({ initialCategory, onCancel, onSave }) {
 
         {/* Contact — Mobile OR Email toggle */}
         <div>
-          <label className="text-xs font-black text-gray-500 uppercase tracking-wider block mb-1.5">Contact</label>
+          <label className="text-xs font-black text-gray-700 uppercase tracking-wider block mb-1.5">Contact</label>
           <div className="flex gap-1 bg-gray-100 rounded-lg p-0.5 mb-2">
             {[
               { id: 'mobile', label: 'Mobile' },
@@ -202,7 +202,7 @@ function EditMode({ initialCategory, onCancel, onSave }) {
                 key={t.id}
                 onClick={() => { setContactType(t.id); mark() }}
                 className={`flex-1 py-1.5 text-xs font-bold rounded-md transition-all ${
-                  contactType === t.id ? 'bg-white text-teal-600 shadow-sm' : 'text-gray-600'
+                  contactType === t.id ? 'bg-white text-teal-700 shadow-sm' : 'text-gray-700'
                 }`}
               >
                 {t.label}
@@ -216,7 +216,7 @@ function EditMode({ initialCategory, onCancel, onSave }) {
               placeholder="03XX-XXXXXXX"
               inputMode="numeric"
               className={`w-full border-2 rounded-xl px-4 py-3 text-sm font-semibold outline-none transition-colors ${
-                errors.mobile ? 'border-red-400 bg-red-50' : 'border-gray-200 focus:border-teal-600'
+                errors.mobile ? 'border-red-400 bg-red-50' : 'border-gray-300 focus:border-teal-600'
               }`}
             />
           ) : (
@@ -226,7 +226,7 @@ function EditMode({ initialCategory, onCancel, onSave }) {
               placeholder="you@example.com"
               type="email"
               className={`w-full border-2 rounded-xl px-4 py-3 text-sm font-semibold text-gray-900 outline-none transition-colors ${
-                errors.email ? 'border-red-400 bg-red-50' : 'border-gray-200 focus:border-teal-600'
+                errors.email ? 'border-red-400 bg-red-50' : 'border-gray-300 focus:border-teal-600'
               }`}
             />
           )}
@@ -236,7 +236,7 @@ function EditMode({ initialCategory, onCancel, onSave }) {
 
         {/* Test Date — NTS preset dates */}
         <div>
-          <label className="text-xs font-black text-gray-500 uppercase tracking-wider block mb-1.5">Test Date</label>
+          <label className="text-xs font-black text-gray-700 uppercase tracking-wider block mb-1.5">Test Date</label>
           <div className="space-y-1.5">
             {NTS_DATES.map(d => (
               <label
@@ -244,7 +244,7 @@ function EditMode({ initialCategory, onCancel, onSave }) {
                 className={`flex items-center gap-3 px-3 py-2.5 rounded-xl border-2 cursor-pointer transition-all ${
                   testDate === d.value
                     ? 'border-teal-600 bg-teal-50'
-                    : 'border-gray-200 bg-white hover:border-gray-300'
+                    : 'border-gray-300 bg-gray-50 hover:border-gray-400'
                 }`}
               >
                 <input
@@ -265,16 +265,16 @@ function EditMode({ initialCategory, onCancel, onSave }) {
 
         {/* NAT-I Category — readonly */}
         <div>
-          <label className="text-xs font-black text-gray-500 uppercase tracking-wider block mb-1.5">NAT-I Category</label>
-          <div className="bg-gray-50 border border-gray-200 rounded-xl px-4 py-3">
+          <label className="text-xs font-black text-gray-700 uppercase tracking-wider block mb-1.5">NAT-I Category</label>
+          <div className="bg-gray-50 border border-gray-300 rounded-xl px-4 py-3">
             <p className="text-sm font-semibold text-gray-700">{getCategoryLabel(initialCategory)}</p>
           </div>
-          <p className="text-xs text-gray-600 mt-1">Contact support to change your category</p>
+          <p className="text-xs text-gray-700 mt-1">Contact support to change your category</p>
         </div>
 
         {/* Target Score */}
         <div>
-          <label className="text-xs font-black text-gray-500 uppercase tracking-wider block mb-1.5">
+          <label className="text-xs font-black text-gray-700 uppercase tracking-wider block mb-1.5">
             Target Score: <span className="text-teal-600 normal-case">{targetScore}/90</span>
           </label>
           <input
@@ -283,7 +283,7 @@ function EditMode({ initialCategory, onCancel, onSave }) {
             type="range" min={50} max={90} step={5}
             className="w-full accent-teal-600"
           />
-          <div className="flex justify-between text-xs text-gray-600 mt-0.5">
+          <div className="flex justify-between text-xs text-gray-700 mt-0.5">
             <span>50 (Pass)</span>
             <span>90</span>
           </div>
@@ -292,10 +292,10 @@ function EditMode({ initialCategory, onCancel, onSave }) {
         </div>
 
         {/* Streak reminders */}
-        <div className="flex items-center justify-between bg-gray-50 border border-gray-100 rounded-xl px-4 py-3">
+        <div className="flex items-center justify-between bg-gray-50 border border-gray-300 rounded-xl px-4 py-3">
           <div>
             <p className="text-sm font-bold text-gray-800">Streak reminders</p>
-            <p className="text-xs text-gray-600">Daily notification to keep your streak</p>
+            <p className="text-xs text-gray-700">Daily notification to keep your streak</p>
           </div>
           <button
             onClick={() => { setReminders(r => !r); mark() }}
@@ -310,7 +310,7 @@ function EditMode({ initialCategory, onCancel, onSave }) {
       <div className="flex gap-3 pt-2 pb-2">
         <button
           onClick={handleCancelClick}
-          className="flex-1 py-3.5 rounded-xl border-2 border-gray-200 text-gray-600 font-bold text-sm hover:bg-gray-50 transition-colors"
+          className="flex-1 py-3.5 rounded-xl border-2 border-gray-300 text-gray-700 font-bold text-sm hover:bg-gray-50 transition-colors"
         >
           Cancel
         </button>
@@ -331,7 +331,7 @@ function EditMode({ initialCategory, onCancel, onSave }) {
             <div className="space-y-3">
               <button
                 onClick={() => setShowCancel(false)}
-                className="w-full py-4 rounded-xl border-2 border-gray-200 text-sm font-bold text-gray-700 hover:bg-gray-50"
+                className="w-full py-4 rounded-xl border-2 border-gray-300 text-sm font-bold text-gray-700 hover:bg-gray-50"
               >
                 Keep Editing
               </button>

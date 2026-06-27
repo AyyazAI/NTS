@@ -48,7 +48,7 @@ function NavigatorGrid({ sectionData, onNavigate }) {
           if (isCurrent)       cls += 'border-teal-600 bg-white text-teal-600'
           else if (isFlagged)  cls += 'border-amber-400 bg-amber-100 text-amber-700'
           else if (isAnswered) cls += 'border-teal-600 bg-teal-600 text-white'
-          else                 cls += 'border-gray-200 bg-white text-gray-400'
+          else                 cls += 'border-gray-300 bg-gray-50 text-gray-600'
           return (
             <button key={i} className={cls} onClick={() => onNavigate(i)}>
               {i + 1}
@@ -61,11 +61,11 @@ function NavigatorGrid({ sectionData, onNavigate }) {
           { colour: 'bg-teal-600',                            label: 'Answered' },
           { colour: 'bg-white border-2 border-teal-600',      label: 'Current'  },
           { colour: 'bg-amber-100 border-2 border-amber-400', label: 'Flagged'  },
-          { colour: 'bg-white border-2 border-gray-200',      label: 'Unseen'   },
+          { colour: 'bg-gray-50 border-2 border-gray-300',     label: 'Unseen'   },
         ].map(l => (
           <div key={l.label} className="flex items-center gap-1">
             <div className={`w-3.5 h-3.5 rounded ${l.colour}`} />
-            <span className="text-[10px] text-gray-500 font-bold">{l.label}</span>
+            <span className="text-[10px] text-gray-700 font-bold">{l.label}</span>
           </div>
         ))}
       </div>
@@ -145,7 +145,7 @@ export default function MockTest() {
               className={`flex-shrink-0 px-3 py-2 rounded-xl text-xs font-black border-2 transition-all ${
                 activeSection === s
                   ? 'bg-teal-600 border-teal-600 text-white'
-                  : 'border-gray-200 text-gray-500 hover:border-gray-300 bg-white'
+                  : 'border-gray-300 text-gray-700 hover:border-gray-400 bg-gray-100'
               }`}
             >
               {sectionDisplayLabel(s)}
@@ -155,7 +155,7 @@ export default function MockTest() {
 
         {/* Section info */}
         <div className="flex items-center justify-between mb-2">
-          <span className="text-xs font-bold text-gray-500">
+          <span className="text-xs font-bold text-gray-700">
             {activeSection === 'Subject' ? subjectLabel : activeSection} · {SECTION_TOTALS[activeSection]} MCQs
           </span>
           <span className="text-xs font-bold text-gray-700">
@@ -164,17 +164,17 @@ export default function MockTest() {
         </div>
 
         {/* Navigator grid */}
-        <div className="bg-gray-50 border border-gray-100 rounded-2xl p-3 mb-4">
+        <div className="bg-gray-50 border border-gray-300 rounded-2xl p-3 mb-4">
           <NavigatorGrid sectionData={current} onNavigate={handleNavigate} />
         </div>
 
         {/* Question card */}
-        <div className="bg-gray-50 border border-gray-100 rounded-2xl p-4 mb-4 relative">
+        <div className="bg-gray-50 border border-gray-300 rounded-2xl p-4 mb-4 relative">
           <button
             onClick={handleFlag}
             title={isFlagged ? 'Flagged' : 'Flag for later'}
             className={`absolute top-3 right-3 text-xl font-bold leading-none transition-all hover:scale-110 ${
-              isFlagged ? 'text-orange-500' : 'text-gray-400 hover:text-gray-600'
+              isFlagged ? 'text-orange-500' : 'text-gray-600 hover:text-gray-800'
             }`}
           >
             {isFlagged ? '⚑' : '⚐'}
@@ -264,7 +264,7 @@ export default function MockTest() {
               </Link>
               <button
                 onClick={() => setShowConfirm(false)}
-                className="text-sm font-bold text-gray-500 hover:text-gray-700 text-center w-full py-2"
+                className="text-sm font-bold text-gray-700 hover:text-gray-900 text-center w-full py-2"
               >
                 Cancel — Continue Test
               </button>

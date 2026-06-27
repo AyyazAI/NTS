@@ -158,7 +158,7 @@ export default function RoughWork({ isMock = false }) {
             </div>
           ) : (
             <div className="h-20 bg-teal-50 flex items-center justify-center">
-              <p className="text-xs text-gray-500 italic">No work yet — double-tap to start</p>
+              <p className="text-xs text-gray-600 italic">No work yet — double-tap to start</p>
             </div>
           )}
         </div>
@@ -197,7 +197,7 @@ export default function RoughWork({ isMock = false }) {
                     key={t.id}
                     onClick={() => setActiveTab(t.id)}
                     className={`flex-1 py-1.5 text-xs font-bold rounded-md transition-all ${
-                      activeTab === t.id ? 'bg-white text-teal-600 shadow-sm' : 'text-gray-600'
+                      activeTab === t.id ? 'bg-white text-teal-700 shadow-sm' : 'text-gray-700'
                     }`}
                   >
                     {t.label}
@@ -219,7 +219,7 @@ export default function RoughWork({ isMock = false }) {
                         className={`w-9 h-9 text-sm rounded-lg border flex items-center justify-center transition-all ${
                           activeTool === tool.id && tool.id !== 'undo' && tool.id !== 'clear'
                             ? 'border-teal-500 bg-teal-50 text-teal-600'
-                            : 'border-gray-200 text-gray-600 hover:border-gray-300'
+                            : 'border-gray-300 text-gray-700 hover:border-gray-400'
                         }`}
                       >
                         {tool.icon}
@@ -230,7 +230,7 @@ export default function RoughWork({ isMock = false }) {
                     ref={canvasRef}
                     width={320}
                     height={200}
-                    className="w-full rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 touch-none cursor-crosshair"
+                    className="w-full rounded-lg border-2 border-dashed border-gray-400 bg-gray-50 touch-none cursor-crosshair"
                     style={{ height: 180 }}
                     onMouseDown={startDraw}
                     onMouseMove={draw}
@@ -251,7 +251,7 @@ export default function RoughWork({ isMock = false }) {
                   className="w-full text-sm text-gray-700 bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 resize-none focus:outline-none focus:ring-2 focus:ring-teal-500"
                 />
               )}
-              <p className="text-xs text-gray-500 mt-2">
+              <p className="text-xs text-gray-700 mt-2">
                 {isMock ? '⚠️ Timer keeps running while this is open' : 'Rough work only — not submitted'}
               </p>
             </div>

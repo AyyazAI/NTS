@@ -25,12 +25,12 @@ export function Step({ number, title, explanation, working, tip }) {
           <>
             <button
               onClick={() => setTipOpen(o => !o)}
-              className="flex items-center gap-1 text-xs font-bold text-teal-600 hover:text-teal-700 transition-colors"
+              className="flex items-center gap-1 text-xs font-bold text-teal-700 hover:text-teal-800 transition-colors"
             >
               💡 {tipOpen ? 'Hide tip' : 'Why this step?'}
             </button>
             {tipOpen && (
-              <p className="text-xs text-gray-600 mt-1.5 italic border-l-2 border-teal-300 pl-2 leading-relaxed">
+              <p className="text-xs text-gray-700 mt-1.5 italic border-l-2 border-teal-300 pl-2 leading-relaxed">
                 {tip}
               </p>
             )}
@@ -87,7 +87,7 @@ export function VisualMethod() {
         </p>
       </div>
 
-      <p className="text-sm text-gray-600 mt-3 leading-relaxed">
+      <p className="text-sm text-gray-700 mt-3 leading-relaxed">
         Each cell above = one rejected pair = one unique committee.
         Every cell is different. No pair is repeated.
         Count the cells — that is your answer.
@@ -101,7 +101,7 @@ export function BridgeCard() {
   return (
     <div className="border-2 border-teal-600 rounded-xl p-4 mt-2 mb-2">
       <p className="text-sm font-black text-teal-700 mb-1">🎯 Challenge yourself</p>
-      <p className="text-sm text-gray-600">
+      <p className="text-sm text-gray-700">
         On the next similar question, try solving with the formula.
         Method 1 is always here if you get stuck.
       </p>
@@ -180,7 +180,7 @@ Total:                 21
 export function Method2() {
   return (
     <div>
-      <p className="text-sm text-gray-600 italic mb-4 leading-relaxed">
+      <p className="text-sm text-gray-700 italic mb-4 leading-relaxed">
         Now that you understand WHY the answer is 21 through counting, here is the shortcut
         mathematicians use — especially useful when numbers are much larger.
       </p>

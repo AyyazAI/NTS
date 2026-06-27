@@ -67,7 +67,7 @@ export default function SubTopicSelection() {
 
   function focusBadge(pct) {
     if (pct < 50) return { text: '⚠️ Focus here', cls: 'text-amber-700 bg-amber-100' }
-    if (pct < 65) return { text: '💡 Needs work',  cls: 'text-amber-600 bg-yellow-50' }
+    if (pct < 65) return { text: '💡 Needs work',  cls: 'text-amber-700 bg-amber-100' }
     return null
   }
 
@@ -91,11 +91,11 @@ export default function SubTopicSelection() {
       <main className="flex-1 px-4 pb-56">
         {/* Back + breadcrumb */}
         <div className="flex items-center gap-2 mb-1">
-          <Link to="/" className="text-2xl text-gray-600 hover:text-gray-800 leading-none">←</Link>
-          <span className="text-xs font-bold text-gray-600 uppercase tracking-wider">{topicLabel}</span>
+          <Link to="/" className="text-2xl text-gray-700 hover:text-gray-900 leading-none">←</Link>
+          <span className="text-xs font-bold text-gray-700 uppercase tracking-wider">{topicLabel}</span>
         </div>
         <h2 className="text-xl font-black text-gray-900 mb-1">Choose what to practice</h2>
-        <p className="text-xs text-gray-600 mb-4">
+        <p className="text-xs text-gray-700 mb-4">
           {selectedSubtopics.length === 0
             ? 'Tap a sub-topic to focus on it, or start mixed'
             : `${selectedSubtopics.length} selected — tap again to deselect`}
@@ -110,7 +110,7 @@ export default function SubTopicSelection() {
               ? 'border-teal-600 bg-teal-50'
               : sub.pct < 50
               ? 'border-amber-200 bg-amber-50'
-              : 'border-gray-100 bg-gray-50 hover:border-gray-200'
+              : 'border-gray-300 bg-gray-50 hover:border-gray-400'
             return (
               <button
                 key={sub.name}
@@ -133,7 +133,7 @@ export default function SubTopicSelection() {
                       </span>
                     )}
                   </div>
-                  <p className={`text-sm font-bold ml-2 shrink-0 ${isSelected ? 'text-teal-700' : 'text-gray-600'}`}>
+                  <p className={`text-sm font-bold ml-2 shrink-0 ${isSelected ? 'text-teal-700' : 'text-gray-700'}`}>
                     {sub.pct}%
                   </p>
                 </div>
@@ -159,7 +159,7 @@ export default function SubTopicSelection() {
                 className={`flex-1 py-2.5 rounded-xl text-xs font-bold border-2 transition-all ${
                   difficulty === d
                     ? 'bg-teal-600 text-white border-teal-600'
-                    : 'bg-white text-gray-600 border-gray-200 hover:border-gray-300'
+                    : 'bg-gray-100 text-gray-700 border-gray-300 hover:border-gray-400'
                 }`}
               >
                 {d}

@@ -51,7 +51,7 @@ function TopicCard({ topic, total }) {
 
   return (
     <Link to={`/practice?topic=${topic.id}`}>
-      <div className="bg-gray-50 border border-gray-100 rounded-2xl p-4 flex items-center gap-4 hover:border-teal-200 hover:bg-teal-50 transition-all cursor-pointer">
+      <div className="bg-gray-50 border border-gray-300 rounded-2xl p-4 flex items-center gap-4 hover:border-teal-400 hover:bg-teal-50 transition-all cursor-pointer">
         <span className="text-3xl">{topic.icon}</span>
         <div className="flex-1 min-w-0">
           <div className="flex items-center justify-between mb-1.5">
@@ -67,16 +67,16 @@ function TopicCard({ topic, total }) {
             />
           </div>
           {showAccuracy ? (
-            <p className="text-xs text-gray-600">
+            <p className="text-xs text-gray-700">
               {attempted} of {total} attempted · {topic.pct}% accuracy
             </p>
           ) : (
-            <p className="text-xs text-gray-600">
+            <p className="text-xs text-gray-700">
               {attempted} of {total} questions attempted
             </p>
           )}
         </div>
-        <span className="text-gray-300 text-xl">›</span>
+        <span className="text-gray-500 text-xl">›</span>
       </div>
     </Link>
   )
@@ -108,7 +108,7 @@ export default function Home() {
 
       <main className="flex-1 px-4 pt-4 pb-28">
         <h1 className="text-2xl font-black text-gray-900 mb-1">{greeting}</h1>
-        <div className="bg-teal-50 border border-teal-100 rounded-xl px-4 py-3 mb-5">
+        <div className="bg-teal-50 border border-teal-300 rounded-xl px-4 py-3 mb-5">
           <p className="text-sm font-bold text-teal-800">{goal}</p>
         </div>
 
@@ -124,7 +124,7 @@ export default function Home() {
               className={`flex-1 py-3 rounded-xl text-sm font-bold border-2 transition-all ${
                 mode === m.id
                   ? 'bg-teal-600 text-white border-teal-600'
-                  : 'bg-white text-gray-600 border-gray-200 hover:border-gray-300'
+                  : 'bg-gray-100 text-gray-700 border-gray-300 hover:border-gray-400'
               }`}
             >
               {m.label}
@@ -145,7 +145,7 @@ export default function Home() {
         {/* Mock test */}
         {mode === 'mock' && (
           <div className="pt-2 text-center">
-            <p className="text-sm text-gray-600 mb-4">
+            <p className="text-sm text-gray-700 mb-4">
               Last score: <span className="font-bold text-gray-700">67/90</span>
             </p>
             <Link to="/mock-test">

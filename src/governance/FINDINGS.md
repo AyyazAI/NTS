@@ -489,3 +489,64 @@
 | R5-10 | 🟡 Medium | CLAUDE.md | UX-008 documented old full-screen overlay — updated for bottom-sheet pattern | ✅ Fixed — UX-008 updated |
 | R5-11 | 🟡 Medium | BottomNav | Nav accessible during active mock test — student can exit without submitting | ✅ Fixed — nav locked during mock test routes; toast "Complete or submit your test first" |
 | R5-12 | 🟡 Medium | Practice Question | Back arrow navigates away without warning — session progress lost silently | ✅ Fixed — "Leave practice?" confirmation dialog; beforeunload handler added |
+
+---
+
+## Round 6 — Global Contrast Audit (June 27, 2026)
+
+### Source: AI contrast audit (Claude Code) — GOV-RULE-012 enforcement pass
+
+**Scope:** All 13 src/ files audited. Every text element checked against page background. Rule: gray-700 minimum on white/light backgrounds; no gray-400 or gray-500 on white.
+
+**Method:** Playwright `contrast-audit.spec.js` — DOM traversal per route, WCAG contrast ratio < 4.5:1 = violation.
+
+| ID | Severity | File | Finding | Resolution |
+|---|---|---|---|---|
+| R6-01 | 🟢 Low | Header.jsx | "NTS PREP" text-gray-600 on white — 5.74:1 borderline | ✅ Fixed — text-gray-800 |
+| R6-02 | 🟢 Low | Header.jsx | Header border-gray-100 too light | ✅ Fixed — border-gray-200 |
+| R6-03 | 🟢 Low | MethodTabs.jsx | Inactive tabs bg-white text-gray-600 border-gray-200 | ✅ Fixed — bg-gray-100 text-gray-700 border-gray-300 |
+| R6-04 | 🟢 Low | Canvas.jsx | Selected tab bg-white text-teal-600 on gray-300 container | ✅ Fixed — bg-teal-600 text-white |
+| R6-05 | 🟢 Low | Canvas.jsx | Draw tool buttons border-gray-200 text-gray-600 | ✅ Fixed — border-gray-300 text-gray-700 |
+| R6-06 | 🟢 Low | Canvas.jsx | Canvas element border-gray-200 | ✅ Fixed — border-gray-400 |
+| R6-07 | 🟢 Low | RoughWork.jsx | "No work yet" text-gray-500 | ✅ Fixed — text-gray-600 |
+| R6-08 | 🟢 Low | RoughWork.jsx | Modal tabs inactive text-gray-600 | ✅ Fixed — text-gray-700 |
+| R6-09 | 🟢 Low | RoughWork.jsx | Modal draw tool buttons border-gray-200 text-gray-600 | ✅ Fixed — border-gray-300 text-gray-700 |
+| R6-10 | 🟢 Low | RoughWork.jsx | Modal canvas border-gray-300 | ✅ Fixed — border-gray-400 |
+| R6-11 | 🟢 Low | RoughWork.jsx | Modal footer text-gray-500 | ✅ Fixed — text-gray-700 |
+| R6-12 | 🟢 Low | Home.jsx | Mode button inactive bg-white text-gray-600 border-gray-200 | ✅ Fixed — bg-gray-100 text-gray-700 border-gray-300 |
+| R6-13 | 🟢 Low | Home.jsx | Topic card border-gray-100 | ✅ Fixed — border-gray-300 |
+| R6-14 | 🟢 Low | Home.jsx | Chevron text-gray-300 | ✅ Fixed — text-gray-500 |
+| R6-15 | 🟢 Low | Home.jsx | Card description text-gray-600 | ✅ Fixed — text-gray-700 |
+| R6-16 | 🟢 Low | Home.jsx | Goal card border-teal-100 | ✅ Fixed — border-teal-300 |
+| R6-17 | 🟢 Low | SubTopicSelection.jsx | Breadcrumb/subtitle text-gray-600 | ✅ Fixed — text-gray-700 |
+| R6-18 | 🟢 Low | SubTopicSelection.jsx | Unselected card border-gray-100 bg-gray-50 hover:border-gray-200 | ✅ Fixed — border-gray-300 hover:border-gray-400 |
+| R6-19 | 🟢 Low | SubTopicSelection.jsx | Difficulty button inactive bg-white text-gray-600 border-gray-200 | ✅ Fixed — bg-gray-100 text-gray-700 border-gray-300 |
+| R6-20 | 🟢 Low | SubTopicSelection.jsx | "Needs work" badge text-amber-600 bg-yellow-50 | ✅ Fixed — text-amber-700 bg-amber-100 |
+| R6-21 | 🟢 Low | SolutionCorrect.jsx | "You selected A" text-gray-500 | ✅ Fixed — text-gray-700 |
+| R6-22 | 🟢 Low | SolutionCorrect.jsx | "47 seconds" text-teal-600 | ✅ Fixed — text-teal-700 |
+| R6-23 | 🟢 Low | SolutionCorrect.jsx | "Keep going" text-gray-600 | ✅ Fixed — text-gray-700 |
+| R6-24 | 🟢 Low | SolutionWrong.jsx | Tip toggle text-teal-600 | ✅ Fixed — text-teal-700 |
+| R6-25 | 🟢 Low | SolutionWrong.jsx | Tip/BridgeCard/VisualMethod captions text-gray-600 | ✅ Fixed — text-gray-700 |
+| R6-26 | 🟢 Low | SolutionWrong.jsx | Method2 intro text-gray-600 italic | ✅ Fixed — text-gray-700 |
+| R6-27 | 🟢 Low | MockTestResults.jsx | Borders border-gray-100 | ✅ Fixed — border-gray-300 |
+| R6-28 | 🟢 Low | MockTestResults.jsx | Non-current test score bg-white border-gray-200 | ✅ Fixed — bg-gray-100 border-gray-300 |
+| R6-29 | 🟢 Low | MockTestResults.jsx | /90 display text-gray-600 | ✅ Fixed — text-gray-700 |
+| R6-30 | 🟢 Low | MockTest.jsx | Legend text-gray-500 | ✅ Fixed — text-gray-700 |
+| R6-31 | 🟢 Low | MockTest.jsx | Section info text-gray-500 | ✅ Fixed — text-gray-700 |
+| R6-32 | 🔴 Critical | QuestionPractice.jsx | ⚐ flag icon text-gray-400 on gray-50 — 2.43:1 ratio (Playwright caught) | ✅ Fixed — text-gray-600 |
+| R6-33 | 🔴 Critical | MockTest.jsx | ⚐ flag icon text-gray-400 on gray-50 — 2.43:1 ratio (Playwright caught) | ✅ Fixed — text-gray-600 |
+| R6-34 | 🔴 Critical | QuestionMockTest.jsx | ⚐ flag icon text-gray-400 on gray-50 — 2.43:1 ratio (Playwright caught) | ✅ Fixed — text-gray-600 |
+| R6-35 | 🟢 Low | QuestionPractice.jsx | Helper text text-gray-600 | ✅ Fixed — text-gray-700 |
+| R6-36 | 🟢 Low | Progress.jsx | "X/Y tried" text-gray-500 | ✅ Fixed — text-gray-700 |
+| R6-37 | 🟢 Low | Progress.jsx | Accordion chevron text-gray-600 | ✅ Fixed — text-gray-700 |
+| R6-38 | 🟢 Low | Progress.jsx | Range toggle inactive border-gray-200 text-gray-600 | ✅ Fixed — border-gray-300 text-gray-700 |
+| R6-39 | 🟢 Low | Profile.jsx | StatRow labels text-gray-600 | ✅ Fixed — text-gray-700 |
+| R6-40 | 🟢 Low | Profile.jsx | Section headers text-gray-500 | ✅ Fixed — text-gray-700 |
+| R6-41 | 🟢 Low | Profile.jsx | Card borders border-gray-100 | ✅ Fixed — border-gray-300 |
+| R6-42 | 🟢 Low | Admin.jsx | "Admin Panel" subtitle text-gray-400 | ✅ Fixed — text-gray-700 |
+| R6-43 | 🟢 Low | Admin.jsx | Sign out text-gray-400 | ✅ Fixed — text-gray-600 |
+| R6-44 | 🟢 Low | Admin.jsx | Loading text-gray-400 | ✅ Fixed — text-gray-700 |
+| R6-45 | 🟢 Low | Admin.jsx | Done task text-gray-500 | ✅ Fixed — text-gray-600 |
+| R6-46 | 🟢 Low | Onboarding.jsx | Subtitle/contact note text-gray-600 | ✅ Fixed — text-gray-700 |
+
+**Playwright contrast-audit.spec.js:** 11 routes × 1 GOV-RULE-012 check = 11 tests. 3 initially failed (⚐ flag icon). Fixed and all 122/122 passing.
