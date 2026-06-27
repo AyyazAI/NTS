@@ -676,6 +676,9 @@ When student crosses their target score, app detects it, celebrates, and immedia
 Example: Hit 70% → "Top engineering universities need 75%+. Ready?"
 Phase: 3
 
+**Phase 2 — Readiness Gauge Behavior:**
+Readiness gauge fills based on current score vs target score (not out of 90). Updates automatically when student changes target in Profile. Score ≥ target → full donut + "Goal achieved! 🎉". Score < target → partial fill showing progress toward target with gap message.
+
 ### PD-002 — University Merit Benchmarks
 Show NAT-I accepting universities with their closing merit benchmarks on the progress graph as reference lines. Data sourced from publicly available merit lists, updated annually.
 Key finding: FAST, COMSATS, Air University, Bahria accept NAT-I.
@@ -784,6 +787,9 @@ Never mechanical — only where it feels natural.
 Home screen purpose: motivate and direct to action. NOT a dashboard — that's Progress screen.
 Shows: greeting, daily prompt, 4 section cards, mode toggle.
 Removes: ambiguous progress bar (unclear if practice/mock/overall).
+
+### UX-008 — Canvas as Full-Screen Overlay
+Canvas is a full-screen fixed overlay (z-50), not embedded in the question screen. Triggered by "✏️ Open scratch pad" button below answer options. Top bar shows question number (left) and "Done ✓" (right). Done closes the overlay and returns to the question. Drawing persists per session — overlay stays mounted so canvas buffer is preserved. Applies to both Practice Mode and Mock Test.
 
 ### UX-007 — Mock Test Redesign (Phase 2)
 Default mock test: subject-focused, 25 minutes, difficulty choice.

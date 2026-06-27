@@ -25,7 +25,17 @@ test.describe('Practice Question Screen', () => {
     await expect(backBtn).not.toBeVisible()
   })
 
-  test('canvas Draw and Type tabs are present (Phase 1)', async ({ page }) => {
+  test('scratch pad trigger button is visible below answer options', async ({ page }) => {
+    await expect(page.locator('button:has-text("Open scratch pad")')).toBeVisible()
+  })
+
+  test('scratch pad overlay opens when trigger is tapped', async ({ page }) => {
+    await page.locator('button:has-text("Open scratch pad")').click()
+    await expect(page.locator('button:has-text("Done ✓")')).toBeVisible()
+  })
+
+  test('canvas Draw and Type tabs are present inside overlay (Phase 1)', async ({ page }) => {
+    await page.locator('button:has-text("Open scratch pad")').click()
     await expect(page.locator('button:has-text("✏️ Draw")')).toBeVisible()
     await expect(page.locator('button:has-text("⌨️ Type")')).toBeVisible()
   })
@@ -34,8 +44,15 @@ test.describe('Practice Question Screen', () => {
     await expect(page.locator('button:has-text("📷 Upload")')).not.toBeVisible()
   })
 
-  test('canvas draw area is a real HTML5 canvas element', async ({ page }) => {
+  test('canvas draw area is a real HTML5 canvas element inside overlay', async ({ page }) => {
+    await page.locator('button:has-text("Open scratch pad")').click()
     await expect(page.locator('canvas')).toBeVisible()
+  })
+
+  test('Done button closes the scratch pad overlay', async ({ page }) => {
+    await page.locator('button:has-text("Open scratch pad")').click()
+    await page.locator('button:has-text("Done ✓")').click()
+    await expect(page.locator('button:has-text("Done ✓")')).not.toBeVisible()
   })
 
   test('flag icon is present on the question card', async ({ page }) => {

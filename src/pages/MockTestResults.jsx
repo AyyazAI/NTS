@@ -4,7 +4,10 @@ import Header from '../components/Header'
 import BottomNav from '../components/BottomNav'
 import { getNatCategory, getCategoryLabel } from '../utils/natCategory'
 
-const ATTEMPTED = 28
+const ATTEMPTED    = 28
+const SKIPPED      = 2
+const TOTAL        = 90
+const UNATTEMPTED  = TOTAL - ATTEMPTED - SKIPPED
 
 function SectionBar({ name, score, total, pct }) {
   const colour = pct >= 70 ? 'bg-teal-500' : pct >= 50 ? 'bg-amber-400' : 'bg-red-400'
@@ -13,7 +16,7 @@ function SectionBar({ name, score, total, pct }) {
       <div className="flex justify-between items-baseline mb-1">
         <span className="text-sm font-bold text-gray-700">{name}</span>
         <span className="text-sm font-black text-gray-900">
-          {score}/{total} <span className="text-gray-400 font-bold">({pct}%)</span>
+          {score}/{total} <span className="text-gray-700 font-bold">({pct}%)</span>
         </span>
       </div>
       <div className="h-2.5 bg-gray-100 rounded-full overflow-hidden">
@@ -39,7 +42,7 @@ export default function MockTestResults() {
     <div className="min-h-screen bg-white flex flex-col max-w-sm mx-auto">
       <Header />
 
-      <main className="flex-1 px-4 pb-28 overflow-y-auto">
+      <main className="flex-1 px-4 overflow-y-auto" style={{ paddingBottom: '96px' }}>
         {/* Result header */}
         <div className="text-center py-6">
           <p className="text-teal-600 font-black text-lg mb-1">Test Complete ✓</p>
@@ -62,27 +65,28 @@ export default function MockTestResults() {
 
         {/* Section breakdown */}
         <div className="bg-gray-50 border border-gray-100 rounded-2xl p-4 mb-4">
-          <p className="text-xs font-black text-gray-500 uppercase tracking-wider mb-3">Section Breakdown</p>
+          <p className="text-xs font-black text-gray-900 uppercase tracking-wider mb-3">Section Breakdown</p>
           {SECTIONS.map(s => <SectionBar key={s.name} {...s} />)}
         </div>
 
         {/* Stats row */}
-        <div className="grid grid-cols-3 gap-3 mb-4">
+        <div className="grid grid-cols-2 gap-3 mb-4">
           {[
-            { label: 'Attempted', value: String(ATTEMPTED) },
-            { label: 'Skipped',   value: '2' },
-            { label: 'Flagged',   value: '3' },
+            { label: 'Attempted',    value: String(ATTEMPTED)   },
+            { label: 'Skipped',      value: String(SKIPPED)     },
+            { label: 'Unattempted',  value: String(UNATTEMPTED) },
+            { label: 'Flagged',      value: '3'                 },
           ].map(s => (
             <div key={s.label} className="bg-gray-50 border border-gray-100 rounded-xl p-3 text-center">
               <p className="text-xl font-black text-gray-900">{s.value}</p>
-              <p className="text-[11px] font-bold text-gray-600 mt-0.5">{s.label}</p>
+              <p className="text-[11px] font-bold text-gray-700 mt-0.5">{s.label}</p>
             </div>
           ))}
         </div>
 
         {/* Attempt history */}
         <div className="bg-gray-50 border border-gray-100 rounded-2xl p-4 mb-4">
-          <p className="text-xs font-black text-gray-500 uppercase tracking-wider mb-2">Your Progress</p>
+          <p className="text-xs font-black text-gray-700 uppercase tracking-wider mb-2">Your Progress</p>
           <div className="flex items-center gap-2">
             {[
               { label: 'Test 1', score: 52, arrow: '' },
@@ -96,7 +100,7 @@ export default function MockTestResults() {
                     {t.arrow && <span className="text-sm text-teal-400 ml-0.5">{t.arrow}</span>}
                   </p>
                 </div>
-                <p className="text-[10px] font-bold text-gray-400 mt-1">{t.label}</p>
+                <p className="text-[10px] font-bold text-gray-700 mt-1">{t.label}</p>
               </div>
             ))}
           </div>

@@ -24,6 +24,7 @@ export default function QuestionPractice() {
   const navigate   = useNavigate()
   const [selected, setSelected] = useState(null)
   const [flagged,  setFlagged]  = useState(false)
+  const [padOpen,  setPadOpen]  = useState(false)
 
   const isFirst = QUESTION.number === 1
 
@@ -97,8 +98,13 @@ export default function QuestionPractice() {
           ))}
         </div>
 
-        {/* Canvas */}
-        <Canvas />
+        {/* Scratch pad trigger */}
+        <button
+          onClick={() => setPadOpen(true)}
+          className="w-full py-3 rounded-xl border-2 border-gray-200 text-sm font-bold text-gray-700 hover:border-gray-300 flex items-center justify-center gap-2 transition-colors"
+        >
+          ✏️ Open scratch pad
+        </button>
       </main>
 
       {/* Bottom action bar */}
@@ -148,6 +154,22 @@ export default function QuestionPractice() {
       </div>
 
       <BottomNav />
+
+      {/* Scratch pad overlay — always mounted to preserve drawing */}
+      <div className={`fixed inset-0 bg-white z-50 flex flex-col max-w-sm mx-auto${padOpen ? '' : ' hidden'}`}>
+        <div className="flex items-center justify-between px-4 py-4 border-b border-gray-100 flex-shrink-0">
+          <span className="text-sm font-bold text-gray-700">Q{QUESTION.number}</span>
+          <button
+            onClick={() => setPadOpen(false)}
+            className="text-sm font-bold text-teal-600 hover:text-teal-700 px-2 py-1"
+          >
+            Done ✓
+          </button>
+        </div>
+        <div className="flex-1 overflow-y-auto px-4 pb-4 pt-2">
+          <Canvas />
+        </div>
+      </div>
     </div>
   )
 }

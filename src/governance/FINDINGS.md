@@ -439,3 +439,27 @@
 | R3-24 | Progress.jsx: Start here button (already implemented in R2 Accordion) | pending |
 | R3-26 | Profile.jsx: "days to your NAT test (Jul 12)" | pending |
 | R3-28 | Profile.jsx: goal bar fill = current/90 + tick mark at target/90 | pending |
+
+---
+
+## Round 4 — Testing Session (June 27, 2026)
+
+### Source: Owner screenshot review + AI spec compliance
+
+| ID | Severity | Screen | Finding | Resolution |
+|---|---|---|---|---|
+| R4-01 | 🟠 High | Practice/Mock | Embedded canvas clutters question screen — needs full-screen overlay | ✅ Fixed — canvas moved to overlay behind "✏️ Open scratch pad" button |
+| R4-02 | 🟡 Medium | Mock Test Submit Dialog | Buttons too close — no gap between Review Flagged and Submit Anyway | ✅ Fixed — flex flex-col gap-3 |
+| R4-03 | 🟡 Medium | Mock Test Submit Dialog | No way to dismiss dialog without choosing — need Cancel option | ✅ Fixed — "Cancel — Continue Test" text link added |
+| R4-05 | 🟡 Medium | Mock Test Results | Stats row missing Unattempted count | ✅ Fixed — 2×2 grid: Attempted · Skipped · Unattempted · Flagged |
+| R4-06/08 | 🟡 Medium | Mock Test Results | Content clipped behind bottom nav | ✅ Fixed — paddingBottom: 96px on main |
+| R4-09 | 🟢 Low | Mock Test Results | Percentage labels (75%) too light — text-gray-400 | ✅ Fixed — text-gray-700 |
+| R4-10 | 🟢 Low | Mock Test Results | SECTION BREAKDOWN header too light — text-gray-500 | ✅ Fixed — text-gray-900 |
+| R4-11 | 🟢 Low | Mock Test Results | Attempted/Skipped/Flagged labels too light — text-gray-600 | ✅ Fixed — text-gray-700 |
+| R4-12 | 🟢 Low | Progress Mock chart | X-axis labels (Test 1/2/3) too light — fill #4b5563 | ✅ Fixed — fill #374151 (gray-700) |
+| R4-13 | 🟢 Low | Progress Mock stats | Stats card secondary labels too light — text-gray-600 | ✅ Fixed — text-gray-700 |
+| R4-14 | 🟠 High | Progress Readiness | Hardcoded "Focus on Algebra and Combinations" text — GOV-RULE-001 violation | ✅ Fixed — replaced with placeholder text |
+| R4-15 | 🟢 Low | Progress Mock stats | "Analytical 85% Highest Section" — missing "Reasoning" | ✅ Fixed — "Analytical Reasoning 85%" |
+| R4-17 | 🟢 Low | Multiple | Stat card secondary labels lighter than text-gray-700 — GOV-RULE-012 | ✅ Fixed — all labels upgraded to text-gray-700 |
+| R4-18 | 🟢 Low | Progress Mock tab | Content below readiness card hidden — scroll padding missing | ✅ Fixed — pb-6 on amber focus card |
+| R4-19 | 🟡 Medium | CLAUDE.md | PD-001 missing Phase 2 gauge spec + UX-008 canvas overlay not documented | ✅ Fixed — CLAUDE.md updated |

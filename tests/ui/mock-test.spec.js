@@ -45,6 +45,21 @@ test.describe('Mock Test Question Screen', () => {
     await expect(actionBar.locator('button:has-text("Submit Test")')).not.toBeVisible()
   })
 
+  test('scratch pad trigger button is visible below answer options', async ({ page }) => {
+    await expect(page.locator('button:has-text("Open scratch pad")')).toBeVisible()
+  })
+
+  test('scratch pad overlay opens when trigger is tapped', async ({ page }) => {
+    await page.locator('button:has-text("Open scratch pad")').click()
+    await expect(page.locator('button:has-text("Done ✓")')).toBeVisible()
+  })
+
+  test('Done button closes the scratch pad overlay', async ({ page }) => {
+    await page.locator('button:has-text("Open scratch pad")').click()
+    await page.locator('button:has-text("Done ✓")').click()
+    await expect(page.locator('button:has-text("Done ✓")')).not.toBeVisible()
+  })
+
   test('Upload tab is NOT present in Phase 1', async ({ page }) => {
     await expect(page.locator('button:has-text("📷 Upload")')).not.toBeVisible()
   })
@@ -61,6 +76,7 @@ test.describe('Mock Test Question Screen', () => {
   })
 
   test('canvas footer shows timer warning in mock mode', async ({ page }) => {
+    await page.locator('button:has-text("Open scratch pad")').click()
     await expect(page.locator('text=Timer keeps running')).toBeVisible()
   })
 

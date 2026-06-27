@@ -52,6 +52,7 @@ export default function QuestionMockTest() {
   const [selected,     setSelected]     = useState(null)
   const [flagged,      setFlagged]      = useState(false)
   const [showConfirm,  setShowConfirm]  = useState(false)
+  const [padOpen,      setPadOpen]      = useState(false)
   const [natCategory]  = useState(() => getNatCategory() || 'NAT-IE')
 
   const subjectLabel  = getCategoryLabel(natCategory)
@@ -130,8 +131,13 @@ export default function QuestionMockTest() {
           ))}
         </div>
 
-        {/* Canvas */}
-        <Canvas footerText="⚠️ Timer keeps running if you leave this page" />
+        {/* Scratch pad trigger */}
+        <button
+          onClick={() => setPadOpen(true)}
+          className="w-full py-3 rounded-xl border-2 border-gray-200 text-sm font-bold text-gray-700 hover:border-gray-300 flex items-center justify-center gap-2 transition-colors"
+        >
+          ✏️ Open scratch pad
+        </button>
       </main>
 
       {/* Bottom action bar — [‹] [Submit Answer] [›] only, no Submit Test */}
@@ -167,10 +173,10 @@ export default function QuestionMockTest() {
         <div className="fixed inset-0 bg-black bg-opacity-40 flex items-end justify-center z-50 max-w-sm mx-auto">
           <div className="w-full bg-white rounded-t-3xl px-6 pt-6 pb-10">
             <h3 className="text-lg font-black text-gray-900 mb-1">Submit test?</h3>
-            <p className="text-sm text-gray-500 mb-6">
+            <p className="text-sm text-gray-700 mb-6">
               You have <span className="font-bold text-amber-600">3 flagged questions</span>. What would you like to do?
             </p>
-            <div className="space-y-3">
+            <div className="flex flex-col gap-3">
               <button
                 onClick={() => setShowConfirm(false)}
                 className="w-full py-4 rounded-xl border-2 border-gray-200 text-sm font-bold text-gray-700 hover:bg-gray-50"
@@ -182,10 +188,32 @@ export default function QuestionMockTest() {
                   Submit Test Anyway
                 </button>
               </Link>
+              <button
+                onClick={() => setShowConfirm(false)}
+                className="text-sm font-bold text-gray-500 hover:text-gray-700 text-center w-full py-2"
+              >
+                Cancel — Continue Test
+              </button>
             </div>
           </div>
         </div>
       )}
+
+      {/* Scratch pad overlay — always mounted to preserve drawing */}
+      <div className={`fixed inset-0 bg-white z-50 flex flex-col max-w-sm mx-auto${padOpen ? '' : ' hidden'}`}>
+        <div className="flex items-center justify-between px-4 py-4 border-b border-gray-100 flex-shrink-0">
+          <span className="text-sm font-bold text-gray-700">Q{QUESTION.number}</span>
+          <button
+            onClick={() => setPadOpen(false)}
+            className="text-sm font-bold text-teal-600 hover:text-teal-700 px-2 py-1"
+          >
+            Done ✓
+          </button>
+        </div>
+        <div className="flex-1 overflow-y-auto px-4 pb-4 pt-2">
+          <Canvas footerText="⚠️ Timer keeps running if you leave this page" />
+        </div>
+      </div>
     </div>
   )
 }

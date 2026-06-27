@@ -59,7 +59,7 @@ function LineChart({ points, labels = null, colour = '#0D9488' }) {
       >Score %</text>
 
       {labels && labels.map((label, i) => (
-        <text key={i} x={xs[i]} y={h - 2} fontSize="8" fill="#4b5563" textAnchor="middle" fontWeight="600">
+        <text key={i} x={xs[i]} y={h - 2} fontSize="8" fill="#374151" textAnchor="middle" fontWeight="600">
           {label}
         </text>
       ))}
@@ -291,11 +291,11 @@ function MockTab() {
           { label: 'Tests Completed',  value: '3'             },
           { label: 'Best Score',       value: '67/90'         },
           { label: 'Average Score',    value: '60/90'         },
-          { label: 'Highest Section',  value: 'Analytical 85%' },
+          { label: 'Highest Section',  value: 'Analytical Reasoning 85%' },
         ].map(s => (
           <div key={s.label} className="bg-gray-50 border border-gray-100 rounded-xl p-3">
             <p className="text-xl font-black text-gray-900">{s.value}</p>
-            <p className="text-xs font-bold text-gray-600 mt-0.5">{s.label}</p>
+            <p className="text-xs font-bold text-gray-700 mt-0.5">{s.label}</p>
           </div>
         ))}
       </div>
@@ -317,13 +317,13 @@ function MockTab() {
           <div>
             <p className="font-black text-gray-900 mb-1">Getting there!</p>
             <p className="text-xs text-gray-700 leading-relaxed">
-              Focus on Algebra and Combinations to push your score above 75.
+              Complete more practice sessions to see your personalised readiness analysis.
             </p>
           </div>
         </div>
       </div>
 
-      <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4">
+      <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4 pb-6">
         <p className="text-xs font-black text-amber-700 uppercase tracking-wider mb-2">Based on your mock tests, focus on:</p>
         {[
           { rank: 1, name: 'Algebra',       pct: 38 },
