@@ -199,7 +199,6 @@ function PracticeTab({ natCategory }) {
   const chartData = {
     Week:  { data: [42, 48, 45, 60, 65, 63, 74], labels: ['Mon 23','Tue 24','Wed 25','Thu 26','Fri 27','Sat 28','Sun 29'] },
     Month: { data: [38, 52, 62, 74],              labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'] },
-    All:   { data: [28, 38, 48, 55, 63, 74],      labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'] },
   }
 
   const subjectSubs  = SUBJECT_SUBTOPICS[natCategory] ?? SUBJECT_SUBTOPICS['NAT-IE']
@@ -237,7 +236,7 @@ function PracticeTab({ natCategory }) {
             <p className="text-teal-600 font-black text-sm">+26% this week ↑</p>
           </div>
           <div className="flex gap-1">
-            {['Week', 'Month', 'All'].map(r => (
+            {['Week', 'Month'].map(r => (
               <button
                 key={r}
                 onClick={() => setRange(r)}
@@ -262,9 +261,8 @@ function PracticeTab({ natCategory }) {
 function MockTab() {
   const [range, setRange] = useState('Week')
   const chartData = {
-    Week:  { data: [52, 61, 67],          labels: ['Test 1', 'Test 2', 'Test 3'] },
-    Month: { data: [45, 52, 61, 67],      labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'] },
-    All:   { data: [42, 48, 52, 58, 67],  labels: ['Feb', 'Mar', 'Apr', 'May', 'Jun'] },
+    Week:  { data: [52, 61, 67],     labels: ['Test 1', 'Test 2', 'Test 3'] },
+    Month: { data: [45, 52, 61, 67], labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'] },
   }
   return (
     <div>
@@ -275,7 +273,7 @@ function MockTab() {
             <p className="text-teal-600 font-black text-sm">↑ 15 points across 3 tests</p>
           </div>
           <div className="flex gap-1">
-            {['Week', 'Month', 'All'].map(r => (
+            {['Week', 'Month'].map(r => (
               <button
                 key={r}
                 onClick={() => setRange(r)}

@@ -20,16 +20,15 @@ test.describe('Practice Question Screen', () => {
     await expect(page.locator('button:has-text("Show Solution")')).toBeVisible()
   })
 
-  test('Show Solution expands inline panel on same page', async ({ page }) => {
+  test('Show Solution navigates to /solution/wrong (dedicated page)', async ({ page }) => {
     await page.locator('button:has-text("Show Solution")').click()
-    await expect(page.locator('text=Solution — three methods')).toBeVisible()
-    // Should NOT navigate away
-    await expect(page).toHaveURL(/\/practice\/question/)
+    await expect(page).toHaveURL(/\/solution\/wrong/)
   })
 
-  test('Show Solution button becomes Hide Solution when panel is open', async ({ page }) => {
+  test('solution page shows Back to Practice button when accessed via Show Solution', async ({ page }) => {
     await page.locator('button:has-text("Show Solution")').click()
-    await expect(page.locator('button:has-text("Hide Solution")')).toBeVisible()
+    await expect(page).toHaveURL(/\/solution\/wrong/)
+    await expect(page.locator('button:has-text("← Back to Practice")')).toBeVisible()
   })
 
   test('back arrow is hidden on Question 1', async ({ page }) => {
@@ -66,6 +65,27 @@ test.describe('Practice Question Screen', () => {
     await expect(page.locator('[data-testid="rough-work-modal"]')).toBeVisible()
     await page.locator('[data-testid="rough-work-modal"] button:has-text("Done")').click()
     await expect(page.locator('[data-testid="rough-work-modal"]')).not.toBeVisible()
+  })
+
+  test('canvas drawing persists when rough work modal is closed and reopened', async ({ page }) => {
+    await page.locator('[data-testid="rough-work-box"]').dblclick()
+    await expect(page.locator('[data-testid="rough-work-modal"]')).toBeVisible()
+    // Draw on canvas
+    const canvas = page.locator('canvas')
+    const box = await canvas.boundingBox()
+    await page.mouse.move(box.x + 50, box.y + 50)
+    await page.mouse.down()
+    await page.mouse.move(box.x + 150, box.y + 100)
+    await page.mouse.up()
+    // Close modal
+    await page.locator('[data-testid="rough-work-modal"] button:has-text("Done")').click()
+    await expect(page.locator('[data-testid="rough-work-modal"]')).not.toBeVisible()
+    // Preview box should now show canvas image
+    const preview = page.locator('[data-testid="rough-work-box"] img')
+    await expect(preview).toBeVisible()
+    // Reopen — canvas should restore
+    await page.locator('[data-testid="rough-work-box"]').dblclick()
+    await expect(page.locator('canvas')).toBeVisible()
   })
 
   test('flag icon is present on the question card — unfilled by default', async ({ page }) => {

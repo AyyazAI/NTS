@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback } from 'react'
+import { useState, useRef, useCallback, useEffect } from 'react'
 
 const DRAW_TOOLS = [
   { id: 'thick',  icon: '✏️', title: 'Thick pen' },
@@ -13,13 +13,23 @@ export default function RoughWork({ isMock = false }) {
   const [activeTab,  setActiveTab]  = useState('draw')
   const [activeTool, setActiveTool] = useState('thick')
   const [preview,    setPreview]    = useState(null)
-  const canvasRef  = useRef(null)
-  const isDrawing  = useRef(false)
-  const history    = useRef([])
-  const textRef    = useRef(null)
-  const lastTap    = useRef(0)
+  const canvasRef    = useRef(null)
+  const isDrawing    = useRef(false)
+  const history      = useRef([])
+  const textRef      = useRef(null)
+  const lastTap      = useRef(0)
+  const savedDataUrl = useRef(null)
 
-  // Double-tap on mobile, dblclick on desktop
+  // Restore canvas drawing when modal opens or tab switches to draw
+  useEffect(() => {
+    if (!modalOpen || activeTab !== 'draw') return
+    const c = canvasRef.current
+    if (!c || !savedDataUrl.current) return
+    const img = new Image()
+    img.onload = () => c.getContext('2d').drawImage(img, 0, 0)
+    img.src = savedDataUrl.current
+  }, [modalOpen, activeTab])
+
   function handleDoubleTap(e) {
     e.preventDefault()
     setModalOpen(true)
@@ -55,6 +65,7 @@ export default function RoughWork({ isMock = false }) {
     if (!c) return
     saveSnapshot()
     c.getContext('2d').clearRect(0, 0, c.width, c.height)
+    savedDataUrl.current = null
     setPreview(null)
   }
 
@@ -125,7 +136,14 @@ export default function RoughWork({ isMock = false }) {
         const ctx = c.getContext('2d')
         const pixels = ctx.getImageData(0, 0, c.width, c.height)
         const hasContent = pixels.data.some((v, i) => i % 4 === 3 && v > 0)
-        setPreview(hasContent ? { type: 'canvas', url: c.toDataURL() } : null)
+        if (hasContent) {
+          const url = c.toDataURL()
+          savedDataUrl.current = url
+          setPreview({ type: 'canvas', url })
+        } else {
+          savedDataUrl.current = null
+          setPreview(null)
+        }
       }
     } else {
       const text = textRef.current?.value?.trim() || ''
@@ -149,15 +167,15 @@ export default function RoughWork({ isMock = false }) {
             <p className="text-[10px] text-gray-400">double-tap to open</p>
           </div>
           {preview?.type === 'canvas' ? (
-            <div className="h-20 bg-white flex items-center justify-center overflow-hidden">
-              <img src={preview.url} className="max-w-full max-h-full object-contain" alt="rough work preview" />
+            <div className="bg-white flex items-center justify-center overflow-hidden p-1 min-h-12">
+              <img src={preview.url} className="max-w-full object-contain" alt="rough work preview" />
             </div>
           ) : preview?.type === 'text' ? (
-            <div className="h-20 bg-teal-50 flex items-start p-3 overflow-hidden">
-              <p className="text-xs text-gray-700 font-mono line-clamp-3">{preview.text}</p>
+            <div className="bg-teal-50 flex items-start p-3 min-h-12">
+              <p className="text-xs text-gray-700 font-mono whitespace-pre-wrap">{preview.text}</p>
             </div>
           ) : (
-            <div className="h-20 bg-teal-50 flex items-center justify-center">
+            <div className="bg-teal-50 flex items-center justify-center py-4">
               <p className="text-xs text-gray-600 italic">No work yet — double-tap to start</p>
             </div>
           )}
@@ -197,7 +215,7 @@ export default function RoughWork({ isMock = false }) {
                     key={t.id}
                     onClick={() => setActiveTab(t.id)}
                     className={`flex-1 py-1.5 text-xs font-bold rounded-md transition-all ${
-                      activeTab === t.id ? 'bg-white text-teal-700 shadow-sm' : 'text-gray-700'
+                      activeTab === t.id ? 'bg-teal-600 text-white shadow-sm' : 'text-gray-900'
                     }`}
                   >
                     {t.label}
@@ -229,9 +247,9 @@ export default function RoughWork({ isMock = false }) {
                   <canvas
                     ref={canvasRef}
                     width={320}
-                    height={200}
+                    height={500}
                     className="w-full rounded-lg border-2 border-dashed border-gray-400 bg-gray-50 touch-none cursor-crosshair"
-                    style={{ height: 180 }}
+                    style={{ height: 500 }}
                     onMouseDown={startDraw}
                     onMouseMove={draw}
                     onMouseUp={stopDraw}

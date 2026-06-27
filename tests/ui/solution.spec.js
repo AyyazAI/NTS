@@ -7,7 +7,7 @@ test.describe('Solution — Wrong Answer', () => {
     await page.goto('/solution/wrong')
   })
 
-  test('"Try a similar question" button is fixed at bottom of viewport even when content scrolls', async ({ page }) => {
+  test('"Try a similar question" button is fixed at bottom when accessed directly', async ({ page }) => {
     const btn = page.locator('button:has-text("Try a similar question")')
     await expect(btn).toBeVisible()
 

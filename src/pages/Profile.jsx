@@ -37,6 +37,18 @@ function StatRow({ label, value }) {
 }
 
 function ViewMode({ natCategory, onEdit }) {
+  const storedDate = (() => { try { return localStorage.getItem('student_test_date') || '' } catch { return '' } })()
+  let daysLabel = '—', dateDisplay = 'Not set', shortDate = ''
+  if (storedDate) {
+    const today = new Date(); today.setHours(0, 0, 0, 0)
+    const target = new Date(storedDate)
+    const diff = Math.ceil((target - today) / 86400000)
+    daysLabel = diff > 0 ? String(diff) : '0'
+    const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
+    shortDate = `${MONTHS[target.getMonth()]} ${target.getDate()}`
+    dateDisplay = target.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
+  }
+
   return (
     <div className="space-y-4">
       {/* Avatar + name */}
@@ -50,11 +62,11 @@ function ViewMode({ natCategory, onEdit }) {
         </div>
       </div>
 
-      {/* Countdown — includes iteration + date */}
+      {/* Countdown — reads from localStorage */}
       <div className="bg-teal-50 border border-teal-200 rounded-2xl p-4 text-center">
-        <p className="text-3xl font-black text-teal-700">18</p>
-        <p className="text-sm font-bold text-teal-600">days to your NAT test (Jul 12)</p>
-        <p className="text-xs text-gray-700 mt-1">Test date: July 12, 2026</p>
+        <p className="text-3xl font-black text-teal-700">{daysLabel}</p>
+        <p className="text-sm font-bold text-teal-600">days to your NAT test{shortDate ? ` (${shortDate})` : ''}</p>
+        <p className="text-xs text-gray-700 mt-1">Test date: {dateDisplay}</p>
       </div>
 
       {/* Goal tracker */}
@@ -93,7 +105,7 @@ function ViewMode({ natCategory, onEdit }) {
       {/* Test details */}
       <div className="bg-gray-50 border border-gray-300 rounded-2xl p-4">
         <p className="text-xs font-black text-gray-700 uppercase tracking-wider mb-2">Test Details</p>
-        <StatRow label="Test date" value="July 12, 2026" />
+        <StatRow label="Test date" value={dateDisplay} />
         <StatRow label="Category"  value={getCategoryLabel(natCategory)} />
       </div>
 
@@ -202,7 +214,7 @@ function EditMode({ initialCategory, onCancel, onSave }) {
                 key={t.id}
                 onClick={() => { setContactType(t.id); mark() }}
                 className={`flex-1 py-1.5 text-xs font-bold rounded-md transition-all ${
-                  contactType === t.id ? 'bg-white text-teal-700 shadow-sm' : 'text-gray-700'
+                  contactType === t.id ? 'bg-teal-600 text-white shadow-sm' : 'text-gray-900'
                 }`}
               >
                 {t.label}
@@ -243,8 +255,8 @@ function EditMode({ initialCategory, onCancel, onSave }) {
                 key={d.value}
                 className={`flex items-center gap-3 px-3 py-2.5 rounded-xl border-2 cursor-pointer transition-all ${
                   testDate === d.value
-                    ? 'border-teal-600 bg-teal-50'
-                    : 'border-gray-300 bg-gray-50 hover:border-gray-400'
+                    ? 'border-teal-600 bg-teal-600'
+                    : 'border-blue-300 bg-blue-100 hover:border-blue-400'
                 }`}
               >
                 <input
@@ -255,7 +267,7 @@ function EditMode({ initialCategory, onCancel, onSave }) {
                   onChange={() => { setTestDate(d.value); mark() }}
                   className="accent-teal-600"
                 />
-                <span className={`text-sm font-bold ${testDate === d.value ? 'text-teal-700' : 'text-gray-700'}`}>
+                <span className={`text-sm font-bold ${testDate === d.value ? 'text-white' : 'text-gray-900'}`}>
                   {d.label}
                 </span>
               </label>
@@ -266,8 +278,8 @@ function EditMode({ initialCategory, onCancel, onSave }) {
         {/* NAT-I Category — readonly */}
         <div>
           <label className="text-xs font-black text-gray-700 uppercase tracking-wider block mb-1.5">NAT-I Category</label>
-          <div className="bg-gray-50 border border-gray-300 rounded-xl px-4 py-3">
-            <p className="text-sm font-semibold text-gray-700">{getCategoryLabel(initialCategory)}</p>
+          <div className="bg-gray-100 border border-gray-300 rounded-xl px-4 py-3">
+            <p className="text-sm font-semibold text-gray-600">{getCategoryLabel(initialCategory)}</p>
           </div>
           <p className="text-xs text-gray-700 mt-1">Contact support to change your category</p>
         </div>

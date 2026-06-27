@@ -174,7 +174,7 @@ export default function MockTest() {
             onClick={handleFlag}
             title={isFlagged ? 'Flagged' : 'Flag for later'}
             className={`absolute top-3 right-3 text-xl font-bold leading-none transition-all hover:scale-110 ${
-              isFlagged ? 'text-orange-500' : 'text-gray-600 hover:text-gray-800'
+              isFlagged ? 'text-orange-500' : 'text-gray-400 hover:text-gray-600'
             }`}
           >
             {isFlagged ? '⚑' : '⚐'}
@@ -192,14 +192,14 @@ export default function MockTest() {
               onClick={() => setSelected(opt.id)}
               className={`w-full flex items-center gap-3 px-4 py-3.5 rounded-xl border-2 text-left transition-all ${
                 selected === opt.id
-                  ? 'border-teal-600 bg-teal-50'
-                  : 'border-gray-200 bg-white hover:border-gray-300'
+                  ? 'bg-teal-600 border-teal-600'
+                  : 'bg-blue-100 border-blue-300 hover:border-blue-400'
               }`}
             >
               <span className={`w-7 h-7 rounded-full border-2 flex items-center justify-center text-xs font-black flex-shrink-0 ${
-                selected === opt.id ? 'border-teal-600 bg-teal-600 text-white' : 'border-gray-300 text-gray-500'
+                selected === opt.id ? 'border-white bg-white text-teal-700' : 'border-blue-300 text-gray-700'
               }`}>{opt.id}</span>
-              <span className={`text-base font-semibold ${selected === opt.id ? 'text-teal-700' : 'text-gray-800'}`}>
+              <span className={`text-base font-semibold ${selected === opt.id ? 'text-white' : 'text-gray-900'}`}>
                 {opt.text}
               </span>
             </button>

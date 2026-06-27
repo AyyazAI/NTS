@@ -106,8 +106,9 @@ test.describe('Onboarding — Step 2', () => {
     await expect(page.locator('input[type="date"]')).not.toBeVisible()
   })
 
-  test('target score defaults to Yes with 60/90', async ({ page }) => {
-    await expect(page.locator('text=I want to score 60/90')).toBeVisible()
+  test('target score label shows Target Score: 60/90', async ({ page }) => {
+    await expect(page.locator('text=Target Score:')).toBeVisible()
+    await expect(page.locator('text=60/90')).toBeVisible()
   })
 
   test('target score slider minimum is 50', async ({ page }) => {

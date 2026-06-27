@@ -3,9 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import Header from '../components/Header'
 import BottomNav from '../components/BottomNav'
 import ModeIndicator from '../components/ModeIndicator'
-import MethodTabs from '../components/MethodTabs'
 import RoughWork from '../components/RoughWork'
-import { Method1, Method2, VisualMethod } from './SolutionWrong'
 
 const QUESTION = {
   number: 1,
@@ -24,10 +22,9 @@ const QUESTION = {
 
 export default function QuestionPractice() {
   const navigate        = useNavigate()
-  const [selected,      setSelected]      = useState(null)
-  const [flagged,       setFlagged]       = useState(false)
-  const [showSolution,  setShowSolution]  = useState(false)
-  const [showLeave,     setShowLeave]     = useState(false)
+  const [selected,  setSelected]  = useState(null)
+  const [flagged,   setFlagged]   = useState(false)
+  const [showLeave, setShowLeave] = useState(false)
 
   const isFirst = QUESTION.number === 1
 
@@ -74,7 +71,7 @@ export default function QuestionPractice() {
             onClick={() => setFlagged(f => !f)}
             title={flagged ? 'Flagged' : 'Flag for later'}
             className={`absolute top-3 right-3 text-xl font-bold leading-none transition-all hover:scale-110 ${
-              flagged ? 'text-orange-500' : 'text-gray-600 hover:text-gray-800'
+              flagged ? 'text-orange-500' : 'text-gray-400 hover:text-gray-600'
             }`}
           >
             {flagged ? '⚑' : '⚐'}
@@ -93,19 +90,19 @@ export default function QuestionPractice() {
               onClick={() => setSelected(opt.id)}
               className={`w-full flex items-center gap-3 px-4 py-3.5 rounded-xl border-2 text-left transition-all ${
                 selected === opt.id
-                  ? 'border-teal-600 bg-teal-50'
-                  : 'border-gray-200 bg-white hover:border-gray-300'
+                  ? 'bg-teal-600 border-teal-600'
+                  : 'bg-blue-100 border-blue-300 hover:border-blue-400'
               }`}
             >
               <span className={`w-7 h-7 rounded-full border-2 flex items-center justify-center text-xs font-black flex-shrink-0 ${
                 selected === opt.id
-                  ? 'border-teal-600 bg-teal-600 text-white'
-                  : 'border-gray-300 text-gray-500'
+                  ? 'border-white bg-white text-teal-700'
+                  : 'border-blue-300 text-gray-700'
               }`}>
                 {opt.id}
               </span>
               <span className={`text-base font-semibold ${
-                selected === opt.id ? 'text-teal-700' : 'text-gray-800'
+                selected === opt.id ? 'text-white' : 'text-gray-900'
               }`}>
                 {opt.text}
               </span>
@@ -113,34 +110,13 @@ export default function QuestionPractice() {
           ))}
         </div>
 
-        {/* Inline solution panel — neutral learning view, no wrong/correct framing */}
-        {showSolution && (
-          <div className="mb-4 border-2 border-teal-200 rounded-2xl overflow-hidden">
-            <div className="bg-teal-600 px-4 py-3">
-              <p className="text-sm font-black text-white">Solution — three methods</p>
-              <p className="text-xs text-teal-100 mt-0.5">All steps shown. Pick the method that makes most sense to you.</p>
-            </div>
-            <div className="p-4">
-              <MethodTabs defaultMethod="count">
-                {(active) => (
-                  <div>
-                    {active === 'count'   && <Method1 />}
-                    {active === 'formula' && <Method2 />}
-                    {active === 'visual'  && <VisualMethod />}
-                  </div>
-                )}
-              </MethodTabs>
-            </div>
-          </div>
-        )}
-
         {/* Rough work area */}
         <RoughWork isMock={false} />
       </main>
 
       {/* Bottom action bar */}
       <div className="fixed bottom-20 left-1/2 -translate-x-1/2 w-full max-w-sm bg-white border-t border-gray-100 px-4 py-3 z-20">
-        {!selected && !showSolution && (
+        {!selected && (
           <p className="text-xs text-center text-gray-700 mb-1.5">Select an answer above to submit</p>
         )}
         <div className="flex items-center gap-2">
@@ -156,16 +132,12 @@ export default function QuestionPractice() {
             <div className="w-10 flex-shrink-0" />
           )}
 
-          {/* Show / Hide Solution */}
+          {/* Show Solution — navigates to dedicated solution page */}
           <button
-            onClick={() => setShowSolution(s => !s)}
-            className={`flex-1 h-12 rounded-xl border-2 text-sm font-bold transition-colors ${
-              showSolution
-                ? 'border-teal-600 bg-teal-50 text-teal-700'
-                : 'border-gray-300 text-gray-700 hover:border-gray-400'
-            }`}
+            onClick={() => navigate('/solution/wrong', { state: { fromShowSolution: true } })}
+            className="flex-1 h-12 rounded-xl border-2 text-sm font-bold transition-colors border-gray-300 text-gray-700 hover:border-gray-400"
           >
-            {showSolution ? 'Hide Solution' : 'Show Solution'}
+            Show Solution
           </button>
 
           {/* Submit Answer */}

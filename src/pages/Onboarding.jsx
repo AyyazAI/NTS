@@ -105,7 +105,7 @@ export default function Onboarding() {
 
       {step === 1 ? (
         <div className="w-full flex-1 flex flex-col">
-          <h1 className="text-2xl font-black text-gray-900 mb-1">{'Welcome to TaleemiMarkaz 👋'}</h1>
+          <h1 className="text-xl font-black text-gray-900 mb-1">{'Welcome to TaleemiMarkaz 👋'}</h1>
           <p className="text-sm text-gray-700 mb-8">Let's get you started in 2 quick steps</p>
 
           <div className="space-y-5">
@@ -149,7 +149,7 @@ export default function Onboarding() {
                     key={t.id}
                     onClick={() => { setContactType(t.id); setContactError('') }}
                     className={`flex-1 py-2 text-xs font-bold rounded-md transition-all ${
-                      contactType === t.id ? 'bg-white text-teal-700 shadow-sm' : 'text-gray-700'
+                      contactType === t.id ? 'bg-teal-600 text-white shadow-sm' : 'text-gray-900'
                     }`}
                   >
                     {t.label}
@@ -220,7 +220,7 @@ export default function Onboarding() {
                       className={`relative flex items-center gap-2 px-3 py-2.5 rounded-xl border-2 transition-all ${
                         selected
                           ? 'border-teal-600 bg-teal-600'
-                          : 'border-gray-300 bg-gray-50 hover:border-gray-400'
+                          : 'border-blue-300 bg-blue-100 hover:border-blue-400'
                       }`}
                     >
                       {selected && (
@@ -230,7 +230,7 @@ export default function Onboarding() {
                         <p className={`text-[10px] font-black ${selected ? 'text-teal-100' : 'text-gray-700'}`}>
                           {cat.id}
                         </p>
-                        <p className={`text-xs font-bold leading-tight truncate ${selected ? 'text-white' : 'text-gray-700'}`}>
+                        <p className={`text-xs font-bold leading-tight truncate ${selected ? 'text-white' : 'text-gray-900'}`}>
                           {cat.label}
                         </p>
                       </div>
@@ -254,8 +254,8 @@ export default function Onboarding() {
                     key={d.value}
                     className={`flex items-center gap-3 px-4 py-3 rounded-xl border-2 cursor-pointer transition-all ${
                       testDate === d.value
-                        ? 'border-teal-600 bg-teal-50'
-                        : 'border-gray-300 bg-gray-50 hover:border-gray-400'
+                        ? 'border-teal-600 bg-teal-600'
+                        : 'border-blue-300 bg-blue-100 hover:border-blue-400'
                     }`}
                   >
                     <input
@@ -266,7 +266,7 @@ export default function Onboarding() {
                       onChange={() => setTestDate(d.value)}
                       className="accent-teal-600"
                     />
-                    <span className={`text-sm font-bold ${testDate === d.value ? 'text-teal-700' : 'text-gray-700'}`}>
+                    <span className={`text-sm font-bold ${testDate === d.value ? 'text-white' : 'text-gray-900'}`}>
                       {d.label}
                     </span>
                   </label>
@@ -274,8 +274,8 @@ export default function Onboarding() {
                 <label
                   className={`flex items-center gap-3 px-4 py-3 rounded-xl border-2 cursor-pointer transition-all ${
                     testDate === ''
-                      ? 'border-teal-600 bg-teal-50'
-                      : 'border-gray-200 bg-white hover:border-gray-300'
+                      ? 'border-teal-600 bg-teal-600'
+                      : 'border-blue-300 bg-blue-100 hover:border-blue-400'
                   }`}
                 >
                   <input
@@ -286,7 +286,7 @@ export default function Onboarding() {
                     onChange={() => setTestDate('')}
                     className="accent-teal-600"
                   />
-                  <span className={`text-sm font-bold ${testDate === '' ? 'text-teal-700' : 'text-gray-700'}`}>
+                  <span className={`text-sm font-bold ${testDate === '' ? 'text-white' : 'text-gray-900'}`}>
                     I'll decide later
                   </span>
                 </label>
@@ -304,7 +304,7 @@ export default function Onboarding() {
                       key={opt}
                       onClick={() => setHasTargetScore(opt === 'Yes')}
                       className={`flex-1 py-3 rounded-xl text-sm font-bold border-2 transition-all ${
-                        active ? 'bg-teal-600 text-white border-teal-600' : 'bg-gray-100 text-gray-700 border-gray-300'
+                        active ? 'bg-teal-600 text-white border-teal-600' : 'bg-blue-100 text-gray-900 border-blue-300'
                       }`}
                     >
                       {opt}
@@ -314,8 +314,8 @@ export default function Onboarding() {
               </div>
               {hasTargetScore && (
                 <div>
-                  <p className="text-sm font-bold text-teal-600 mb-2">
-                    I want to score {score}/90
+                  <p className="text-sm font-bold text-gray-700 mb-2">
+                    Target Score: <span className="text-teal-600">{score}/90</span>
                   </p>
                   <input
                     type="range"
@@ -340,17 +340,17 @@ export default function Onboarding() {
             <button
               onClick={handleFinish}
               disabled={!natCategory}
-              className={`w-full font-bold py-4 rounded-xl text-base transition-colors ${
+              className={`w-full font-bold py-4 rounded-xl text-base transition-colors border-2 ${
                 natCategory
-                  ? 'bg-teal-600 text-white hover:bg-teal-700 active:bg-teal-800'
-                  : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                  ? 'bg-teal-600 text-white border-teal-600 hover:bg-teal-700 active:bg-teal-800'
+                  : 'bg-gray-200 text-gray-500 border-gray-300 cursor-not-allowed'
               }`}
             >
               Let's go! →
             </button>
             <button
               onClick={() => setStep(1)}
-              className="w-full border-2 border-gray-300 text-gray-700 font-bold py-4 rounded-xl text-base hover:bg-gray-50 transition-colors"
+              className="w-full border-2 border-blue-300 bg-blue-100 text-gray-900 font-bold py-4 rounded-xl text-base hover:bg-blue-200 transition-colors"
             >
               ← Back
             </button>

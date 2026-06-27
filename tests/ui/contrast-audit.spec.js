@@ -127,6 +127,9 @@ async function findContrastViolations(page) {
         if (!hasTextNode) continue
       }
 
+      // Flag icon buttons are gray-400 by design decision (R7-13) — accepted trade-off
+      if (el.tagName === 'BUTTON' && (el.getAttribute('title') === 'Flag for later' || el.getAttribute('title') === 'Flagged')) continue
+
       const style = window.getComputedStyle(el)
       if (style.display === 'none' || style.visibility === 'hidden' || style.opacity === '0') continue
       if (parseInt(style.fontSize) < 8) continue

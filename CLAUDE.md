@@ -519,6 +519,7 @@ time_spent INTEGER DEFAULT 0
 | GOV-RULE-011 | All UGC passes moderation before AI processing or permanent storage | Phase 2 |
 | GOV-RULE-012 | No light gray text on white/light backgrounds. Ever. No exceptions. | Active |
 | GOV-RULE-013 | Claude Code must only modify files and components explicitly listed in the prompt. Any change outside the stated scope must be flagged in the output report before committing. Undocumented changes are a governance violation. | Active |
+| GOV-RULE-014 | All selectable/option components: unselected = bg-blue-100 / border-blue-300 / text-gray-900. Selected = solid bg-teal-600 / border-teal-600 / text-white. Back buttons = bg-blue-100 / border-blue-300 / text-gray-900. Applies to answer options, category pills, date rows, Yes/No toggles, difficulty buttons, and all other interactable selectables. | Active |
 
 **Governance document:** src/governance/NTS-GOV-001-AI-Governance-Incident-Log.docx (v1.1)
 **Incident log (markdown):** src/governance/GOV-001-AI-Governance-Incident-Log.md

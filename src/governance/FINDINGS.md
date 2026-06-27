@@ -550,3 +550,45 @@
 | R6-46 | 🟢 Low | Onboarding.jsx | Subtitle/contact note text-gray-600 | ✅ Fixed — text-gray-700 |
 
 **Playwright contrast-audit.spec.js:** 11 routes × 1 GOV-RULE-012 check = 11 tests. 3 initially failed (⚐ flag icon). Fixed and all 122/122 passing.
+
+---
+
+## Round 7 — Canvas, Selection Theme, Flag, Profile, Navigation (June 27, 2026)
+
+### Source: Owner design review + spec compliance pass
+
+| ID | Severity | Screen/File | Finding | Resolution |
+|---|---|---|---|---|
+| R7-01 | 🟠 High | RoughWork.jsx | Canvas drawing lost on modal close/reopen — toDataURL not saved | ✅ Fixed — savedDataUrl ref; useEffect restores on modal open |
+| R7-02 | 🟡 Medium | RoughWork.jsx | Modal canvas only 180px tall — too small for meaningful working | ✅ Fixed — canvas height 500px; scrollable modal content |
+| R7-03 | 🟡 Medium | RoughWork.jsx | Preview box fixed h-20 clips long drawings and text | ✅ Fixed — min-h-12 / auto height; no line-clamp on text preview |
+| R7-04 | 🟠 High | QuestionPractice.jsx | Show Solution expands inline — breaks navigate-back flow and loses question context | ✅ Fixed — navigates to /solution/wrong with state; Back to Practice button added |
+| R7-05 | 🟢 Low | Onboarding.jsx | "Welcome to TaleemiMarkaz 👋" h1 text-2xl wraps on narrow viewport | ✅ Fixed — text-xl |
+| R7-06 | 🟢 Low | Onboarding.jsx | "I'll decide later" date option had different visual treatment from other options | ✅ Fixed — GOV-RULE-014 uniform: bg-blue-100/border-blue-300 unselected; solid teal selected |
+| R7-07 | 🟢 Low | Onboarding.jsx | "I want to score X/90" prefix text — redundant with slider label | ✅ Fixed — label = "Target Score: X/90" |
+| R7-08 | 🟢 Low | Onboarding.jsx | Disabled "Let's go!" gray-400 text — fails GOV-RULE-012 | ✅ Fixed — gray-500 text, gray-200 bg, gray-300 border |
+| R7-09 | 🟡 Medium | Profile.jsx | Countdown hardcoded "18 days" — ignores localStorage student_test_date | ✅ Fixed — reads localStorage, computes diff, shows computed days and date |
+| R7-10 | 🟢 Low | Profile.jsx | NAT category readonly field bg-gray-50 — unclear it's readonly vs editable | ✅ Fixed — bg-gray-100, gray-300 border, gray-600 text |
+| R7-11 | 🟢 Low | Profile.jsx | Mobile/Email toggle selected = bg-white/teal-700 — inconsistent with GOV-RULE-014 | ✅ Fixed — selected = bg-teal-600/white |
+| R7-12 | 🟡 Medium | Progress.jsx | "All" time range button — too little data in Phase 1 to be meaningful | ✅ Fixed — removed; Week/Month only |
+| R7-13 | 🟡 Medium | QuestionPractice/MockTest/MockTest | Flag reverted to gray-400 per spec (R6 fix to gray-600 was overcorrection vs design intent) | ✅ Fixed — gray-400 unfilled; orange-500 filled |
+| R7-14 | ✅ Verified | BottomNav | Bottom nav lock during Mock Test (R5-11) | ✅ Verified — no change needed |
+| R7-15 | ✅ Verified | QuestionPractice | Back nav guard (R5-12) | ✅ Verified — no change needed |
+
+### GOV-RULE-014 Applied (selection theme) — June 27, 2026
+
+| Screen | Component | Before | After |
+|---|---|---|---|
+| Onboarding | NAT category pills | gray-50/gray-300 | blue-100/blue-300 unselected; teal-600 selected |
+| Onboarding | Date option rows | gray-50/gray-300 | blue-100/blue-300 unselected; teal-600 selected |
+| Onboarding | Yes/Not yet toggle | gray-100/gray-300 | blue-100/blue-300 unselected |
+| Onboarding | Back button | gray-50/gray-300 | blue-100/blue-300 |
+| Onboarding | Contact toggle | bg-white/teal-700 selected | bg-teal-600/white selected |
+| QuestionPractice | Answer options | white/gray-200 | blue-100/blue-300 unselected; teal-600 full solid selected |
+| QuestionMockTest | Answer options | white/gray-200 | blue-100/blue-300 unselected; teal-600 full solid selected |
+| MockTest | Answer options | white/gray-200 | blue-100/blue-300 unselected; teal-600 full solid selected |
+| Profile | Date radio options | gray-50/gray-300 | blue-100/blue-300 unselected; teal-600 selected |
+| Profile | Mobile/Email toggle | bg-white/teal-700 selected | bg-teal-600/white selected |
+| SubTopicSelection | Difficulty buttons | gray-100/gray-300 | blue-100/blue-300 unselected |
+
+**Note on R7-13 and GOV-RULE-012:** Flag reverting to gray-400 creates a 2.43:1 contrast ratio on gray-50 card background — below WCAG AA. This is a deliberate design decision override per R7 spec. The flag is decorative/interactive at large size (text-xl); the orange-500 filled state meets contrast. Logged as accepted design trade-off.

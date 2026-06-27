@@ -147,11 +147,11 @@ Each incident records:
 **Description:** Multiple Round 1 fixes confirmed by commit 961095d did not actually land in the codebase — greeting still "Assalam-o-Alaikum", XP badge still present, skip link still present, negative marking still displayed, "Math" not renamed, profile stats blocks still present — all observed in Round 2 testing.
 **Root Cause:** Commit may have had a merge conflict or files were overwritten by subsequent commits. Claude Code confirmed changes were made but the running code showed otherwise.
 **Impact:** Students see factually wrong information (negative marking displayed for a test that has none), out-of-spec features (XP badge), and broken onboarding flow (skip link that bypasses mandatory onboarding).
-**Resolution:** Re-apply all Round 1 fixes explicitly in Round 2 fix prompt.
+**Resolution:** Re-applied all Round 1 fixes explicitly in Round 2 fix prompt.
 **Rule Triggered:** GOV-RULE-003, GOV-RULE-008
-**Status:** Open
-**Resolved By:** Pending Round 2 fix commit
-**Resolved Date:** Pending
+**Status:** Resolved
+**Resolved By:** Fix commit 47c5d57
+**Resolved Date:** 2026-06-26
 
 ---
 
@@ -162,11 +162,11 @@ Each incident records:
 **Description:** Selecting the correct answer on Practice Question screen routes student to the wrong answer / solution screen instead of the correct answer screen.
 **Root Cause:** Answer validation logic not correctly comparing selected option against correct_option — routing decision uses wrong conditional.
 **Impact:** Students who answer correctly are told they are wrong — destroys student confidence and trust in the platform. Core learning loop is broken.
-**Resolution:** Pending Round 2 fix.
+**Resolution:** Fixed correct answer routing logic in QuestionPractice.jsx — selected === correct_option → /solution/correct, otherwise → /solution/wrong.
 **Rule Triggered:** GOV-RULE-001 (human-verified ground truth not correctly applied in routing logic)
-**Status:** Open
-**Resolved By:** Pending
-**Resolved Date:** Pending
+**Status:** Resolved
+**Resolved By:** Fix commit 47c5d57
+**Resolved Date:** 2026-06-26
 
 ---
 
@@ -192,11 +192,27 @@ Each incident records:
 **Description:** Readiness Score card in Mock Tests tab (Progress.jsx) contains hardcoded AI-sounding recommendation text — "Focus on Algebra and Combinations to push your score above 75" — with no connection to real student data. The score (67), gauge fill, and subject names are all static constants.
 **Root Cause:** Static demo content was not flagged or labelled during implementation. The phrasing implies live AI analysis of student performance when it is purely placeholder text.
 **Impact:** Misleading — a student reading this sees a specific, personalised-sounding recommendation ("Algebra and Combinations") that has no relationship to their actual attempt history. Violates GOV-RULE-001 (AI must reference verified data, not fabricated context).
-**Resolution:** Replace hardcoded text with an honest placeholder (e.g. "Complete more mock tests to see your personalised focus areas") in Round 4. Dynamic version with real attempt data and actual weak-zone detection deferred to Phase 2 (PD-004 — Readiness Score metric).
+**Resolution:** Replaced hardcoded text with "Complete more practice sessions to see your personalised readiness analysis." Dynamic weak-zone detection deferred to Phase 2 (PD-004).
 **Rule Triggered:** GOV-RULE-001
-**Status:** Open — pending Round 4 fix
-**Resolved By:** Pending
-**Resolved Date:** Pending
+**Status:** Resolved
+**Resolved By:** Fix commit 4ea9c80
+**Resolved Date:** 2026-06-27
+
+---
+
+---
+
+## GOV-RULE-014 — UI Selection Theme (added 2026-06-27)
+
+**Rule:** All selectable/option components use a consistent visual language:
+- **Unselected:** bg-blue-100, border-blue-300, text-gray-900
+- **Selected:** solid bg-teal-600, border-teal-600, text-white
+
+**Applies to:** Answer options (A/B/C/D), NAT category pills, test date radio rows, Yes/No toggles, difficulty buttons, Back buttons, and any other selectable card or pill.
+
+**Rationale:** Inconsistent selection states (some gray-50, some bg-white, some bg-gray-100) confused the visual hierarchy. A single blue-100→teal-600 pattern makes selection intent unambiguous at every interaction point.
+
+**Status:** Active — enforced from 2026-06-27 (Round 7)
 
 ---
 
@@ -212,7 +228,7 @@ Each incident records:
 | INC-006 | Jun 25 2026 | Medium | Review Failure | Resolved |
 | INC-007 | Jun 25 2026 | Medium | Scope Creep | Resolved |
 | INC-008 | Jun 25 2026 | Low | Review Failure | Resolved |
-| INC-009 | Jun 26 2026 | High | Implementation Failure | Open |
-| INC-010 | Jun 26 2026 | Critical | Logic Bug | Open |
+| INC-009 | Jun 26 2026 | High | Implementation Failure | Resolved |
+| INC-010 | Jun 26 2026 | Critical | Logic Bug | Resolved |
 | INC-011 | Jun 26 2026 | High | Spec Drift | Resolved |
-| INC-012 | Jun 26 2026 | Medium | GOV-RULE-001 Violation | Open |
+| INC-012 | Jun 26 2026 | Medium | GOV-RULE-001 Violation | Resolved |

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import Header from '../components/Header'
 import BottomNav from '../components/BottomNav'
 import ModeIndicator from '../components/ModeIndicator'
@@ -277,7 +277,10 @@ function YourWorking({ canvasTab }) {
 }
 
 export default function SolutionWrong() {
-  const canvasTab = getCanvasTab()
+  const canvasTab        = getCanvasTab()
+  const location         = useLocation()
+  const navigate         = useNavigate()
+  const fromShowSolution = location.state?.fromShowSolution ?? false
 
   return (
     <div className="min-h-screen bg-white flex flex-col max-w-sm mx-auto">
@@ -316,11 +319,27 @@ export default function SolutionWrong() {
 
       {/* Fixed CTA — never scrolls */}
       <div className="fixed bottom-20 left-1/2 -translate-x-1/2 w-full max-w-sm bg-white border-t border-gray-100 px-4 py-3 z-20">
-        <Link to="/practice/question">
-          <button className="w-full bg-teal-600 text-white font-bold py-4 rounded-xl text-base hover:bg-teal-700 transition-colors">
-            Try a similar question →
-          </button>
-        </Link>
+        {fromShowSolution ? (
+          <div className="flex gap-3">
+            <button
+              onClick={() => navigate(-1)}
+              className="flex-1 py-4 rounded-xl border-2 bg-blue-100 border-blue-300 text-gray-900 font-bold text-sm hover:bg-blue-200 transition-colors"
+            >
+              ← Back to Practice
+            </button>
+            <Link to="/practice/question" className="flex-1">
+              <button className="w-full py-4 rounded-xl bg-teal-600 text-white font-bold text-sm hover:bg-teal-700 transition-colors">
+                Next Question →
+              </button>
+            </Link>
+          </div>
+        ) : (
+          <Link to="/practice/question">
+            <button className="w-full bg-teal-600 text-white font-bold py-4 rounded-xl text-base hover:bg-teal-700 transition-colors">
+              Try a similar question →
+            </button>
+          </Link>
+        )}
       </div>
 
       <BottomNav />
