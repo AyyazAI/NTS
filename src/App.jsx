@@ -5,8 +5,7 @@ import Home from './pages/Home'
 import SubTopicSelection from './pages/SubTopicSelection'
 import QuestionPractice from './pages/QuestionPractice'
 import QuestionMockTest from './pages/QuestionMockTest'
-import SolutionWrong from './pages/SolutionWrong'
-import SolutionCorrect from './pages/SolutionCorrect'
+import Solution from './pages/Solution'
 import Progress from './pages/Progress'
 import MockTest from './pages/MockTest'
 import MockTestResults from './pages/MockTestResults'
@@ -23,8 +22,7 @@ export default function App() {
         <Route path="/mock-test" element={<MockTest />} />
         <Route path="/mock-test/question" element={<QuestionMockTest />} />
         <Route path="/mock-test/results" element={<MockTestResults />} />
-        <Route path="/solution/wrong" element={<SolutionWrong />} />
-        <Route path="/solution/correct" element={<SolutionCorrect />} />
+        <Route path="/solution" element={<Solution />} />
         <Route path="/progress" element={<Progress />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/admin" element={<Admin />} />

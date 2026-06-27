@@ -18,12 +18,18 @@ function LineChart({ points, labels = null, colour = '#0D9488' }) {
   const fill = `${path} L${xs[xs.length - 1].toFixed(1)},${(padT + innerH).toFixed(1)} L${xs[0].toFixed(1)},${(padT + innerH).toFixed(1)} Z`
 
   const passY = toY(50)
-  const yTicks = [100, 75]
+  const yTicks = [100, 75, 50]
 
   return (
     <svg viewBox={`0 0 ${w} ${h}`} className="w-full" style={{ height: 130 }}>
+      {/* Pass mark — rendered first so all data elements appear on top */}
+      <line x1={padL} y1={passY} x2={w - padR} y2={passY}
+        stroke="#DC2626" strokeWidth="1" strokeDasharray="3,2" />
+      <text x={padL - 4} y={passY + 4} fontSize="8" fill="#DC2626" textAnchor="end" fontWeight="700">Pass</text>
+
       {yTicks.map(pct => {
         const y = toY(pct)
+        if (pct === 50) return null
         return (
           <g key={pct}>
             <line x1={padL} y1={y} x2={w - padR} y2={y} stroke="#e5e7eb" strokeWidth="0.5" />
@@ -31,10 +37,6 @@ function LineChart({ points, labels = null, colour = '#0D9488' }) {
           </g>
         )
       })}
-
-      <line x1={padL} y1={passY} x2={w - padR} y2={passY}
-        stroke="#DC2626" strokeWidth="1" strokeDasharray="3,2" />
-      <text x={padL - 4} y={passY + 4} fontSize="9" fill="#DC2626" textAnchor="end" fontWeight="700">Pass</text>
 
       <path d={fill} fill={colour} fillOpacity="0.08" />
       <path d={path} stroke={colour} strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
@@ -59,7 +61,7 @@ function LineChart({ points, labels = null, colour = '#0D9488' }) {
       >Score %</text>
 
       {labels && labels.map((label, i) => (
-        <text key={i} x={xs[i]} y={h - 2} fontSize="8" fill="#374151" textAnchor="middle" fontWeight="600">
+        <text key={i} x={xs[i]} y={h - 2} fontSize="7" fill="#374151" textAnchor="middle" fontWeight="600">
           {label}
         </text>
       ))}
@@ -129,10 +131,10 @@ function Accordion({ topic }) {
   const topicLabel  = topicHeaderLabel(topic.overall)
 
   return (
-    <div className="border border-gray-300 rounded-2xl overflow-hidden mb-3">
+    <div className="border border-teal-200 rounded-2xl overflow-hidden mb-3">
       <button
         onClick={() => setOpen(o => !o)}
-        className="w-full flex items-center justify-between px-4 py-3.5 bg-white hover:bg-gray-50 transition-colors"
+        className="w-full flex items-center justify-between px-4 py-3.5 bg-teal-50 hover:bg-teal-100 transition-colors"
       >
         <div className="flex items-center gap-2 flex-wrap">
           <span className="font-black text-gray-900">{topic.name}</span>
@@ -147,7 +149,7 @@ function Accordion({ topic }) {
       </button>
 
       {open && (
-        <div className="px-4 pb-4 pt-1 bg-white border-t border-gray-50">
+        <div className="px-4 pb-4 pt-1 bg-teal-50 border-t border-teal-100">
           {topic.subs.map(s => {
             const focusLabel = subFocusLabel(s.pct)
             const isWeakest  = s.name === weakestName
@@ -229,7 +231,7 @@ function PracticeTab({ natCategory }) {
 
   return (
     <div>
-      <div className="bg-gray-50 border border-gray-300 rounded-2xl p-4 mb-4">
+      <div className="bg-teal-50 border border-teal-200 rounded-2xl p-4 mb-4">
         <div className="flex items-center justify-between mb-2">
           <div>
             <p className="text-xs font-black text-gray-700 uppercase tracking-wider">Score Trend</p>
@@ -266,7 +268,7 @@ function MockTab() {
   }
   return (
     <div>
-      <div className="bg-gray-50 border border-gray-300 rounded-2xl p-4 mb-4">
+      <div className="bg-teal-50 border border-teal-200 rounded-2xl p-4 mb-4">
         <div className="flex items-center justify-between mb-2">
           <div>
             <p className="text-xs font-black text-gray-700 uppercase tracking-wider">Score Trend</p>
@@ -296,7 +298,7 @@ function MockTab() {
           { label: 'Average Score',    value: '60/90'         },
           { label: 'Highest Section',  value: 'Analytical Reasoning 85%' },
         ].map(s => (
-          <div key={s.label} className="bg-gray-50 border border-gray-300 rounded-xl p-3">
+          <div key={s.label} className="bg-teal-50 border border-teal-200 rounded-xl p-3">
             <p className="text-xl font-black text-gray-900">{s.value}</p>
             <p className="text-xs font-bold text-gray-700 mt-0.5">{s.label}</p>
           </div>

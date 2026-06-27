@@ -25,23 +25,32 @@ export default function QuestionPractice() {
   const [selected,  setSelected]  = useState(null)
   const [flagged,   setFlagged]   = useState(false)
   const [showLeave, setShowLeave] = useState(false)
+  const [toast,     setToast]     = useState(null)
 
   const isFirst = QUESTION.number === 1
 
-  // Warn on browser back / tab close during active session
   useEffect(() => {
     const handler = (e) => { e.preventDefault(); e.returnValue = '' }
     window.addEventListener('beforeunload', handler)
     return () => window.removeEventListener('beforeunload', handler)
   }, [])
 
+  function showToastMsg(msg) {
+    setToast(msg)
+    setTimeout(() => setToast(null), 2000)
+  }
+
+  function handleSelectOption(optId) {
+    setSelected(optId)
+    if (flagged) {
+      setFlagged(false)
+      showToastMsg('Flag removed — question answered')
+    }
+  }
+
   function handleSubmit() {
     if (!selected) return
-    if (selected === QUESTION.correct_option) {
-      navigate('/solution/correct')
-    } else {
-      navigate('/solution/wrong')
-    }
+    navigate('/solution')
   }
 
   function handleBack(e) {
@@ -55,14 +64,14 @@ export default function QuestionPractice() {
       <ModeIndicator mode="practice" />
 
       <main className="flex-1 px-4 pb-48 overflow-y-auto">
-        {/* Topic tag + progress */}
-        <div className="flex items-center justify-between mb-3">
-          <span className="text-xs font-bold text-gray-700 uppercase tracking-wider">
+        {/* Topic/subtopic on own line, Q counter below — prevents wrapping on 375px */}
+        <div className="mb-3">
+          <p className="text-[9px] font-bold text-gray-700 uppercase tracking-widest">
             {QUESTION.topic} · {QUESTION.subtopic}
-          </span>
-          <span className="text-xs font-bold text-gray-700">
+          </p>
+          <p className="text-xs font-bold text-gray-700 mt-0.5">
             Question {QUESTION.number} of {QUESTION.total}
-          </span>
+          </p>
         </div>
 
         {/* Question card */}
@@ -70,14 +79,15 @@ export default function QuestionPractice() {
           <button
             onClick={() => setFlagged(f => !f)}
             title={flagged ? 'Flagged' : 'Flag for later'}
-            className={`absolute top-3 right-3 text-xl font-bold leading-none transition-all hover:scale-110 ${
-              flagged ? 'text-orange-500' : 'text-gray-400 hover:text-gray-600'
+            className={`absolute top-3 right-3 flex items-center gap-0.5 transition-all hover:scale-110 ${
+              flagged ? 'text-orange-500' : 'text-gray-700 hover:text-gray-800'
             }`}
           >
-            {flagged ? '⚑' : '⚐'}
+            <span className="text-xl font-bold leading-none">{flagged ? '⚑' : '⚐'}</span>
+            <span className="text-[9px] font-bold leading-none">Flag</span>
           </button>
 
-          <p className="text-base font-semibold text-gray-900 leading-relaxed pr-8">
+          <p className="text-base font-semibold text-gray-900 leading-relaxed pr-12">
             {QUESTION.text}
           </p>
         </div>
@@ -87,7 +97,7 @@ export default function QuestionPractice() {
           {QUESTION.options.map(opt => (
             <button
               key={opt.id}
-              onClick={() => setSelected(opt.id)}
+              onClick={() => handleSelectOption(opt.id)}
               className={`w-full flex items-center gap-3 px-4 py-3.5 rounded-xl border-2 text-left transition-all ${
                 selected === opt.id
                   ? 'bg-teal-600 border-teal-600'
@@ -132,10 +142,10 @@ export default function QuestionPractice() {
             <div className="w-10 flex-shrink-0" />
           )}
 
-          {/* Show Solution — navigates to dedicated solution page */}
+          {/* Show Solution — solid teal (R8-02) */}
           <button
-            onClick={() => navigate('/solution/wrong', { state: { fromShowSolution: true } })}
-            className="flex-1 h-12 rounded-xl border-2 text-sm font-bold transition-colors border-gray-300 text-gray-700 hover:border-gray-400"
+            onClick={() => navigate('/solution', { state: { fromShowSolution: true } })}
+            className="flex-1 h-12 rounded-xl border-2 text-sm font-bold transition-colors bg-teal-600 border-teal-600 text-white hover:bg-teal-700"
           >
             Show Solution
           </button>
@@ -185,6 +195,15 @@ export default function QuestionPractice() {
                 Leave
               </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Flag auto-remove toast */}
+      {toast && (
+        <div className="fixed bottom-36 left-1/2 -translate-x-1/2 max-w-xs w-full z-40 px-4">
+          <div className="bg-gray-900 text-white rounded-2xl px-4 py-3 text-center shadow-lg">
+            <p className="text-xs font-bold">{toast}</p>
           </div>
         </div>
       )}

@@ -66,7 +66,7 @@ function ViewMode({ natCategory, onEdit }) {
       <div className="bg-teal-50 border border-teal-200 rounded-2xl p-4 text-center">
         <p className="text-3xl font-black text-teal-700">{daysLabel}</p>
         <p className="text-sm font-bold text-teal-600">days to your NAT test{shortDate ? ` (${shortDate})` : ''}</p>
-        <p className="text-xs text-gray-700 mt-1">Test date: {dateDisplay}</p>
+        <p className="text-sm font-bold text-teal-700 mt-1">{dateDisplay}</p>
       </div>
 
       {/* Goal tracker */}

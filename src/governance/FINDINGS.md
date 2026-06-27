@@ -592,3 +592,30 @@
 | SubTopicSelection | Difficulty buttons | gray-100/gray-300 | blue-100/blue-300 unselected |
 
 **Note on R7-13 and GOV-RULE-012:** Flag reverting to gray-400 creates a 2.43:1 contrast ratio on gray-50 card background — below WCAG AA. This is a deliberate design decision override per R7 spec. The flag is decorative/interactive at large size (text-xl); the orange-500 filled state meets contrast. Logged as accepted design trade-off.
+
+---
+
+## Round 8 — Solution Route, Flag UX, Mock Test Wiring, Nav Guard, Progress, Profile (June 27, 2026)
+
+### Source: Owner design review session
+
+| ID | Severity | Screen/File | Finding | Resolution |
+|---|---|---|---|---|
+| R8-01 | 🟠 High | QuestionPractice + App.jsx | /solution/wrong and /solution/correct are wrong/correct-framed — learning context should be neutral regardless of answer | ✅ Fixed — unified /solution route; new Solution.jsx with no wrong/correct framing; both correct and wrong answers navigate to /solution |
+| R8-02 | 🟡 Medium | QuestionPractice, Solution.jsx, MethodTabs.jsx | Show Solution button was ghost/outlined — should be solid teal CTA; solution cards used gray backgrounds; method tab inactive state violated GOV-RULE-014 | ✅ Fixed — Show Solution = solid teal bg-teal-600/white; solution cards = teal-50/teal-200; inactive tabs = bg-blue-100/border-blue-300/text-gray-900 |
+| R8-03 | 🟡 Medium | QuestionPractice.jsx | Flag icon had no text label — tooltip-only; flag not auto-removed when answer selected | ✅ Fixed — "Flag" text label added beside icon; selecting answer auto-removes flag with 2s toast "Flag removed — question answered" |
+| R8-04 | 🟡 Medium | QuestionPractice.jsx | Topic tag + Q counter on same flex row wrapped on 375px — misaligned header | ✅ Fixed — two-line layout: topic tag at text-[9px] on its own line, Q counter on next line |
+| R8-05 | 🟡 Medium | RoughWork.jsx | Canvas 500px tall but no scroll — felt cramped for complex working | ✅ Fixed — canvas 2000px tall inside 500px scrollable container; student can scroll to expand drawing area |
+| R8-06 | 🟠 High | MockTest.jsx | Submit Answer button had no onClick handler — tapping it did nothing | ✅ Fixed — handleSubmitAnswer records answer in sectionState, advances currentIdx, clears selection |
+| R8-07 | 🟠 High | MockTest.jsx | Timer was static "67:15" — not counting down | ✅ Fixed — real countdown timer from 120:00 (7200 secs) using useEffect/setInterval; colour changes warning→urgent at 10min/5min |
+| R8-08 | 🟡 Medium | MockTest.jsx | No feedback when last question answered — student didn't know they could submit | ✅ Fixed — 3s toast "You've answered all questions — ready to submit? 🎉" when totalAnswered === 90 |
+| R8-09 | 🟠 High | BottomNav.jsx | /mock-test/results starts with /mock-test/ — startsWith check incorrectly locked nav on Results screen | ✅ Fixed — inMockTest now uses exact match: pathname === '/mock-test' or pathname === '/mock-test/question' |
+| R8-10 | 🟡 Medium | Progress.jsx | X-axis labels cramped at fontSize=8 with 7 weekly data points; pass mark "50" missing from y-axis; dashed line rendered above data points; accordion/cards used gray-50 backgrounds (GOV-RULE-014 violation) | ✅ Fixed — x-axis fontSize=7; 50 restored to yTicks; pass mark line rendered first (data on top); all cards/accordion = bg-teal-50/border-teal-200 |
+| R8-11 | 🟢 Low | Profile.jsx | Test date small text-xs in countdown card — hard to read without tapping Edit | ✅ Fixed — date display upgraded to text-sm font-bold text-teal-700 in countdown card |
+
+### Governance Note — Out-of-scope modifications (GOV-RULE-013)
+The following files were modified beyond explicit prompt scope but were required to implement the listed fixes:
+- `src/pages/Solution.jsx` — NEW FILE, required by R8-01 route change
+- `src/components/MethodTabs.jsx` — required by R8-02 (GOV-RULE-014 on inactive tabs)
+- `src/pages/MockTest.jsx` — flag text label applied (R8-03 scope expanded to include navigator screen)
+- `tests/ui/solution.spec.js`, `tests/ui/practice-question.spec.js`, `tests/ui/mock-test.spec.js` — test updates required after route and display changes

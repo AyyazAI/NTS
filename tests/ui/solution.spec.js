@@ -1,18 +1,37 @@
 import { test, expect } from '@playwright/test'
 
-// ── Wrong Answer ──────────────────────────────────────────────────────────────
+// ── Unified Solution page (/solution) ─────────────────────────────────────────
 
-test.describe('Solution — Wrong Answer', () => {
+test.describe('Solution — Direct access', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('/solution/wrong')
+    await page.goto('/solution')
   })
 
-  test('"Try a similar question" button is fixed at bottom when accessed directly', async ({ page }) => {
-    const btn = page.locator('button:has-text("Try a similar question")')
-    await expect(btn).toBeVisible()
+  test('"Correct answer" label shown — no wrong/correct framing', async ({ page }) => {
+    await expect(page.locator('text=Correct answer')).toBeVisible()
+    await expect(page.locator('text=You got it wrong')).not.toBeVisible()
+    await expect(page.locator('text=Not quite')).not.toBeVisible()
+  })
 
-    const container = btn.locator('..')
-    const position = await container.evaluate(el => {
+  test('correct answer A (21) is displayed in a teal pill', async ({ page }) => {
+    await expect(page.locator('span:has-text("21")').first()).toBeVisible()
+  })
+
+  test('"Three ways to see the solution" heading is present', async ({ page }) => {
+    await expect(page.locator('text=Three ways to see the solution')).toBeVisible()
+  })
+
+  test('"← Back to Practice" button is always present', async ({ page }) => {
+    await expect(page.locator('button:has-text("← Back to Practice")')).toBeVisible()
+  })
+
+  test('"Next Question →" button is always present', async ({ page }) => {
+    await expect(page.locator('button:has-text("Next Question")')).toBeVisible()
+  })
+
+  test('"← Back to Practice" button is in a fixed bar — never scrolls away', async ({ page }) => {
+    const btn = page.locator('button:has-text("← Back to Practice")')
+    const position = await btn.evaluate(el => {
       let node = el
       while (node && node !== document.body) {
         if (getComputedStyle(node).position === 'fixed') return 'fixed'
@@ -23,44 +42,42 @@ test.describe('Solution — Wrong Answer', () => {
     expect(position).toBe('fixed')
   })
 
-  test('YOUR WORKING section is hidden when canvas was not used', async ({ page }) => {
-    // No canvas_last_tab in localStorage — YOUR WORKING should not appear
+  test('YOUR WORKING section is hidden when canvas was not used (canvas_last_tab = null)', async ({ page }) => {
     await page.evaluate(() => localStorage.removeItem('canvas_last_tab'))
     await page.reload()
-    await expect(page.locator('text=YOUR WORKING')).not.toBeVisible()
+    await expect(page.locator('text=Your working')).not.toBeVisible()
+  })
+
+  test('YOUR WORKING section is shown when canvas draw tab was used', async ({ page }) => {
+    await page.addInitScript(() => {
+      localStorage.setItem('canvas_last_tab', 'draw')
+    })
+    await page.goto('/solution')
+    await expect(page.locator('text=Your working')).toBeVisible()
   })
 })
 
-// ── Correct Answer ────────────────────────────────────────────────────────────
+test.describe('Solution — accessed via Show Solution', () => {
+  test('clicking Show Solution navigates to /solution and shows Back to Practice', async ({ page }) => {
+    await page.goto('/practice/question')
+    await page.locator('button:has-text("Show Solution")').click()
+    await expect(page).toHaveURL(/\/solution/)
+    await expect(page.locator('button:has-text("← Back to Practice")')).toBeVisible()
+  })
+})
 
-test.describe('Solution — Correct Answer', () => {
-  test.beforeEach(async ({ page }) => {
-    await page.goto('/solution/correct')
+test.describe('Solution — accessed via Submit Answer', () => {
+  test('submitting any answer navigates to /solution', async ({ page }) => {
+    await page.goto('/practice/question')
+    await page.locator('button:has-text("21")').click()
+    await page.locator('button:has-text("Submit Answer")').click()
+    await expect(page).toHaveURL(/\/solution/)
   })
 
-  test('no XP earned or speed bonus card is present', async ({ page }) => {
-    await expect(page.locator('text=XP earned')).not.toBeVisible()
-    await expect(page.locator('text=speed bonus')).not.toBeVisible()
-  })
-
-  test('"Explore other methods" button is present', async ({ page }) => {
-    await expect(page.locator('button:has-text("Explore other methods")')).toBeVisible()
-  })
-
-  test('"Next Question" button is present', async ({ page }) => {
-    await expect(page.locator('button:has-text("Next Question")')).toBeVisible()
-  })
-
-  test('buttons have adequate spacing between them (at least 12px)', async ({ page }) => {
-    const exploreBtn = page.locator('button:has-text("Explore other methods")')
-    const nextBtn    = page.locator('button:has-text("Next Question")')
-    const exploreBB  = await exploreBtn.boundingBox()
-    const nextBB     = await nextBtn.boundingBox()
-    const gap = nextBB.y - (exploreBB.y + exploreBB.height)
-    expect(gap).toBeGreaterThanOrEqual(12)
-  })
-
-  test('motivational message appears below action buttons', async ({ page }) => {
-    await expect(page.locator('text=every question makes you stronger')).toBeVisible()
+  test('submitting a wrong answer also routes to /solution — no wrong-answer page', async ({ page }) => {
+    await page.goto('/practice/question')
+    await page.locator('button:has-text("35")').click()
+    await page.locator('button:has-text("Submit Answer")').click()
+    await expect(page).toHaveURL(/\/solution/)
   })
 })

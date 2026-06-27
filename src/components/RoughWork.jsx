@@ -244,20 +244,21 @@ export default function RoughWork({ isMock = false }) {
                       </button>
                     ))}
                   </div>
-                  <canvas
-                    ref={canvasRef}
-                    width={320}
-                    height={500}
-                    className="w-full rounded-lg border-2 border-dashed border-gray-400 bg-gray-50 touch-none cursor-crosshair"
-                    style={{ height: 500 }}
-                    onMouseDown={startDraw}
-                    onMouseMove={draw}
-                    onMouseUp={stopDraw}
-                    onMouseLeave={stopDraw}
-                    onTouchStart={startDraw}
-                    onTouchMove={draw}
-                    onTouchEnd={stopDraw}
-                  />
+                  <div style={{ height: 500, overflowY: 'scroll' }}>
+                    <canvas
+                      ref={canvasRef}
+                      width={320}
+                      height={2000}
+                      className="w-full rounded-lg border-2 border-dashed border-gray-400 bg-gray-50 touch-none cursor-crosshair"
+                      onMouseDown={startDraw}
+                      onMouseMove={draw}
+                      onMouseUp={stopDraw}
+                      onMouseLeave={stopDraw}
+                      onTouchStart={startDraw}
+                      onTouchMove={draw}
+                      onTouchEnd={stopDraw}
+                    />
+                  </div>
                 </div>
               )}
               {activeTab === 'type' && (

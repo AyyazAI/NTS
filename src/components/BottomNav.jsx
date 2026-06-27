@@ -16,7 +16,7 @@ export default function BottomNav() {
   const { pathname } = useLocation()
   const [showLock, setShowLock] = useState(false)
 
-  const inMockTest = MOCK_TEST_ROUTES.some(r => pathname === r || pathname.startsWith(r + '/'))
+  const inMockTest = pathname === '/mock-test' || pathname === '/mock-test/question'
 
   function isActive(path) {
     if (path === '/') return pathname === '/'

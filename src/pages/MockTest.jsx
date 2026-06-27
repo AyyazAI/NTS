@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import Header from '../components/Header'
 import BottomNav from '../components/BottomNav'
@@ -6,7 +6,6 @@ import ModeIndicator from '../components/ModeIndicator'
 import RoughWork from '../components/RoughWork'
 import { getNatCategory, getCategoryLabel, getCategoryShort } from '../utils/natCategory'
 
-// Section keys — Subject key is fixed; display label is dynamic
 const SECTION_KEYS = ['Verbal', 'Analytical', 'Quantitative', 'Subject']
 
 const SECTION_TOTALS = { Verbal: 20, Analytical: 20, Quantitative: 20, Subject: 30 }
@@ -28,10 +27,19 @@ const QUESTION = {
   ],
 }
 
-function Timer({ time = '67:15', state = 'normal' }) {
+const TOTAL_QUESTIONS = 90
+
+function formatTime(secs) {
+  const m = Math.floor(secs / 60)
+  const s = secs % 60
+  return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`
+}
+
+function Timer({ secs }) {
+  const state  = secs < 300 ? 'urgent' : secs < 600 ? 'warning' : 'normal'
   const colour = state === 'urgent' ? 'text-red-600' : state === 'warning' ? 'text-amber-600' : 'text-teal-600'
   const size   = state === 'urgent' ? 'text-2xl'     : state === 'warning' ? 'text-xl'        : 'text-lg'
-  return <span className={`font-black tabular-nums ${colour} ${size}`}>{time}</span>
+  return <span className={`font-black tabular-nums ${colour} ${size}`}>{formatTime(secs)}</span>
 }
 
 function NavigatorGrid({ sectionData, onNavigate }) {
@@ -74,18 +82,32 @@ function NavigatorGrid({ sectionData, onNavigate }) {
 }
 
 export default function MockTest() {
-  const [natCategory]   = useState(() => getNatCategory() || 'NAT-IE')
-  const [activeSection, setActiveSection] = useState('Verbal')
-  const [sectionState,  setSectionState]  = useState(INITIAL_STATE)
-  const [selected,      setSelected]      = useState(null)
-  const [showConfirm,   setShowConfirm]   = useState(false)
+  const [natCategory]      = useState(() => getNatCategory() || 'NAT-IE')
+  const [activeSection,    setActiveSection]    = useState('Verbal')
+  const [sectionState,     setSectionState]     = useState(INITIAL_STATE)
+  const [selected,         setSelected]         = useState(null)
+  const [showConfirm,      setShowConfirm]      = useState(false)
+  const [timerSecs,        setTimerSecs]        = useState(7200)
+  const [allAnsweredToast, setAllAnsweredToast] = useState(false)
 
-  const currentIdx = sectionState[activeSection].current
-  const isFlagged  = sectionState[activeSection].flagged.includes(currentIdx)
+  useEffect(() => {
+    const id = setInterval(() => setTimerSecs(s => {
+      if (s <= 0) { clearInterval(id); return 0 }
+      return s - 1
+    }), 1000)
+    return () => clearInterval(id)
+  }, [])
+
+  const currentIdx     = sectionState[activeSection].current
+  const isFlagged      = sectionState[activeSection].flagged.includes(currentIdx)
+  const current        = sectionState[activeSection]
+  const subjectLabel   = getCategoryLabel(natCategory)
+  const subjectShort   = getCategoryShort(natCategory)
+  const totalAnswered  = Object.values(sectionState).reduce((sum, s) => sum + s.answered.length, 0)
 
   function handleFlag() {
     setSectionState(s => {
-      const sec       = s[activeSection]
+      const sec        = s[activeSection]
       const wasFlagged = sec.flagged.includes(currentIdx)
       return {
         ...s,
@@ -98,10 +120,6 @@ export default function MockTest() {
       }
     })
   }
-
-  const current      = sectionState[activeSection]
-  const subjectLabel = getCategoryLabel(natCategory)
-  const subjectShort = getCategoryShort(natCategory)
 
   function sectionDisplayLabel(key) {
     if (key === 'Verbal')       return 'English'
@@ -117,21 +135,41 @@ export default function MockTest() {
     }))
   }
 
+  function handleSubmitAnswer() {
+    if (!selected) return
+    const sec = sectionState[activeSection]
+    const newAnswered = sec.answered.includes(sec.current)
+      ? sec.answered
+      : [...sec.answered, sec.current]
+    const nextCurrent = sec.current + 1 < sec.total ? sec.current + 1 : sec.current
+    const newState = {
+      ...sectionState,
+      [activeSection]: { ...sec, answered: newAnswered, current: nextCurrent },
+    }
+    setSectionState(newState)
+    setSelected(null)
+    const answered = Object.values(newState).reduce((sum, s) => sum + s.answered.length, 0)
+    if (answered >= TOTAL_QUESTIONS) {
+      setAllAnsweredToast(true)
+      setTimeout(() => setAllAnsweredToast(false), 3000)
+    }
+  }
+
   return (
     <div className="min-h-screen bg-white flex flex-col max-w-sm mx-auto">
       <Header />
       <ModeIndicator mode="mock" />
 
       <main className="flex-1 px-4 pb-48 overflow-y-auto">
-        {/* Score + timer */}
+        {/* Answered count + timer */}
         <div className="flex items-center justify-between mb-3">
           <div className="bg-teal-50 border border-teal-200 rounded-xl px-3 py-2">
-            <p className="text-xs font-bold text-teal-700">Score</p>
-            <p className="text-lg font-black text-teal-700">18 / 90</p>
+            <p className="text-xs font-bold text-teal-700">Answered</p>
+            <p className="text-lg font-black text-teal-700">{totalAnswered} / {TOTAL_QUESTIONS}</p>
           </div>
           <div className="text-right">
             <p className="text-[10px] font-bold text-gray-700 uppercase tracking-wide mb-0.5">Time left</p>
-            <Timer time="67:15" state="normal" />
+            <Timer secs={timerSecs} />
             <p className="text-[10px] text-gray-700">of 120 min</p>
           </div>
         </div>
@@ -173,13 +211,14 @@ export default function MockTest() {
           <button
             onClick={handleFlag}
             title={isFlagged ? 'Flagged' : 'Flag for later'}
-            className={`absolute top-3 right-3 text-xl font-bold leading-none transition-all hover:scale-110 ${
-              isFlagged ? 'text-orange-500' : 'text-gray-400 hover:text-gray-600'
+            className={`absolute top-3 right-3 flex items-center gap-0.5 transition-all hover:scale-110 ${
+              isFlagged ? 'text-orange-500' : 'text-gray-700 hover:text-gray-800'
             }`}
           >
-            {isFlagged ? '⚑' : '⚐'}
+            <span className="text-xl font-bold leading-none">{isFlagged ? '⚑' : '⚐'}</span>
+            <span className="text-[9px] font-bold leading-none">Flag</span>
           </button>
-          <p className="text-base font-semibold text-gray-900 leading-relaxed pr-8">
+          <p className="text-base font-semibold text-gray-900 leading-relaxed pr-12">
             {QUESTION.text}
           </p>
         </div>
@@ -220,27 +259,45 @@ export default function MockTest() {
         </button>
       </main>
 
-      {/* Action bar — [‹] [Submit Answer] [›] only; Submit Test is NOT in the persistent bar */}
+      {/* Action bar — Submit Answer wired to record + advance */}
       <div className="fixed bottom-20 left-1/2 -translate-x-1/2 w-full max-w-sm bg-white border-t border-gray-100 px-4 py-3 z-20">
         <div className="flex items-center gap-2">
-          <button className="w-10 h-12 flex items-center justify-center rounded-xl border-2 border-gray-200 text-gray-500 hover:border-gray-300 flex-shrink-0">
+          <button
+            onClick={() => handleNavigate(Math.max(0, currentIdx - 1))}
+            className="w-10 h-12 flex items-center justify-center rounded-xl border-2 border-gray-200 text-gray-500 hover:border-gray-300 flex-shrink-0"
+          >
             ‹
           </button>
           <button
             disabled={!selected}
+            onClick={handleSubmitAnswer}
             className={`flex-1 h-12 rounded-xl text-sm font-bold transition-all ${
               selected ? 'bg-teal-600 text-white hover:bg-teal-700' : 'bg-gray-100 text-gray-400 cursor-not-allowed'
             }`}
           >
             Submit Answer
           </button>
-          <button className="w-10 h-12 flex items-center justify-center rounded-xl border-2 border-gray-200 text-gray-500 hover:border-gray-300 flex-shrink-0">
+          <button
+            onClick={() => handleNavigate(Math.min(current.total - 1, currentIdx + 1))}
+            className="w-10 h-12 flex items-center justify-center rounded-xl border-2 border-gray-200 text-gray-500 hover:border-gray-300 flex-shrink-0"
+          >
             ›
           </button>
         </div>
       </div>
 
       <BottomNav />
+
+      {/* All answered toast */}
+      {allAnsweredToast && (
+        <div className="fixed bottom-36 left-1/2 -translate-x-1/2 max-w-xs w-full z-40 px-4">
+          <div className="bg-teal-700 text-white rounded-2xl px-4 py-3 shadow-lg">
+            <p className="text-xs font-bold leading-snug">
+              You've answered all questions — ready to submit? 🎉
+            </p>
+          </div>
+        </div>
+      )}
 
       {/* Submit confirmation */}
       {showConfirm && (
