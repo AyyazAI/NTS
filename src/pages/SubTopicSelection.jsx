@@ -159,7 +159,7 @@ export default function SubTopicSelection() {
                 className={`flex-1 py-2.5 rounded-xl text-xs font-bold border-2 transition-all ${
                   difficulty === d
                     ? 'bg-teal-600 text-white border-teal-600'
-                    : 'bg-gray-100 text-gray-700 border-gray-300 hover:border-gray-400'
+                    : 'bg-blue-100 text-gray-900 border-blue-300 hover:border-blue-400'
                 }`}
               >
                 {d}
