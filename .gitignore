@@ -24,3 +24,8 @@ Thumbs.db
 # logs
 *.log
 npm-debug.log*
+
+# screenshots (local QA only)
+screenshots/
+screenshots-round2/
+screenshots-round2.zip
