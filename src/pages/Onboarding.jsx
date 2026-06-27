@@ -1,4 +1,4 @@
-import { useState } from 'react'
+﻿import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { NAT_CATEGORIES, setNatCategory as saveCategory } from '../utils/natCategory'
 
@@ -92,15 +92,15 @@ export default function Onboarding() {
       <div className="text-center mb-8">
         <div className="flex items-center justify-center">
           <span className="font-black text-3xl text-gray-900">Taleemi</span>
-          <span className="font-black text-3xl text-teal-600">Markaz</span>
+          <span className="font-black text-3xl text-[#006D5B]">Markaz</span>
         </div>
         <p className="text-xs font-bold text-gray-600 tracking-widest uppercase mt-1">NTS Prep</p>
       </div>
 
       {/* Progress dots */}
       <div className="flex gap-2 mb-8">
-        <div className={`w-3 h-3 rounded-full transition-colors duration-300 ${step === 1 ? 'bg-teal-600' : 'bg-teal-300'}`} />
-        <div className={`w-3 h-3 rounded-full transition-colors duration-300 ${step === 2 ? 'bg-teal-600' : 'bg-gray-200'}`} />
+        <div className={`w-3 h-3 rounded-full transition-colors duration-300 ${step === 1 ? 'bg-[#006D5B]' : 'bg-[#66BFB5]'}`} />
+        <div className={`w-3 h-3 rounded-full transition-colors duration-300 ${step === 2 ? 'bg-[#006D5B]' : 'bg-gray-200'}`} />
       </div>
 
       {step === 1 ? (
@@ -126,7 +126,7 @@ export default function Onboarding() {
                 }}
                 onBlur={handleNameBlur}
                 className={`w-full border rounded-xl px-4 py-3.5 text-base focus:outline-none focus:ring-2 focus:border-transparent ${
-                  nameError ? 'border-red-400 focus:ring-red-400' : 'border-gray-200 focus:ring-teal-500'
+                  nameError ? 'border-red-400 focus:ring-red-400' : 'border-gray-200 focus:ring-[#006D5B]'
                 }`}
               />
               {nameError && (
@@ -149,7 +149,7 @@ export default function Onboarding() {
                     key={t.id}
                     onClick={() => { setContactType(t.id); setContactError('') }}
                     className={`flex-1 py-2 text-xs font-bold rounded-md transition-all ${
-                      contactType === t.id ? 'bg-teal-600 text-white shadow-sm' : 'text-gray-900'
+                      contactType === t.id ? 'bg-[#006D5B] text-white shadow-sm' : 'text-gray-900'
                     }`}
                   >
                     {t.label}
@@ -165,7 +165,7 @@ export default function Onboarding() {
                   value={mobile}
                   onChange={e => { setMobile(e.target.value); setContactError('') }}
                   className={`w-full border rounded-xl px-4 py-3.5 text-base focus:outline-none focus:ring-2 focus:border-transparent ${
-                    contactError ? 'border-red-400 focus:ring-red-400' : 'border-gray-200 focus:ring-teal-500'
+                    contactError ? 'border-red-400 focus:ring-red-400' : 'border-gray-200 focus:ring-[#006D5B]'
                   }`}
                 />
               ) : (
@@ -177,7 +177,7 @@ export default function Onboarding() {
                   maxLength={100}
                   onChange={e => { setEmail(e.target.value); setContactError('') }}
                   className={`w-full border rounded-xl px-4 py-3.5 text-base focus:outline-none focus:ring-2 focus:border-transparent ${
-                    contactError ? 'border-red-400 focus:ring-red-400' : 'border-gray-200 focus:ring-teal-500'
+                    contactError ? 'border-red-400 focus:ring-red-400' : 'border-gray-200 focus:ring-[#006D5B]'
                   }`}
                 />
               )}
@@ -189,7 +189,7 @@ export default function Onboarding() {
 
           <button
             onClick={handleContinue}
-            className="mt-8 w-full bg-teal-600 text-white font-bold py-4 rounded-xl text-base hover:bg-teal-700 active:bg-teal-800 transition-colors"
+            className="mt-8 w-full bg-[#006D5B] text-white font-bold py-4 rounded-xl text-base hover:bg-[#005548] active:bg-[#004A3D] transition-colors"
           >
             Continue →
           </button>
@@ -197,7 +197,7 @@ export default function Onboarding() {
       ) : (
         <div className="w-full flex-1 flex flex-col">
           <h1 className={`font-black text-gray-900 mb-1 ${name.trim().length > 16 ? 'text-xl' : 'text-2xl'}`}>
-            Welcome aboard, {name.trim()}!
+            Welcome aboard, {name.trim()}! 👋
           </h1>
           <p className="text-sm text-gray-700 mb-6">
             Let's personalise your prep so we show you the right content
@@ -219,15 +219,15 @@ export default function Onboarding() {
                       onClick={() => setNatCategory(cat.id)}
                       className={`relative flex items-center gap-2 px-3 py-2.5 rounded-xl border-2 transition-all ${
                         selected
-                          ? 'border-teal-600 bg-teal-600'
+                          ? 'border-[#006D5B] bg-[#006D5B]'
                           : 'border-blue-300 bg-blue-100 hover:border-blue-400'
                       }`}
                     >
                       {selected && (
-                        <span className="w-4 h-4 rounded-full bg-white flex items-center justify-center text-teal-600 text-[9px] font-black flex-shrink-0">✓</span>
+                        <span className="w-4 h-4 rounded-full bg-white flex items-center justify-center text-[#006D5B] text-[9px] font-black flex-shrink-0">✓</span>
                       )}
                       <div className="text-left min-w-0">
-                        <p className={`text-[10px] font-black ${selected ? 'text-teal-100' : 'text-gray-700'}`}>
+                        <p className={`text-[10px] font-black ${selected ? 'text-[#CCE8E5]' : 'text-gray-700'}`}>
                           {cat.id}
                         </p>
                         <p className={`text-xs font-bold leading-tight truncate ${selected ? 'text-white' : 'text-gray-900'}`}>
@@ -254,7 +254,7 @@ export default function Onboarding() {
                     key={d.value}
                     className={`flex items-center gap-3 px-4 py-3 rounded-xl border-2 cursor-pointer transition-all ${
                       testDate === d.value
-                        ? 'border-teal-600 bg-teal-600'
+                        ? 'border-[#006D5B] bg-[#006D5B]'
                         : 'border-blue-300 bg-blue-100 hover:border-blue-400'
                     }`}
                   >
@@ -264,7 +264,7 @@ export default function Onboarding() {
                       value={d.value}
                       checked={testDate === d.value}
                       onChange={() => setTestDate(d.value)}
-                      className="accent-teal-600"
+                      className="accent-[#006D5B]"
                     />
                     <span className={`text-sm font-bold ${testDate === d.value ? 'text-white' : 'text-gray-900'}`}>
                       {d.label}
@@ -274,7 +274,7 @@ export default function Onboarding() {
                 <label
                   className={`flex items-center gap-3 px-4 py-3 rounded-xl border-2 cursor-pointer transition-all ${
                     testDate === ''
-                      ? 'border-teal-600 bg-teal-600'
+                      ? 'border-[#006D5B] bg-[#006D5B]'
                       : 'border-blue-300 bg-blue-100 hover:border-blue-400'
                   }`}
                 >
@@ -284,7 +284,7 @@ export default function Onboarding() {
                     value=""
                     checked={testDate === ''}
                     onChange={() => setTestDate('')}
-                    className="accent-teal-600"
+                    className="accent-[#006D5B]"
                   />
                   <span className={`text-sm font-bold ${testDate === '' ? 'text-white' : 'text-gray-900'}`}>
                     I'll decide later
@@ -304,7 +304,7 @@ export default function Onboarding() {
                       key={opt}
                       onClick={() => setHasTargetScore(opt === 'Yes')}
                       className={`flex-1 py-3 rounded-xl text-sm font-bold border-2 transition-all ${
-                        active ? 'bg-teal-600 text-white border-teal-600' : 'bg-blue-100 text-gray-900 border-blue-300'
+                        active ? 'bg-[#006D5B] text-white border-[#006D5B]' : 'bg-blue-100 text-gray-900 border-blue-300'
                       }`}
                     >
                       {opt}
@@ -315,7 +315,7 @@ export default function Onboarding() {
               {hasTargetScore && (
                 <div>
                   <p className="text-sm font-bold text-gray-700 mb-2">
-                    Target Score: <span className="text-teal-600">{score}/90</span>
+                    Target Score: <span className="text-[#006D5B]">{score}/90</span>
                   </p>
                   <input
                     type="range"
@@ -324,7 +324,7 @@ export default function Onboarding() {
                     step="5"
                     value={score}
                     onChange={e => setScore(Number(e.target.value))}
-                    className="w-full accent-teal-600"
+                    className="w-full accent-[#006D5B]"
                   />
                   <div className="flex justify-between text-xs text-gray-700 mt-1">
                     <span>50 (Pass)</span>
@@ -342,7 +342,7 @@ export default function Onboarding() {
               disabled={!natCategory}
               className={`w-full font-bold py-4 rounded-xl text-base transition-colors border-2 ${
                 natCategory
-                  ? 'bg-teal-600 text-white border-teal-600 hover:bg-teal-700 active:bg-teal-800'
+                  ? 'bg-[#006D5B] text-white border-[#006D5B] hover:bg-[#005548] active:bg-[#004A3D]'
                   : 'bg-gray-200 text-gray-500 border-gray-300 cursor-not-allowed'
               }`}
             >

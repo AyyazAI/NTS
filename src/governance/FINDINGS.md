@@ -740,3 +740,20 @@ R13-02 required modifying files beyond RoughWork.jsx (the explicitly listed file
 | R15-01 | 🟠 High | Home.jsx | "⏱️ Mock Test" toggle button showed inline "Last score" + "Start Mock Test" content below — behaved as a mode toggle, not a navigation action; inconsistent with BottomNav Mock tab which navigates directly to /mock-test | ✅ Fixed — mode-toggle .map() replaced with two separate elements: Practice Mode remains a state toggle (shows topic cards), Mock Test becomes `<Link to="/mock-test">` wrapping a button (direct navigation, no inline content); `{mode === 'mock' && ...}` block removed entirely |
 | R15-02 | 🟡 Medium | Progress.jsx LineChart | Chart plot area had no background — line and dots floated on white; lacked visual definition between axes | ✅ Fixed — `<rect x={padL} y={padT} width={innerW} height={innerH} fill="#f0faf4" />` added as first SVG child (renders behind all data); light green tint consistent with brand; applies to both Practice and Mock Tests tabs via shared LineChart component |
 
+---
+
+## Round 16 — Testing Session (June 28, 2026)
+
+### Source: Owner design review
+
+| ID | Severity | Screen/File | Finding | Resolution |
+|---|---|---|---|---|
+| R16-01 | 🟠 High | MockTestOverview.jsx | No way to cancel an active mock test — student was trapped if they wanted to exit without submitting | ✅ Fixed — "Cancel Test" button added below "Submit Test" (bg-red-100/border-red-400/text-red-700); confirmation bottom-sheet dialog: "Keep Testing" (bg-[#006D5B]) stays on Overview, "Cancel Test" (red) navigates to /mock-test clearing all state; `showCancel` state added |
+| R16-02 | 🟢 Low | Onboarding.jsx | Step 2 heading "Welcome aboard, [Name]!" missing wave emoji — inconsistent with UX-005 greeting spec | ✅ Fixed — heading updated to "Welcome aboard, {name.trim()}! 👋" |
+| R16-03 | 🟡 Medium | Home.jsx | Greeting "Welcome, [Name]! 👋" is passive — Home is where the student starts working, not a welcome screen | ✅ Fixed — greeting changed to `Let's get to work, ${studentName}! 💪`; fallback (no name) is `Let's get to work! 💪` |
+| R16-04 | 🟡 Medium | Progress.jsx | Progress screen greeting "Let's get to work, [Name]! 💪" now duplicates Home greeting (R16-03) | ✅ Fixed — Progress greeting changed to "Keep it up, {studentName}! 🔥" — reflects ongoing momentum rather than starting motivation |
+| R16-05 | 🟢 Low | Progress.jsx LineChart | Chart area background (#f0faf4) was too pale — barely visible against white card background | ✅ Fixed — fill updated to #d1f0e0 (slightly darker green tint); line #006D5B remains clearly readable against background; applies to both Practice and Mock Tests tabs |
+
+### Governance Note — DECISIONS.md not updated (GOV-RULE-013 / GOV-RULE-008 tension)
+R16-03 and R16-04 change the greeting assignments documented in DECISIONS.md UX-005. DECISIONS.md was not listed in the R16 prompt scope. Per GOV-RULE-013, it was not modified. DECISIONS.md UX-005 should be updated next session to reflect: Home = "Let's get to work, [Name]! 💪"; Progress = "Keep it up, [Name]! 🔥"; wave emoji 👋 = Onboarding Step 2 + (Home fallback removed).
+

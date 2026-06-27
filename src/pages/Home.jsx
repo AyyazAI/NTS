@@ -67,7 +67,7 @@ export default function Home() {
   const [natCategory]             = useState(() => getNatCategory() || 'NAT-IE')
   const [studentName]             = useState(() => getStudentName())
 
-  const greeting = studentName ? `Welcome, ${studentName}! 👋` : 'Welcome! 👋'
+  const greeting = studentName ? `Let's get to work, ${studentName}! 💪` : `Let's get to work! 💪`
 
   const subjectTopic = {
     id: 'subject',

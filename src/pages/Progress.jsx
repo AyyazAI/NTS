@@ -25,7 +25,7 @@ function LineChart({ points, labels = null, colour = '#006D5B' }) {
   return (
     <svg viewBox={`0 0 ${w} ${h}`} className="w-full" style={{ height: h }}>
       {/* Chart plot area background */}
-      <rect x={padL} y={padT} width={innerW} height={innerH} fill="#f0faf4" />
+      <rect x={padL} y={padT} width={innerW} height={innerH} fill="#d1f0e0" />
       {/* Pass mark — rendered first so all data elements appear on top */}
       <line x1={padL} y1={passY} x2={w - padR} y2={passY}
         stroke="#DC2626" strokeWidth="1" strokeDasharray="3,2" />
@@ -347,7 +347,7 @@ export default function Progress() {
 
       <main className="flex-1 px-4 pb-28 overflow-y-auto">
         {studentName && (
-          <h1 className="text-2xl font-black text-gray-900 mt-4 mb-1">Let's get to work, {studentName}! 💪</h1>
+          <h1 className="text-2xl font-black text-gray-900 mt-4 mb-1">Keep it up, {studentName}! 🔥</h1>
         )}
         <div className="flex gap-2 mt-1 mb-4">
           {[
