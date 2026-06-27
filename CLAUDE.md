@@ -16,7 +16,7 @@
 |---|---|
 | Frontend | React 18 + Vite + Tailwind CSS |
 | Font | Nunito |
-| Accent colour | Teal #0D9488 |
+| Accent colour | Dark green #006D5B |
 | Database | Turso / libSQL |
 | AI | Claude Sonnet 4.6 |
 | Deployment | Vercel (Hobby plan) |
@@ -32,7 +32,8 @@ All Claude API and Turso calls route through Vercel serverless functions — NEV
 2. Work step by step, one task at a time. Do not skip confirmation steps unless the prompt explicitly says to proceed autonomously.
 3. **GOV-RULE-013:** Only modify files explicitly listed in the prompt. Flag any out-of-scope change before committing. Undocumented changes are a governance violation.
 4. **Never run the test suite** unless explicitly instructed.
-5. **Never commit** unless explicitly instructed.
+5. **Run targeted tests only** (e.g. `npx playwright test tests/ui/progress.spec.js`) unless the full suite is explicitly requested. Never run the full suite automatically.
+6. **Never commit** unless explicitly instructed.
 
 ---
 
@@ -53,7 +54,7 @@ All Claude API and Turso calls route through Vercel serverless functions — NEV
 | GOV-RULE-011 | All UGC passes moderation before AI processing or permanent storage | Phase 2 |
 | GOV-RULE-012 | No light gray text on white/light backgrounds — minimum text-gray-700 | Active |
 | GOV-RULE-013 | Claude Code modifies only files explicitly listed in the prompt. Undocumented changes = governance violation. | Active |
-| GOV-RULE-014 | Unselected: bg-blue-100 / border-blue-300 / text-gray-900. Selected: solid bg-teal-600 / text-white. Back buttons: bg-blue-100 / border-blue-300. | Active |
+| GOV-RULE-014 | Unselected: bg-blue-100 / border-blue-300 / text-gray-900. Selected: solid bg-[#006D5B] / text-white. Back buttons: bg-blue-100 / border-blue-300. | Active |
 
 Full rule details: SPEC.md (GOV-RULE-009, 010, 011, 012) · DECISIONS.md (GOV-RULE-014)
 

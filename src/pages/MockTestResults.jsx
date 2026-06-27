@@ -1,4 +1,4 @@
-import { useState } from 'react'
+﻿import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import Header from '../components/Header'
 import BottomNav from '../components/BottomNav'
@@ -10,7 +10,7 @@ const TOTAL        = 90
 const UNATTEMPTED  = TOTAL - ATTEMPTED - SKIPPED
 
 function SectionBar({ name, score, total, pct }) {
-  const colour = pct >= 70 ? 'bg-teal-500' : pct >= 50 ? 'bg-amber-400' : 'bg-red-400'
+  const colour = pct >= 70 ? 'bg-[#006D5B]' : pct >= 50 ? 'bg-amber-400' : 'bg-red-400'
   return (
     <div className="mb-3">
       <div className="flex justify-between items-baseline mb-1">
@@ -45,10 +45,10 @@ export default function MockTestResults() {
       <main className="flex-1 px-4 overflow-y-auto" style={{ paddingBottom: '96px' }}>
         {/* Result header */}
         <div className="text-center py-6">
-          <p className="text-teal-600 font-black text-lg mb-1">Test Complete ✓</p>
+          <p className="text-[#006D5B] font-black text-lg mb-1">Test Complete ✓</p>
           <p className="text-6xl font-black text-gray-900 leading-none">67</p>
           <p className="text-xl font-bold text-gray-700">/90</p>
-          <p className="mt-2 text-sm font-bold text-teal-600">↑ 5 points from your last mock test</p>
+          <p className="mt-2 text-sm font-bold text-[#006D5B]">↑ 5 points from your last mock test</p>
         </div>
 
         {/* Coverage warning — shown if attempted < 60 */}
@@ -94,10 +94,10 @@ export default function MockTestResults() {
               { label: 'Test 3', score: 67, arrow: '↑', current: true },
             ].map((t, i) => (
               <div key={i} className="flex-1 text-center">
-                <div className={`rounded-xl py-2.5 ${t.current ? 'bg-teal-600' : 'bg-gray-100 border border-gray-300'}`}>
+                <div className={`rounded-xl py-2.5 ${t.current ? 'bg-[#006D5B]' : 'bg-gray-100 border border-gray-300'}`}>
                   <p className={`text-lg font-black ${t.current ? 'text-white' : 'text-gray-700'}`}>
                     {t.score}
-                    {t.arrow && <span className="text-sm text-teal-400 ml-0.5">{t.arrow}</span>}
+                    {t.arrow && <span className="text-sm text-[#006D5B] ml-0.5">{t.arrow}</span>}
                   </p>
                 </div>
                 <p className="text-[10px] font-bold text-gray-700 mt-1">{t.label}</p>
@@ -107,27 +107,27 @@ export default function MockTestResults() {
         </div>
 
         {/* Recommendation — weakest section */}
-        <div className="bg-teal-50 border border-teal-200 rounded-2xl p-4 mb-6">
-          <p className="text-xs font-black text-teal-700 uppercase tracking-wider mb-2">Focus Next On</p>
+        <div className="bg-[#F0FAF8] border border-[#99D4CE] rounded-2xl p-4 mb-6">
+          <p className="text-xs font-black text-[#005548] uppercase tracking-wider mb-2">Focus Next On</p>
           <p className="text-sm text-gray-700 leading-relaxed mb-3">
             📚 <span className="font-black">{weakestSection.name}</span> ({weakestSection.pct}%) — your weakest section today.
           </p>
           <Link to={`/practice?topic=${weakestSection.name.toLowerCase().replace(/\s+/g, '-')}`}>
-            <button className="w-full py-3 rounded-xl bg-teal-600 text-white text-sm font-bold hover:bg-teal-700 transition-colors">
+            <button className="w-full py-3 rounded-xl bg-[#006D5B] text-white text-sm font-bold hover:bg-[#005548] transition-colors">
               Practice {weakestSection.name} →
             </button>
           </Link>
         </div>
 
         {/* CTAs */}
-        <div className="space-y-4">
-          <Link to="/solution/wrong">
-            <button className="w-full py-4 rounded-xl bg-teal-600 text-white font-bold text-sm hover:bg-teal-700 transition-colors">
+        <div className="flex flex-col gap-4 pb-4">
+          <Link to="/mock-test/review">
+            <button className="w-full py-4 rounded-xl bg-[#006D5B] text-white font-bold text-sm hover:bg-[#005548] transition-colors">
               Review All Questions →
             </button>
           </Link>
           <Link to="/practice">
-            <button className="w-full py-4 rounded-xl border-2 border-teal-600 text-teal-700 font-bold text-sm hover:bg-teal-50 transition-colors">
+            <button className="w-full py-4 rounded-xl border-2 bg-blue-100 border-blue-300 text-gray-900 font-bold text-sm hover:bg-blue-200 transition-colors">
               Practice Weak Areas →
             </button>
           </Link>

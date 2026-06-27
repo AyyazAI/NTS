@@ -52,13 +52,13 @@ test.describe('Mock Test — Question Screen', () => {
     await expect(actionBar.locator('button:has-text("Submit Test")')).not.toBeVisible()
   })
 
-  test('flag icon is unfilled by default', async ({ page }) => {
-    await expect(page.locator('button[title="Flag for later"]')).toBeVisible()
+  test('Try Later button is visible by default (unflagged)', async ({ page }) => {
+    await expect(page.locator('button[title="Mark to revisit later"]')).toBeVisible()
   })
 
-  test('flag icon changes to orange after clicking', async ({ page }) => {
-    await page.locator('button[title="Flag for later"]').click()
-    await expect(page.locator('button[title="Flagged"]')).toHaveClass(/text-orange-500/)
+  test('Try Later button turns orange after clicking', async ({ page }) => {
+    await page.locator('button[title="Mark to revisit later"]').click()
+    await expect(page.locator('button[title="Mark to revisit later"]')).toHaveClass(/text-orange-500/)
   })
 
   test('rough work box is visible below answer options', async ({ page }) => {

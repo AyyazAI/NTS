@@ -32,21 +32,48 @@ Replace date picker entirely with radio list of upcoming NAT-I dates. Student ta
 Use student's name where it genuinely warms the interaction:
 - Step 2 heading: "Welcome aboard, [Name]!"
 - Home greeting: "Welcome, [Name]! 👋"
+- Progress screen: "Let's get to work, [Name]! 💪" (shown when studentName present)
 - Solution correct: "Nice work, [Name]!"
 - Target crossed: "You hit your target, [Name]! 🎉"
 Never mechanical — only where it feels natural.
+**Wave emoji 👋:** Home greeting only. Motivational 💪: Progress and work-mode screens.
 
 ### UX-006 — Home Screen Purpose
 Home screen: motivate and direct to action. NOT a dashboard — Progress screen handles that.
 Shows: greeting, daily prompt, 4 section cards, mode toggle.
 Removes: ambiguous progress bars (unclear if practice/mock/overall).
 
-### UX-007 — Mock Test Redesign (Phase 2)
-Default mock test: subject-focused, 25 minutes, difficulty choice.
-Student selects: section + Easy/Medium/Hard/Mixed.
-Mixed (all sections): 30 minutes — extra time for context switching.
-Full 90-question simulation: available as milestone, not default.
-**Rationale:** No student voluntarily sits 120 minutes. 25-min sessions build habit and return visits. Full test is earned achievement.
+### UX-007 — Mock Test Redesign (R9-04, 2026-06-27)
+Mock test is a focused single-topic session — not a 90-question full simulation.
+
+**Session spec:** 30 minutes · 20 questions · one topic selected by student.
+**Topics available:** English, Quantitative Reasoning, Analytical Reasoning, Engineering (NAT-IE).
+**No negative marking (SC-01). No Show Solution during the test.**
+
+**Three-page structure:**
+1. **Setup** (`/mock-test`): topic selection cards (GOV-RULE-014), "30 minutes · 20 questions" info, disabled Start Test until topic selected.
+2. **Question** (`/mock-test/question`): 20 question dots (answered/flagged/unseen), 30:00 countdown, Try Later flag (auto-removes on answer), Submit Answer (records + advances), "Go to Overview →" always visible.
+3. **Overview** (`/mock-test/overview`): tappable question dots (navigate to specific question), answered/flag/unseen counts, timer continues, "← Back to Question N" returns to origin question, Submit Test CTA.
+
+**Timer behaviour:**
+- Starts when "Start Test →" is tapped (startTimestamp stored in Router state).
+- Persists accurately across Question ↔ Overview navigation via localStorage-free startTimestamp computation: `remaining = 1800 - Math.floor((Date.now() - startTimestamp) / 1000)`.
+- Warnings at 5:00, 4:00, 3:00, 2:00, 1:00 remaining: toast notification.
+- At 0:10: prominent digit countdown replaces timer display.
+- At 0:00: auto-submit, navigate to Results.
+
+**"Try Later" flag in Mock mode:**
+- Label on button: "Try Later". Title: "Mark to revisit later".
+- Auto-removed when the student submits an answer for that question (with toast).
+- Overview shows flagged count as "Try Later" stat.
+
+**Navigation between Question and Overview:**
+- Student taps "Go to Overview →": navigates with `{ originIdx: currentIdx }` in state.
+- Student taps a dot in Overview: navigates to Question with `{ fromOverview: true, originIdx }`.
+- When `fromOverview: true`, Submit Answer returns student to Overview automatically.
+- "← Back to Question N" uses `originIdx` to return to the exact question.
+
+**Rationale:** 120-minute full simulation creates friction and abandonment. 30-minute focused sessions build daily habit, allow meaningful per-topic assessment, and respect student time constraints.
 
 ### UX-008 — Rough Work Area (Bottom-Sheet Pattern)
 Canvas is a compact always-visible "Rough work area" box below answer options.
@@ -145,21 +172,26 @@ All selectable and option components follow one consistent visual language:
 | State | Background | Border | Text |
 |---|---|---|---|
 | Unselected | bg-blue-100 | border-blue-300 | text-gray-900 |
-| Selected | bg-teal-600 | border-teal-600 | text-white |
+| Selected | bg-[#006D5B] | border-[#006D5B] | text-white |
 | Back buttons | bg-blue-100 | border-blue-300 | text-gray-900 |
 | Disabled (Let's go!) | bg-gray-200 | border-gray-300 | text-gray-500 |
 
 **Applies to:** Answer options (A/B/C/D), NAT category pills, test date radio rows, Yes/Not yet toggles, difficulty buttons, Mobile/Email toggles, back navigation buttons, and all other selectable cards or pills.
 
-**Rationale:** Inconsistent prior states (gray-50, bg-white, gray-100) created ambiguous visual hierarchy. Blue-100→teal-600 makes selection intent unambiguous at every interaction point. Established Round 7 (2026-06-27).
+**Rationale:** Inconsistent prior states (gray-50, bg-white, gray-100) created ambiguous visual hierarchy. Blue-100→#006D5B makes selection intent unambiguous at every interaction point. Established Round 7 (2026-06-27). Primary colour updated to #006D5B (dark forest green) in R11-01.
 
 ---
 
 ## Solution Screen Navigation
 
-**Decision (R7-04, 2026-06-27):** Show Solution navigates to `/solution/wrong` as a dedicated page. Solution screen is neutral — no wrong/correct framing on entry via Show Solution.
+**Decision (R8-01, 2026-06-27):** Single `/solution` route. No `/solution/wrong` or `/solution/correct` split.
 
-**"← Back to Practice" button:** Shown on `/solution/wrong` when accessed via Show Solution (detected via React Router location state `fromShowSolution: true`). Returns student to practice session via `navigate(-1)`.
+**Result panel (R9-03):** Solution.jsx reads `location.state?.correct`:
+- `true` → green "Correct! 🎉" panel at top.
+- `false` → amber "Not quite 🤔" panel showing the correct answer.
+- `undefined` (via Show Solution or direct URL) → no panel, neutral view.
+
+**"← Back to Practice" button:** Always present. Uses `navigate(-1)` to return to wherever the student came from.
 
 **REVERSED — Inline Solution Panel:**
 ~~R6 built an inline solution panel that expanded on the same page as the question.~~
@@ -167,6 +199,24 @@ Reversed in R7-04. Reasons:
 1. Inline panel cluttered the question screen and conflicted with the canvas rough work area
 2. Dedicated solution page allows full method tabs, step expansion, and fixed CTA bar without scroll conflicts
 3. Back to Practice preserves full session state via React Router history
+
+---
+
+## "Try Later" Flag Position (R10-03, 2026-06-27)
+
+Flag button is placed **outside and above the question card**, right-aligned on the same row as the question counter ("Question X of Y").
+
+**Layout:** `flex items-center justify-between` row containing `Question X of Y` (left) and the flag button (right).
+
+**Rationale:** Flag inside the question card (absolute-positioned) forced `pr-12` padding on question text to avoid overlap, which reduced readable width. Placing it in the header row is cleaner, avoids any overflow risk, and is more consistent with standard quiz UX where navigation controls live above the content.
+
+**Applies to:** QuestionPractice.jsx and MockTestQuestion.jsx.
+
+---
+
+## Targeted Test Rule (R10-01, 2026-06-27)
+
+Run targeted tests only (e.g. `npx playwright test tests/ui/progress.spec.js`) unless the full suite is explicitly requested. Never run the full suite automatically. Added to CLAUDE.md Working Rules as rule 5.
 
 ---
 
@@ -180,10 +230,10 @@ Reversed in R7-04. Reasons:
 
 ## Chart Colours
 
-- Practice progress charts: **teal** (#0D9488)
-- Mock test charts: **amber** (#D97706)
+- Practice and Mock Tests progress charts: **dark green** (#006D5B)
+- Mock test active session UI (timer, mode pill, amber card accents): **amber** (#D97706)
 
-This is intentional — amber is the mock test mode colour (timer, pill), so mock test data inherits it. Teal is the primary brand/practice colour.
+The progress chart colour is unified to dark green (#006D5B) for both Practice and Mock tabs (R12-03). The amber colour is reserved for the active mock test session UI only — it signals "you're in a timed test." Chart data in Progress uses brand green regardless of source.
 
 ---
 

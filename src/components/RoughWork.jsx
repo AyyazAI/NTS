@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback, useEffect } from 'react'
+﻿import { useState, useRef, useCallback, useEffect } from 'react'
 
 const DRAW_TOOLS = [
   { id: 'thick',  icon: '✏️', title: 'Thick pen' },
@@ -8,7 +8,9 @@ const DRAW_TOOLS = [
   { id: 'clear',  icon: '✕',  title: 'Clear'     },
 ]
 
-export default function RoughWork({ isMock = false }) {
+const drawingsStore = new Map()
+
+export default function RoughWork({ isMock = false, questionKey = null }) {
   const [modalOpen,  setModalOpen]  = useState(false)
   const [activeTab,  setActiveTab]  = useState('draw')
   const [activeTool, setActiveTool] = useState('thick')
@@ -19,6 +21,7 @@ export default function RoughWork({ isMock = false }) {
   const textRef      = useRef(null)
   const lastTap      = useRef(0)
   const savedDataUrl = useRef(null)
+  const prevKeyRef   = useRef(questionKey)
 
   // Restore canvas drawing when modal opens or tab switches to draw
   useEffect(() => {
@@ -29,6 +32,32 @@ export default function RoughWork({ isMock = false }) {
     img.onload = () => c.getContext('2d').drawImage(img, 0, 0)
     img.src = savedDataUrl.current
   }, [modalOpen, activeTab])
+
+  // Save/restore per-question drawing state when questionKey changes
+  useEffect(() => {
+    const prevKey = prevKeyRef.current
+    if (prevKey === questionKey) return
+    if (prevKey !== null) {
+      drawingsStore.set(prevKey, {
+        dataUrl: savedDataUrl.current,
+        text: textRef.current?.value?.trim() || null,
+      })
+    }
+    const stored = questionKey !== null ? drawingsStore.get(questionKey) : null
+    savedDataUrl.current = stored?.dataUrl || null
+    if (stored?.dataUrl) {
+      setPreview({ type: 'canvas', url: stored.dataUrl })
+    } else if (stored?.text) {
+      setPreview({ type: 'text', text: stored.text })
+    } else {
+      setPreview(null)
+    }
+    if (textRef.current) textRef.current.value = stored?.text || ''
+    const c = canvasRef.current
+    if (c) c.getContext('2d').clearRect(0, 0, c.width, c.height)
+    history.current = []
+    prevKeyRef.current = questionKey
+  }, [questionKey])
 
   function handleDoubleTap(e) {
     e.preventDefault()
@@ -158,7 +187,7 @@ export default function RoughWork({ isMock = false }) {
       <div className="mt-3">
         <div
           data-testid="rough-work-box"
-          className="border-2 border-gray-700 rounded-xl overflow-hidden cursor-pointer hover:border-teal-600 transition-colors select-none"
+          className="border-2 border-gray-700 rounded-xl overflow-hidden cursor-pointer hover:border-[#006D5B] transition-colors select-none"
           onDoubleClick={handleDoubleTap}
           onTouchEnd={handleTouchEnd}
         >
@@ -171,11 +200,11 @@ export default function RoughWork({ isMock = false }) {
               <img src={preview.url} className="max-w-full object-contain" alt="rough work preview" />
             </div>
           ) : preview?.type === 'text' ? (
-            <div className="bg-teal-50 flex items-start p-3 min-h-12">
+            <div className="bg-[#F0FAF8] flex items-start p-3 min-h-12">
               <p className="text-xs text-gray-700 font-mono whitespace-pre-wrap">{preview.text}</p>
             </div>
           ) : (
-            <div className="bg-teal-50 flex items-center justify-center py-4">
+            <div className="bg-[#F0FAF8] flex items-center justify-center py-4">
               <p className="text-xs text-gray-600 italic">No work yet — double-tap to start</p>
             </div>
           )}
@@ -201,7 +230,7 @@ export default function RoughWork({ isMock = false }) {
               <p className="text-sm font-black text-gray-900">Rough Work</p>
               <button
                 onClick={handleDone}
-                className="text-sm font-bold text-teal-600 hover:text-teal-700 px-1 py-1"
+                className="text-sm font-bold text-[#006D5B] hover:text-[#005548] px-1 py-1"
               >
                 Done
               </button>
@@ -215,7 +244,7 @@ export default function RoughWork({ isMock = false }) {
                     key={t.id}
                     onClick={() => setActiveTab(t.id)}
                     className={`flex-1 py-1.5 text-xs font-bold rounded-md transition-all ${
-                      activeTab === t.id ? 'bg-teal-600 text-white shadow-sm' : 'text-gray-900'
+                      activeTab === t.id ? 'bg-[#006D5B] text-white shadow-sm' : 'text-gray-900'
                     }`}
                   >
                     {t.label}
@@ -236,7 +265,7 @@ export default function RoughWork({ isMock = false }) {
                         title={tool.title}
                         className={`w-9 h-9 text-sm rounded-lg border flex items-center justify-center transition-all ${
                           activeTool === tool.id && tool.id !== 'undo' && tool.id !== 'clear'
-                            ? 'border-teal-500 bg-teal-50 text-teal-600'
+                            ? 'border-[#006D5B] bg-[#F0FAF8] text-[#006D5B]'
                             : 'border-gray-300 text-gray-700 hover:border-gray-400'
                         }`}
                       >
@@ -267,7 +296,7 @@ export default function RoughWork({ isMock = false }) {
                   rows={6}
                   defaultValue={preview?.type === 'text' ? preview.text : ''}
                   placeholder="Type your working here..."
-                  className="w-full text-sm text-gray-700 bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 resize-none focus:outline-none focus:ring-2 focus:ring-teal-500"
+                  className="w-full text-sm text-gray-700 bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 resize-none focus:outline-none focus:ring-2 focus:ring-[#006D5B]"
                 />
               )}
               <p className="text-xs text-gray-700 mt-2">

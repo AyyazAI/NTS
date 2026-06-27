@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+﻿import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Header from '../components/Header'
 import BottomNav from '../components/BottomNav'
@@ -50,7 +50,7 @@ export default function QuestionPractice() {
 
   function handleSubmit() {
     if (!selected) return
-    navigate('/solution')
+    navigate('/solution', { state: { correct: selected === QUESTION.correct_option, correctAnswer: QUESTION.correct_option } })
   }
 
   function handleBack(e) {
@@ -64,30 +64,31 @@ export default function QuestionPractice() {
       <ModeIndicator mode="practice" />
 
       <main className="flex-1 px-4 pb-48 overflow-y-auto">
-        {/* Topic/subtopic on own line, Q counter below — prevents wrapping on 375px */}
+        {/* Topic/subtopic + Q counter row with Try Later flag */}
         <div className="mb-3">
-          <p className="text-[9px] font-bold text-gray-700 uppercase tracking-widest">
+          <p className="text-xs font-bold text-gray-700 uppercase tracking-wider">
             {QUESTION.topic} · {QUESTION.subtopic}
           </p>
-          <p className="text-xs font-bold text-gray-700 mt-0.5">
-            Question {QUESTION.number} of {QUESTION.total}
-          </p>
+          <div className="flex items-center justify-between mt-0.5">
+            <p className="text-xs font-bold text-gray-700">
+              Question {QUESTION.number} of {QUESTION.total}
+            </p>
+            <button
+              onClick={() => setFlagged(f => !f)}
+              title="Mark to revisit later"
+              className={`flex items-center gap-0.5 transition-all hover:scale-110 ${
+                flagged ? 'text-orange-500' : 'text-gray-700 hover:text-gray-800'
+              }`}
+            >
+              <span className="text-base font-bold leading-none">{flagged ? '⚑' : '⚐'}</span>
+              <span className="text-[9px] font-bold leading-none ml-0.5">Try Later</span>
+            </button>
+          </div>
         </div>
 
         {/* Question card */}
-        <div className="bg-gray-50 border border-gray-300 rounded-2xl p-4 mb-4 relative">
-          <button
-            onClick={() => setFlagged(f => !f)}
-            title={flagged ? 'Flagged' : 'Flag for later'}
-            className={`absolute top-3 right-3 flex items-center gap-0.5 transition-all hover:scale-110 ${
-              flagged ? 'text-orange-500' : 'text-gray-700 hover:text-gray-800'
-            }`}
-          >
-            <span className="text-xl font-bold leading-none">{flagged ? '⚑' : '⚐'}</span>
-            <span className="text-[9px] font-bold leading-none">Flag</span>
-          </button>
-
-          <p className="text-base font-semibold text-gray-900 leading-relaxed pr-12">
+        <div className="bg-gray-50 border border-gray-300 rounded-2xl p-4 mb-4">
+          <p className="text-base font-semibold text-gray-900 leading-relaxed">
             {QUESTION.text}
           </p>
         </div>
@@ -100,13 +101,13 @@ export default function QuestionPractice() {
               onClick={() => handleSelectOption(opt.id)}
               className={`w-full flex items-center gap-3 px-4 py-3.5 rounded-xl border-2 text-left transition-all ${
                 selected === opt.id
-                  ? 'bg-teal-600 border-teal-600'
+                  ? 'bg-[#006D5B] border-[#006D5B]'
                   : 'bg-blue-100 border-blue-300 hover:border-blue-400'
               }`}
             >
               <span className={`w-7 h-7 rounded-full border-2 flex items-center justify-center text-xs font-black flex-shrink-0 ${
                 selected === opt.id
-                  ? 'border-white bg-white text-teal-700'
+                  ? 'border-white bg-white text-[#005548]'
                   : 'border-blue-300 text-gray-700'
               }`}>
                 {opt.id}
@@ -121,7 +122,7 @@ export default function QuestionPractice() {
         </div>
 
         {/* Rough work area */}
-        <RoughWork isMock={false} />
+        <RoughWork isMock={false} questionKey={QUESTION.number} />
       </main>
 
       {/* Bottom action bar */}
@@ -145,7 +146,7 @@ export default function QuestionPractice() {
           {/* Show Solution — solid teal (R8-02) */}
           <button
             onClick={() => navigate('/solution', { state: { fromShowSolution: true } })}
-            className="flex-1 h-12 rounded-xl border-2 text-sm font-bold transition-colors bg-teal-600 border-teal-600 text-white hover:bg-teal-700"
+            className="flex-1 h-12 rounded-xl border-2 text-sm font-bold transition-colors bg-[#006D5B] border-[#006D5B] text-white hover:bg-[#005548]"
           >
             Show Solution
           </button>
@@ -156,7 +157,7 @@ export default function QuestionPractice() {
             disabled={!selected}
             className={`flex-1 h-12 rounded-xl text-sm font-bold transition-all ${
               selected
-                ? 'bg-teal-600 text-white hover:bg-teal-700'
+                ? 'bg-[#006D5B] text-white hover:bg-[#005548]'
                 : 'bg-gray-100 text-gray-400 cursor-not-allowed'
             }`}
           >
@@ -184,7 +185,7 @@ export default function QuestionPractice() {
             <div className="flex flex-col gap-3">
               <button
                 onClick={() => setShowLeave(false)}
-                className="w-full py-4 rounded-xl bg-teal-600 text-white text-sm font-bold hover:bg-teal-700"
+                className="w-full py-4 rounded-xl bg-[#006D5B] text-white text-sm font-bold hover:bg-[#005548]"
               >
                 Stay
               </button>

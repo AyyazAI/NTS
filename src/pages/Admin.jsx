@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+﻿import { useState, useEffect } from 'react'
 import { db } from '../utils/db'
 
 const PHASE_FLOWS = {
@@ -49,13 +49,13 @@ const PHASE_FLOWS = {
 }
 
 const TOOL_COLORS = {
-  'Vite': '#646cff', 'Claude Code': '#0d9488', 'Turso': '#4f9cf9',
+  'Vite': '#646cff', 'Claude Code': '#006D5B', 'Turso': '#4f9cf9',
   'React': '#0ea5e9', 'Git': '#f05032', 'Vercel': '#000000',
   'Claude Design': '#7c3aed', 'Claude API': '#d97706',
 }
 
 const ACCENT_HEX = {
-  '0': '#1e293b', '1': '#0d9488', '2': '#7c3aed', '3': '#d97706', '4': '#0ea5e9',
+  '0': '#1e293b', '1': '#006D5B', '2': '#7c3aed', '3': '#d97706', '4': '#0ea5e9',
 }
 
 const PHASES = [
@@ -121,8 +121,8 @@ const SEED_TASKS = [
 
 // Governance colour system — high contrast: solid dark headers, white text
 const COLORS = {
-  '0': { bg: 'bg-slate-800',   border: 'border-slate-800',   bar: 'bg-teal-400',  badge: 'bg-slate-700 text-white',   heading: 'text-white', check: 'bg-teal-400' },
-  '1': { bg: 'bg-teal-700',    border: 'border-teal-700',    bar: 'bg-white',     badge: 'bg-teal-600 text-white',    heading: 'text-white', check: 'bg-white'    },
+  '0': { bg: 'bg-slate-800',   border: 'border-slate-800',   bar: 'bg-[#006D5B]',  badge: 'bg-slate-700 text-white',   heading: 'text-white', check: 'bg-[#006D5B]' },
+  '1': { bg: 'bg-[#005548]',    border: 'border-[#005548]',    bar: 'bg-white',     badge: 'bg-[#006D5B] text-white',    heading: 'text-white', check: 'bg-white'    },
   '2': { bg: 'bg-violet-700',  border: 'border-violet-700',  bar: 'bg-white',     badge: 'bg-violet-600 text-white',  heading: 'text-white', check: 'bg-white'    },
   '3': { bg: 'bg-amber-600',   border: 'border-amber-600',   bar: 'bg-white',     badge: 'bg-amber-500 text-white',   heading: 'text-white', check: 'bg-white'    },
   '4': { bg: 'bg-sky-700',     border: 'border-sky-700',     bar: 'bg-white',     badge: 'bg-sky-600 text-white',     heading: 'text-white', check: 'bg-white'    },
@@ -313,7 +313,7 @@ export default function Admin() {
                 type="password"
                 value={password}
                 onChange={e => { setPassword(e.target.value); setAuthError('') }}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500"
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#006D5B]"
                 placeholder="Enter admin password"
                 autoFocus
               />
@@ -321,7 +321,7 @@ export default function Admin() {
             {authError && <p className="text-red-500 text-sm">{authError}</p>}
             <button
               type="submit"
-              className="w-full bg-teal-600 text-white rounded-lg py-2 text-sm font-semibold hover:bg-teal-700 transition-colors"
+              className="w-full bg-[#006D5B] text-white rounded-lg py-2 text-sm font-semibold hover:bg-[#005548] transition-colors"
             >
               Sign in
             </button>

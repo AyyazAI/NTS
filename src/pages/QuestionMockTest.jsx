@@ -1,4 +1,4 @@
-import { useState } from 'react'
+﻿import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import Header from '../components/Header'
 import BottomNav from '../components/BottomNav'
@@ -38,7 +38,7 @@ function Timer({ time = '120:00', state = 'normal' }) {
   const colour =
     state === 'urgent'  ? 'text-red-600'   :
     state === 'warning' ? 'text-amber-600' :
-    'text-teal-600'
+    'text-[#006D5B]'
   const size =
     state === 'urgent'  ? 'text-2xl' :
     state === 'warning' ? 'text-xl'  :
@@ -66,9 +66,9 @@ export default function QuestionMockTest() {
       <main className="flex-1 px-4 pb-48 overflow-y-auto">
         {/* Score + timer row */}
         <div className="flex items-center justify-between mb-3">
-          <div className="bg-teal-50 border border-teal-200 rounded-xl px-3 py-2">
-            <p className="text-xs font-bold text-teal-700">Score</p>
-            <p className="text-lg font-black text-teal-700">18 / 90</p>
+          <div className="bg-[#F0FAF8] border border-[#99D4CE] rounded-xl px-3 py-2">
+            <p className="text-xs font-bold text-[#005548]">Score</p>
+            <p className="text-lg font-black text-[#005548]">18 / 90</p>
           </div>
           <div className="text-right">
             <p className="text-[10px] font-bold text-gray-700 uppercase tracking-wide mb-0.5">Time left</p>
@@ -78,7 +78,7 @@ export default function QuestionMockTest() {
 
         {/* Section label + progress */}
         <div className="flex items-center justify-between mb-3">
-          <span className="text-xs font-bold text-teal-700 bg-teal-50 border border-teal-200 rounded-full px-2.5 py-1">
+          <span className="text-xs font-bold text-[#005548] bg-[#F0FAF8] border border-[#99D4CE] rounded-full px-2.5 py-1">
             {sectionLabel}
           </span>
           <span className="text-xs font-bold text-gray-700">
@@ -90,12 +90,13 @@ export default function QuestionMockTest() {
         <div className="bg-gray-50 border border-gray-100 rounded-2xl p-4 mb-4 relative">
           <button
             onClick={() => setFlagged(f => !f)}
-            title={flagged ? 'Flagged' : 'Flag for later'}
-            className={`absolute top-3 right-3 text-xl font-bold leading-none transition-all hover:scale-110 ${
-              flagged ? 'text-orange-500' : 'text-gray-400 hover:text-gray-600'
+            title="Mark to revisit later"
+            className={`absolute top-3 right-3 flex items-center gap-0.5 transition-all hover:scale-110 ${
+              flagged ? 'text-orange-500' : 'text-gray-700 hover:text-gray-800'
             }`}
           >
-            {flagged ? '⚑' : '⚐'}
+            <span className="text-xl font-bold leading-none">{flagged ? '⚑' : '⚐'}</span>
+            <span className="text-[9px] font-bold leading-none">Try Later</span>
           </button>
           <p className="text-base font-semibold text-gray-900 leading-relaxed pr-8">
             {QUESTION.text}
@@ -110,13 +111,13 @@ export default function QuestionMockTest() {
               onClick={() => setSelected(opt.id)}
               className={`w-full flex items-center gap-3 px-4 py-3.5 rounded-xl border-2 text-left transition-all ${
                 selected === opt.id
-                  ? 'bg-teal-600 border-teal-600'
+                  ? 'bg-[#006D5B] border-[#006D5B]'
                   : 'bg-blue-100 border-blue-300 hover:border-blue-400'
               }`}
             >
               <span className={`w-7 h-7 rounded-full border-2 flex items-center justify-center text-xs font-black flex-shrink-0 ${
                 selected === opt.id
-                  ? 'border-white bg-white text-teal-700'
+                  ? 'border-white bg-white text-[#005548]'
                   : 'border-blue-300 text-gray-700'
               }`}>
                 {opt.id}
@@ -147,7 +148,7 @@ export default function QuestionMockTest() {
             disabled={!selected}
             className={`flex-1 h-12 rounded-xl text-sm font-bold transition-all ${
               selected
-                ? 'bg-teal-600 text-white hover:bg-teal-700'
+                ? 'bg-[#006D5B] text-white hover:bg-[#005548]'
                 : 'bg-gray-100 text-gray-400 cursor-not-allowed'
             }`}
           >
@@ -178,7 +179,7 @@ export default function QuestionMockTest() {
                 Review Flagged Questions
               </button>
               <Link to="/mock-test/results">
-                <button className="w-full py-4 rounded-xl bg-teal-600 text-white text-sm font-bold hover:bg-teal-700">
+                <button className="w-full py-4 rounded-xl bg-[#006D5B] text-white text-sm font-bold hover:bg-[#005548]">
                   Submit Test Anyway
                 </button>
               </Link>

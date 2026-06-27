@@ -1,4 +1,4 @@
-import { useState } from 'react'
+﻿import { useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import Header from '../components/Header'
 import BottomNav from '../components/BottomNav'
@@ -10,7 +10,7 @@ export function Step({ number, title, explanation, working, tip }) {
   const [tipOpen, setTipOpen] = useState(false)
   return (
     <div className="flex gap-3 mb-6">
-      <div className="flex-shrink-0 w-8 h-8 rounded-full bg-teal-600 flex items-center justify-center text-white font-black text-sm mt-0.5">
+      <div className="flex-shrink-0 w-8 h-8 rounded-full bg-[#006D5B] flex items-center justify-center text-white font-black text-sm mt-0.5">
         {number}
       </div>
       <div className="flex-1 min-w-0">
@@ -25,12 +25,12 @@ export function Step({ number, title, explanation, working, tip }) {
           <>
             <button
               onClick={() => setTipOpen(o => !o)}
-              className="flex items-center gap-1 text-xs font-bold text-teal-700 hover:text-teal-800 transition-colors"
+              className="flex items-center gap-1 text-xs font-bold text-[#005548] hover:text-[#004A3D] transition-colors"
             >
               💡 {tipOpen ? 'Hide tip' : 'Why this step?'}
             </button>
             {tipOpen && (
-              <p className="text-xs text-gray-700 mt-1.5 italic border-l-2 border-teal-300 pl-2 leading-relaxed">
+              <p className="text-xs text-gray-700 mt-1.5 italic border-l-2 border-[#66BFB5] pl-2 leading-relaxed">
                 {tip}
               </p>
             )}
@@ -82,7 +82,7 @@ export function VisualMethod() {
       </div>
 
       <div className="border-t border-gray-200 mt-4 pt-3">
-        <p className="text-sm font-black text-teal-700">
+        <p className="text-sm font-black text-[#005548]">
           Total: 6+5+4+3+2+1 = 21 committees ✅
         </p>
       </div>
@@ -99,8 +99,8 @@ export function VisualMethod() {
 // Bridge card shown after Method 1
 export function BridgeCard() {
   return (
-    <div className="border-2 border-teal-600 rounded-xl p-4 mt-2 mb-2">
-      <p className="text-sm font-black text-teal-700 mb-1">🎯 Challenge yourself</p>
+    <div className="border-2 border-[#006D5B] rounded-xl p-4 mt-2 mb-2">
+      <p className="text-sm font-black text-[#005548] mb-1">🎯 Challenge yourself</p>
       <p className="text-sm text-gray-700">
         On the next similar question, try solving with the formula.
         Method 1 is always here if you get stuck.
@@ -296,7 +296,7 @@ export default function SolutionWrong() {
               Your answer: B (35)
             </span>
             <span className="text-amber-600 font-black">→</span>
-            <span className="bg-teal-600 text-white rounded-lg px-3 py-1.5 font-bold">
+            <span className="bg-[#006D5B] text-white rounded-lg px-3 py-1.5 font-bold">
               Correct: A (21)
             </span>
           </div>
@@ -328,14 +328,14 @@ export default function SolutionWrong() {
               ← Back to Practice
             </button>
             <Link to="/practice/question" className="flex-1">
-              <button className="w-full py-4 rounded-xl bg-teal-600 text-white font-bold text-sm hover:bg-teal-700 transition-colors">
+              <button className="w-full py-4 rounded-xl bg-[#006D5B] text-white font-bold text-sm hover:bg-[#005548] transition-colors">
                 Next Question →
               </button>
             </Link>
           </div>
         ) : (
           <Link to="/practice/question">
-            <button className="w-full bg-teal-600 text-white font-bold py-4 rounded-xl text-base hover:bg-teal-700 transition-colors">
+            <button className="w-full bg-[#006D5B] text-white font-bold py-4 rounded-xl text-base hover:bg-[#005548] transition-colors">
               Try a similar question →
             </button>
           </Link>

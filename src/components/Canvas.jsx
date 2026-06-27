@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useCallback } from 'react'
+﻿import { useState, useRef, useEffect, useCallback } from 'react'
 
 const TABS = [
   { id: 'draw', label: '✏️ Draw' },
@@ -105,7 +105,7 @@ export default function Canvas({ footerText = 'Your work is saved if you navigat
               key={t.id}
               onClick={() => switchTab(t.id)}
               className={`flex-1 py-1.5 text-xs font-bold rounded-md transition-all ${
-                t.id === tab ? 'bg-teal-600 text-white shadow-sm' : 'text-gray-700 hover:text-gray-900'
+                t.id === tab ? 'bg-[#006D5B] text-white shadow-sm' : 'text-gray-700 hover:text-gray-900'
               }`}
             >
               {t.label}
@@ -124,7 +124,7 @@ export default function Canvas({ footerText = 'Your work is saved if you navigat
                 title={tool.title}
                 className={`w-9 h-9 text-sm rounded-lg border flex items-center justify-center transition-all ${
                   activeTool === tool.id && tool.id !== 'undo' && tool.id !== 'clear'
-                    ? 'border-teal-500 bg-teal-50 text-teal-700'
+                    ? 'border-[#006D5B] bg-[#F0FAF8] text-[#005548]'
                     : 'border-gray-300 text-gray-700 hover:border-gray-400'
                 }`}
               >
@@ -149,7 +149,7 @@ export default function Canvas({ footerText = 'Your work is saved if you navigat
             ref={textRef}
             rows={4}
             placeholder="Type your working here..."
-            className="w-full text-sm text-gray-700 bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 resize-none focus:outline-none focus:ring-2 focus:ring-teal-500"
+            className="w-full text-sm text-gray-700 bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 resize-none focus:outline-none focus:ring-2 focus:ring-[#006D5B]"
           />
         </div>
       )}

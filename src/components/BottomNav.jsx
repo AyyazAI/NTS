@@ -1,4 +1,4 @@
-import { useState } from 'react'
+﻿import { useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 
 const NAV = [
@@ -16,7 +16,7 @@ export default function BottomNav() {
   const { pathname } = useLocation()
   const [showLock, setShowLock] = useState(false)
 
-  const inMockTest = pathname === '/mock-test' || pathname === '/mock-test/question'
+  const inMockTest = pathname === '/mock-test/question' || pathname === '/mock-test/overview'
 
   function isActive(path) {
     if (path === '/') return pathname === '/'
@@ -40,7 +40,7 @@ export default function BottomNav() {
               to={item.path}
               onClick={(e) => handleNavClick(e, item.path)}
               className={`flex-1 flex flex-col items-center gap-0.5 pt-2 pb-1 transition-colors ${
-                isActive(item.path) ? 'text-teal-600' : 'text-gray-600 hover:text-gray-800'
+                isActive(item.path) ? 'text-[#006D5B]' : 'text-gray-600 hover:text-gray-800'
               }`}
             >
               <span className="text-xl leading-none">{item.icon}</span>

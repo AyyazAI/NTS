@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+﻿import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import Header from '../components/Header'
 import BottomNav from '../components/BottomNav'
@@ -37,7 +37,7 @@ function formatTime(secs) {
 
 function Timer({ secs }) {
   const state  = secs < 300 ? 'urgent' : secs < 600 ? 'warning' : 'normal'
-  const colour = state === 'urgent' ? 'text-red-600' : state === 'warning' ? 'text-amber-600' : 'text-teal-600'
+  const colour = state === 'urgent' ? 'text-red-600' : state === 'warning' ? 'text-amber-600' : 'text-[#006D5B]'
   const size   = state === 'urgent' ? 'text-2xl'     : state === 'warning' ? 'text-xl'        : 'text-lg'
   return <span className={`font-black tabular-nums ${colour} ${size}`}>{formatTime(secs)}</span>
 }
@@ -53,9 +53,9 @@ function NavigatorGrid({ sectionData, onNavigate }) {
           const isFlagged  = flagged.includes(i)
           const isCurrent  = i === current
           let cls = 'w-full aspect-square rounded flex items-center justify-center text-[9px] font-black border-2 transition-all cursor-pointer '
-          if (isCurrent)       cls += 'border-teal-600 bg-white text-teal-600'
+          if (isCurrent)       cls += 'border-[#006D5B] bg-white text-[#006D5B]'
           else if (isFlagged)  cls += 'border-amber-400 bg-amber-100 text-amber-700'
-          else if (isAnswered) cls += 'border-teal-600 bg-teal-600 text-white'
+          else if (isAnswered) cls += 'border-[#006D5B] bg-[#006D5B] text-white'
           else                 cls += 'border-gray-300 bg-gray-50 text-gray-600'
           return (
             <button key={i} className={cls} onClick={() => onNavigate(i)}>
@@ -66,8 +66,8 @@ function NavigatorGrid({ sectionData, onNavigate }) {
       </div>
       <div className="flex flex-wrap gap-x-3 gap-y-1">
         {[
-          { colour: 'bg-teal-600',                            label: 'Answered' },
-          { colour: 'bg-white border-2 border-teal-600',      label: 'Current'  },
+          { colour: 'bg-[#006D5B]',                            label: 'Answered' },
+          { colour: 'bg-white border-2 border-[#006D5B]',      label: 'Current'  },
           { colour: 'bg-amber-100 border-2 border-amber-400', label: 'Flagged'  },
           { colour: 'bg-gray-50 border-2 border-gray-300',     label: 'Unseen'   },
         ].map(l => (
@@ -163,9 +163,9 @@ export default function MockTest() {
       <main className="flex-1 px-4 pb-48 overflow-y-auto">
         {/* Answered count + timer */}
         <div className="flex items-center justify-between mb-3">
-          <div className="bg-teal-50 border border-teal-200 rounded-xl px-3 py-2">
-            <p className="text-xs font-bold text-teal-700">Answered</p>
-            <p className="text-lg font-black text-teal-700">{totalAnswered} / {TOTAL_QUESTIONS}</p>
+          <div className="bg-[#F0FAF8] border border-[#99D4CE] rounded-xl px-3 py-2">
+            <p className="text-xs font-bold text-[#005548]">Answered</p>
+            <p className="text-lg font-black text-[#005548]">{totalAnswered} / {TOTAL_QUESTIONS}</p>
           </div>
           <div className="text-right">
             <p className="text-[10px] font-bold text-gray-700 uppercase tracking-wide mb-0.5">Time left</p>
@@ -182,7 +182,7 @@ export default function MockTest() {
               onClick={() => setActiveSection(s)}
               className={`flex-shrink-0 px-3 py-2 rounded-xl text-xs font-black border-2 transition-all ${
                 activeSection === s
-                  ? 'bg-teal-600 border-teal-600 text-white'
+                  ? 'bg-[#006D5B] border-[#006D5B] text-white'
                   : 'border-gray-300 text-gray-700 hover:border-gray-400 bg-gray-100'
               }`}
             >
@@ -210,13 +210,13 @@ export default function MockTest() {
         <div className="bg-gray-50 border border-gray-300 rounded-2xl p-4 mb-4 relative">
           <button
             onClick={handleFlag}
-            title={isFlagged ? 'Flagged' : 'Flag for later'}
+            title="Mark to revisit later"
             className={`absolute top-3 right-3 flex items-center gap-0.5 transition-all hover:scale-110 ${
               isFlagged ? 'text-orange-500' : 'text-gray-700 hover:text-gray-800'
             }`}
           >
             <span className="text-xl font-bold leading-none">{isFlagged ? '⚑' : '⚐'}</span>
-            <span className="text-[9px] font-bold leading-none">Flag</span>
+            <span className="text-[9px] font-bold leading-none">Try Later</span>
           </button>
           <p className="text-base font-semibold text-gray-900 leading-relaxed pr-12">
             {QUESTION.text}
@@ -231,12 +231,12 @@ export default function MockTest() {
               onClick={() => setSelected(opt.id)}
               className={`w-full flex items-center gap-3 px-4 py-3.5 rounded-xl border-2 text-left transition-all ${
                 selected === opt.id
-                  ? 'bg-teal-600 border-teal-600'
+                  ? 'bg-[#006D5B] border-[#006D5B]'
                   : 'bg-blue-100 border-blue-300 hover:border-blue-400'
               }`}
             >
               <span className={`w-7 h-7 rounded-full border-2 flex items-center justify-center text-xs font-black flex-shrink-0 ${
-                selected === opt.id ? 'border-white bg-white text-teal-700' : 'border-blue-300 text-gray-700'
+                selected === opt.id ? 'border-white bg-white text-[#005548]' : 'border-blue-300 text-gray-700'
               }`}>{opt.id}</span>
               <span className={`text-base font-semibold ${selected === opt.id ? 'text-white' : 'text-gray-900'}`}>
                 {opt.text}
@@ -253,7 +253,7 @@ export default function MockTest() {
         {/* Submit Test — in scrollable area, not persistent bar */}
         <button
           onClick={() => setShowConfirm(true)}
-          className="w-full py-3.5 rounded-xl border-2 border-teal-600 text-sm font-bold text-teal-600 hover:bg-teal-50 transition-colors"
+          className="w-full py-3.5 rounded-xl border-2 border-[#006D5B] text-sm font-bold text-[#006D5B] hover:bg-[#F0FAF8] transition-colors"
         >
           Submit Test
         </button>
@@ -272,7 +272,7 @@ export default function MockTest() {
             disabled={!selected}
             onClick={handleSubmitAnswer}
             className={`flex-1 h-12 rounded-xl text-sm font-bold transition-all ${
-              selected ? 'bg-teal-600 text-white hover:bg-teal-700' : 'bg-gray-100 text-gray-400 cursor-not-allowed'
+              selected ? 'bg-[#006D5B] text-white hover:bg-[#005548]' : 'bg-gray-100 text-gray-400 cursor-not-allowed'
             }`}
           >
             Submit Answer
@@ -291,7 +291,7 @@ export default function MockTest() {
       {/* All answered toast */}
       {allAnsweredToast && (
         <div className="fixed bottom-36 left-1/2 -translate-x-1/2 max-w-xs w-full z-40 px-4">
-          <div className="bg-teal-700 text-white rounded-2xl px-4 py-3 shadow-lg">
+          <div className="bg-[#005548] text-white rounded-2xl px-4 py-3 shadow-lg">
             <p className="text-xs font-bold leading-snug">
               You've answered all questions — ready to submit? 🎉
             </p>
@@ -315,7 +315,7 @@ export default function MockTest() {
                 Review Flagged Questions
               </button>
               <Link to="/mock-test/results">
-                <button className="w-full py-4 rounded-xl bg-teal-600 text-white text-sm font-bold hover:bg-teal-700">
+                <button className="w-full py-4 rounded-xl bg-[#006D5B] text-white text-sm font-bold hover:bg-[#005548]">
                   Submit Test Anyway
                 </button>
               </Link>

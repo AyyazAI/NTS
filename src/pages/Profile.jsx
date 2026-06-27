@@ -1,4 +1,4 @@
-import { useState } from 'react'
+﻿import { useState } from 'react'
 import Header from '../components/Header'
 import BottomNav from '../components/BottomNav'
 import { getNatCategory, getCategoryLabel } from '../utils/natCategory'
@@ -21,17 +21,8 @@ function StreakCalendar() {
   return (
     <div className="grid gap-1" style={{ gridTemplateColumns: 'repeat(10, 1fr)' }}>
       {STREAK_DAYS.map((active, i) => (
-        <div key={i} className={`aspect-square rounded ${active ? 'bg-teal-500' : 'bg-gray-100'}`} />
+        <div key={i} className={`aspect-square rounded ${active ? 'bg-[#006D5B]' : 'bg-gray-100'}`} />
       ))}
-    </div>
-  )
-}
-
-function StatRow({ label, value }) {
-  return (
-    <div className="flex justify-between items-center py-2 border-b border-gray-50 last:border-0">
-      <span className="text-sm text-gray-700">{label}</span>
-      <span className="text-sm font-black text-gray-900">{value}</span>
     </div>
   )
 }
@@ -53,7 +44,7 @@ function ViewMode({ natCategory, onEdit }) {
     <div className="space-y-4">
       {/* Avatar + name */}
       <div className="flex items-center gap-4 pt-2 pb-4 border-b border-gray-200">
-        <div className="w-16 h-16 rounded-full bg-teal-600 flex items-center justify-center text-white text-2xl font-black flex-shrink-0">
+        <div className="w-16 h-16 rounded-full bg-[#006D5B] flex items-center justify-center text-white text-2xl font-black flex-shrink-0">
           H
         </div>
         <div>
@@ -63,10 +54,10 @@ function ViewMode({ natCategory, onEdit }) {
       </div>
 
       {/* Countdown — reads from localStorage */}
-      <div className="bg-teal-50 border border-teal-200 rounded-2xl p-4 text-center">
-        <p className="text-3xl font-black text-teal-700">{daysLabel}</p>
-        <p className="text-sm font-bold text-teal-600">days to your NAT test{shortDate ? ` (${shortDate})` : ''}</p>
-        <p className="text-sm font-bold text-teal-700 mt-1">{dateDisplay}</p>
+      <div className="bg-[#F0FAF8] border border-[#99D4CE] rounded-2xl p-4 text-center">
+        <p className="text-3xl font-black text-[#005548]">{daysLabel}</p>
+        <p className="text-sm font-bold text-[#006D5B]">days to your NAT test{shortDate ? ` (${shortDate})` : ''}</p>
+        <p className="text-sm font-bold text-[#005548] mt-1">{dateDisplay} · {getCategoryLabel(natCategory)}</p>
       </div>
 
       {/* Goal tracker */}
@@ -78,7 +69,7 @@ function ViewMode({ natCategory, onEdit }) {
         </div>
         <div className="relative h-3 mb-1">
           <div className="absolute inset-0 bg-gray-200 rounded-full overflow-hidden">
-            <div className="h-full bg-teal-500" style={{ width: '74%' }} />
+            <div className="h-full bg-[#006D5B]" style={{ width: '74%' }} />
           </div>
           <div className="absolute top-0 bottom-0 w-0.5 bg-amber-500 rounded-full z-10" style={{ left: '83.3%' }} />
         </div>
@@ -102,16 +93,9 @@ function ViewMode({ natCategory, onEdit }) {
         <p className="text-xs text-gray-700 mt-2">Last 30 days</p>
       </div>
 
-      {/* Test details */}
-      <div className="bg-gray-50 border border-gray-300 rounded-2xl p-4">
-        <p className="text-xs font-black text-gray-700 uppercase tracking-wider mb-2">Test Details</p>
-        <StatRow label="Test date" value={dateDisplay} />
-        <StatRow label="Category"  value={getCategoryLabel(natCategory)} />
-      </div>
-
       <button
         onClick={onEdit}
-        className="w-full py-3.5 rounded-xl border-2 border-teal-600 text-teal-700 font-bold text-sm hover:bg-teal-50 transition-colors"
+        className="w-full py-3.5 rounded-xl border-2 bg-blue-100 border-blue-300 text-gray-900 font-bold text-sm hover:bg-blue-200 transition-colors"
       >
         ✏️ Edit Profile
       </button>
@@ -146,6 +130,13 @@ function EditMode({ initialCategory, onCancel, onSave }) {
     if (contactType === 'email' && email) {
       if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) errs.email = 'Enter a valid email address'
     }
+    if (!mobile.trim() && !email.trim()) {
+      if (contactType === 'mobile') {
+        errs.mobile = 'Add a mobile number or email address to save'
+      } else {
+        errs.email = 'Add a mobile number or email address to save'
+      }
+    }
     if (targetScore < 50 || targetScore > 90) errs.score = 'Score must be between 50 and 90'
     return errs
   }
@@ -172,7 +163,7 @@ function EditMode({ initialCategory, onCancel, onSave }) {
     <div className="space-y-4">
       {/* Edit badge */}
       <div className="flex items-center gap-3 pt-2">
-        <div className="w-14 h-14 rounded-full bg-teal-600 flex items-center justify-center text-white text-xl font-black">
+        <div className="w-14 h-14 rounded-full bg-[#006D5B] flex items-center justify-center text-white text-xl font-black">
           H
         </div>
         <span className="text-xs font-black text-amber-600 bg-amber-50 border border-amber-200 rounded-full px-2.5 py-1">
@@ -196,7 +187,7 @@ function EditMode({ initialCategory, onCancel, onSave }) {
             maxLength={50}
             onChange={e => { setName(e.target.value); mark(); setErrors(prev => ({ ...prev, name: '' })) }}
             className={`w-full border-2 rounded-xl px-4 py-3 text-sm font-semibold text-gray-900 outline-none transition-colors ${
-              errors.name ? 'border-red-400 bg-red-50' : 'border-gray-300 focus:border-teal-600'
+              errors.name ? 'border-red-400 bg-red-50' : 'border-gray-300 focus:border-[#006D5B]'
             }`}
           />
           {errors.name && <p className="text-xs text-red-500 mt-1 font-bold">{errors.name}</p>}
@@ -214,7 +205,7 @@ function EditMode({ initialCategory, onCancel, onSave }) {
                 key={t.id}
                 onClick={() => { setContactType(t.id); mark() }}
                 className={`flex-1 py-1.5 text-xs font-bold rounded-md transition-all ${
-                  contactType === t.id ? 'bg-teal-600 text-white shadow-sm' : 'text-gray-900'
+                  contactType === t.id ? 'bg-[#006D5B] text-white shadow-sm' : 'text-gray-900'
                 }`}
               >
                 {t.label}
@@ -228,7 +219,7 @@ function EditMode({ initialCategory, onCancel, onSave }) {
               placeholder="03XX-XXXXXXX"
               inputMode="numeric"
               className={`w-full border-2 rounded-xl px-4 py-3 text-sm font-semibold outline-none transition-colors ${
-                errors.mobile ? 'border-red-400 bg-red-50' : 'border-gray-300 focus:border-teal-600'
+                errors.mobile ? 'border-red-400 bg-red-50' : 'border-gray-300 focus:border-[#006D5B]'
               }`}
             />
           ) : (
@@ -238,7 +229,7 @@ function EditMode({ initialCategory, onCancel, onSave }) {
               placeholder="you@example.com"
               type="email"
               className={`w-full border-2 rounded-xl px-4 py-3 text-sm font-semibold text-gray-900 outline-none transition-colors ${
-                errors.email ? 'border-red-400 bg-red-50' : 'border-gray-300 focus:border-teal-600'
+                errors.email ? 'border-red-400 bg-red-50' : 'border-gray-300 focus:border-[#006D5B]'
               }`}
             />
           )}
@@ -255,7 +246,7 @@ function EditMode({ initialCategory, onCancel, onSave }) {
                 key={d.value}
                 className={`flex items-center gap-3 px-3 py-2.5 rounded-xl border-2 cursor-pointer transition-all ${
                   testDate === d.value
-                    ? 'border-teal-600 bg-teal-600'
+                    ? 'border-[#006D5B] bg-[#006D5B]'
                     : 'border-blue-300 bg-blue-100 hover:border-blue-400'
                 }`}
               >
@@ -265,7 +256,7 @@ function EditMode({ initialCategory, onCancel, onSave }) {
                   value={d.value}
                   checked={testDate === d.value}
                   onChange={() => { setTestDate(d.value); mark() }}
-                  className="accent-teal-600"
+                  className="accent-[#006D5B]"
                 />
                 <span className={`text-sm font-bold ${testDate === d.value ? 'text-white' : 'text-gray-900'}`}>
                   {d.label}
@@ -287,13 +278,13 @@ function EditMode({ initialCategory, onCancel, onSave }) {
         {/* Target Score */}
         <div>
           <label className="text-xs font-black text-gray-700 uppercase tracking-wider block mb-1.5">
-            Target Score: <span className="text-teal-600 normal-case">{targetScore}/90</span>
+            Target Score: <span className="text-[#006D5B] normal-case">{targetScore}/90</span>
           </label>
           <input
             value={targetScore}
             onChange={e => { setTargetScore(Number(e.target.value)); mark(); setErrors(prev => ({ ...prev, score: '' })) }}
             type="range" min={50} max={90} step={5}
-            className="w-full accent-teal-600"
+            className="w-full accent-[#006D5B]"
           />
           <div className="flex justify-between text-xs text-gray-700 mt-0.5">
             <span>50 (Pass)</span>
@@ -311,7 +302,7 @@ function EditMode({ initialCategory, onCancel, onSave }) {
           </div>
           <button
             onClick={() => { setReminders(r => !r); mark() }}
-            className={`w-12 h-6 rounded-full transition-colors relative ${reminders ? 'bg-teal-600' : 'bg-gray-300'}`}
+            className={`w-12 h-6 rounded-full transition-colors relative ${reminders ? 'bg-[#006D5B]' : 'bg-gray-300'}`}
           >
             <span className={`absolute top-1 w-4 h-4 bg-white rounded-full shadow transition-all ${reminders ? 'left-7' : 'left-1'}`} />
           </button>
@@ -328,7 +319,7 @@ function EditMode({ initialCategory, onCancel, onSave }) {
         </button>
         <button
           onClick={handleSave}
-          className="flex-1 py-3.5 rounded-xl bg-teal-600 text-white font-bold text-sm hover:bg-teal-700 transition-colors"
+          className="flex-1 py-3.5 rounded-xl bg-[#006D5B] text-white font-bold text-sm hover:bg-[#005548] transition-colors"
         >
           Save Profile
         </button>

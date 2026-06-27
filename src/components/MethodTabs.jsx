@@ -1,4 +1,4 @@
-import { useState } from 'react'
+﻿import { useState } from 'react'
 
 const METHODS = [
   { id: 'count', label: '✓ Count' },
@@ -18,7 +18,7 @@ export default function MethodTabs({ defaultMethod = 'count', children }) {
             onClick={() => setActive(m.id)}
             className={`flex-1 min-w-0 px-2 py-2 rounded-lg text-xs font-bold border transition-all ${
               active === m.id
-                ? 'bg-teal-600 text-white border-teal-600'
+                ? 'bg-[#006D5B] text-white border-[#006D5B]'
                 : 'bg-blue-100 text-gray-900 border-blue-300 hover:border-blue-400'
             }`}
           >

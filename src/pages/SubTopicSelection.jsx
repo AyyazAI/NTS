@@ -1,4 +1,4 @@
-import { useState } from 'react'
+﻿import { useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import Header from '../components/Header'
 import BottomNav from '../components/BottomNav'
@@ -107,7 +107,7 @@ export default function SubTopicSelection() {
             const isSelected = selectedSubtopics.includes(sub.name)
             const badge      = !isSelected ? focusBadge(sub.pct) : null
             const cardCls    = isSelected
-              ? 'border-teal-600 bg-teal-50'
+              ? 'border-[#006D5B] bg-[#F0FAF8]'
               : sub.pct < 50
               ? 'border-amber-200 bg-amber-50'
               : 'border-gray-300 bg-gray-50 hover:border-gray-400'
@@ -119,7 +119,7 @@ export default function SubTopicSelection() {
               >
                 <div className="flex items-center justify-between mb-2">
                   <div className="flex items-center gap-2 flex-wrap">
-                    <p className={`text-sm font-bold ${isSelected ? 'text-teal-800' : 'text-gray-900'}`}>
+                    <p className={`text-sm font-bold ${isSelected ? 'text-[#004A3D]' : 'text-gray-900'}`}>
                       {sub.name}
                     </p>
                     {badge && (
@@ -128,18 +128,18 @@ export default function SubTopicSelection() {
                       </span>
                     )}
                     {isSelected && (
-                      <span className="text-xs font-bold text-teal-700 bg-teal-100 px-2 py-0.5 rounded-full">
+                      <span className="text-xs font-bold text-[#005548] bg-[#CCE8E5] px-2 py-0.5 rounded-full">
                         ✓ Selected
                       </span>
                     )}
                   </div>
-                  <p className={`text-sm font-bold ml-2 shrink-0 ${isSelected ? 'text-teal-700' : 'text-gray-700'}`}>
+                  <p className={`text-sm font-bold ml-2 shrink-0 ${isSelected ? 'text-[#005548]' : 'text-gray-700'}`}>
                     {sub.pct}%
                   </p>
                 </div>
                 <div className="bg-gray-200 rounded-full h-1.5">
                   <div
-                    className={`${isSelected ? 'bg-teal-500' : barColor(sub.pct)} h-1.5 rounded-full transition-all`}
+                    className={`${isSelected ? 'bg-[#006D5B]' : barColor(sub.pct)} h-1.5 rounded-full transition-all`}
                     style={{ width: `${sub.pct}%` }}
                   />
                 </div>
@@ -158,7 +158,7 @@ export default function SubTopicSelection() {
                 onClick={() => setDifficulty(d)}
                 className={`flex-1 py-2.5 rounded-xl text-xs font-bold border-2 transition-all ${
                   difficulty === d
-                    ? 'bg-teal-600 text-white border-teal-600'
+                    ? 'bg-[#006D5B] text-white border-[#006D5B]'
                     : 'bg-blue-100 text-gray-900 border-blue-300 hover:border-blue-400'
                 }`}
               >
@@ -172,7 +172,7 @@ export default function SubTopicSelection() {
       {/* Start button */}
       <div className="fixed bottom-20 left-1/2 -translate-x-1/2 w-full max-w-sm bg-white border-t border-gray-100 px-4 py-3 z-20">
         <Link to={startHref}>
-          <button className="w-full bg-teal-600 text-white font-bold py-4 rounded-xl text-base hover:bg-teal-700 transition-colors">
+          <button className="w-full bg-[#006D5B] text-white font-bold py-4 rounded-xl text-base hover:bg-[#005548] transition-colors">
             {selectedSubtopics.length === 0
               ? 'Start Practice — Mixed →'
               : `Practice ${selectedSubtopics.length} topic${selectedSubtopics.length > 1 ? 's' : ''} →`}
